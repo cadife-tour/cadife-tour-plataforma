@@ -11,8 +11,11 @@ import type {
  * Informações Institucionais e de Contato
  * (Campos ainda não homologados formalmente usam flags pendentes)
  */
+const configuredPhone = process.env.NEXT_PUBLIC_WHATSAPP_NUMBER?.trim();
+
 export const contactInfo: ContactInfo = {
-  whatsappNumber: process.env.NEXT_PUBLIC_WHATSAPP_NUMBER || "5500000000000",
+  whatsappNumber: configuredPhone || undefined,
+  isWhatsappNumberPending: !configuredPhone,
   email: "contato@cadifetour.com.br",
   address: "Atendimento Consultivo Online e Presencial (Sob agendamento)",
   cadasturNumber: undefined,

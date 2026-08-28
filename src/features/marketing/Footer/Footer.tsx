@@ -5,6 +5,7 @@ import { Container } from "@/shared/ui/Container/Container";
 import { contactInfo } from "@/content/data";
 import { useLocale } from "@/core/i18n/LocaleContext";
 import { buildWhatsAppUrl } from "@/shared/utils/whatsapp";
+import { trackEvent } from "@/core/analytics";
 
 export const Footer: React.FC = () => {
   const { locale } = useLocale();
@@ -41,9 +42,9 @@ export const Footer: React.FC = () => {
       destinations: "Destinos Destacados",
       howItWorks: "Cómo Funciona",
       about: "La Agencia",
-      faq: "Preguntas Frecuentes",
+      faq: "Preguntas Frequentes",
       legalTitle: "Seguridad y Cumplimiento",
-      rights: "Todos los derechos reservados.",
+      rights: "Todos os direitos reservados.",
       whatsappBtn: "Contactar por WhatsApp",
     },
   };
@@ -55,6 +56,13 @@ export const Footer: React.FC = () => {
     locale,
     context: "general",
   });
+
+  const handleCtaClick = () => {
+    trackEvent("whatsapp_conversion", {
+      cta_location: "footer",
+      locale,
+    });
+  };
 
   return (
     <footer className="border-t border-border bg-background py-16 text-foreground-muted">
@@ -110,7 +118,9 @@ export const Footer: React.FC = () => {
                   href={whatsappUrl}
                   target="_blank"
                   rel="noopener noreferrer"
+                  onClick={handleCtaClick}
                   className="text-brand-accent font-medium hover:underline focus-visible:outline focus-visible:outline-2 focus-visible:outline-brand-accent rounded py-0.5"
+                  aria-label={`${t.whatsappBtn} (abre em nova aba)`}
                 >
                   {t.whatsappBtn} →
                 </a>

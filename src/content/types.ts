@@ -1,10 +1,3 @@
-/**
- * CADIFE Tour — Content Domain Types & Schemas
- *
- * Princípio: Todo conteúdo é estritamente tipado.
- * Nenhum dado comercial inventado é permitido.
- */
-
 export type Locale = "pt" | "en" | "es";
 
 export interface DestinationItem {
@@ -49,7 +42,8 @@ export interface FaqItem {
 }
 
 export interface ContactInfo {
-  whatsappNumber: string;
+  whatsappNumber?: string;
+  isWhatsappNumberPending?: boolean;
   email: string;
   address?: string;
   cadasturNumber?: string;
