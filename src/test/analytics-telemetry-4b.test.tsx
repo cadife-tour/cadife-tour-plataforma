@@ -77,7 +77,7 @@ describe("Fase 4B — Telemetria & Analytics Privacy-First", () => {
     const details = document.querySelector("details");
     expect(details).toBeInTheDocument();
     if (details) {
-      fireEvent.toggle(details);
+      fireEvent(details, new Event("toggle"));
     }
   });
 

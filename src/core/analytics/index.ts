@@ -68,7 +68,6 @@ export function trackEvent<K extends AnalyticsEventName>(
     if (typeof window !== "undefined") {
       // 1. Log seguro em desenvolvimento (nunca polui produção)
       if (process.env.NODE_ENV === "development") {
-        // eslint-disable-next-line no-console
         console.info(`[Telemetry Event: ${event}]`, payload);
       }
 
