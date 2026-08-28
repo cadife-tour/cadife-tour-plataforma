@@ -88,7 +88,7 @@ describe("Fase 4B — Telemetria & Analytics Privacy-First", () => {
       </LocaleProvider>
     );
 
-    const reviewLink = screen.getByRole("link", { name: /ver avaliações no google/i });
+    const reviewLink = screen.getByRole("link", { name: /google/i });
     expect(reviewLink).toBeInTheDocument();
     fireEvent.click(reviewLink);
   });

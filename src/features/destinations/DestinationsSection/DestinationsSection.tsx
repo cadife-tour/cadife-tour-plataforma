@@ -1,3 +1,5 @@
+"use client";
+
 import React, { useEffect, useRef } from "react";
 import { Container } from "@/shared/ui/Container/Container";
 import { destinationsData, contactInfo } from "@/content/data";
