@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useEffect, useRef } from "react";
+import Image from "next/image";
 import { Container } from "@/shared/ui/Container/Container";
 import { destinationsData, contactInfo } from "@/content/data";
 import { useLocale } from "@/core/i18n/LocaleContext";
@@ -113,10 +114,22 @@ export const DestinationsSection: React.FC = () => {
               <article
                 key={item.id}
                 data-destination-id={item.id}
-                className="flex flex-col justify-between rounded-xl border border-border bg-surface p-7 transition-all duration-200 hover:border-brand-accent/40 hover:bg-surface-elevated shadow-sm"
+                className="flex flex-col justify-between overflow-hidden rounded-xl border border-border bg-surface p-6 transition-all duration-200 hover:border-brand-accent/40 hover:bg-surface-elevated shadow-sm"
               >
                 <div className="space-y-4">
-                  <div className="flex items-center justify-between">
+                  {/* Thumbnail Responsivo com next/image (CLS Zero) */}
+                  <div className="relative aspect-video w-full overflow-hidden rounded-lg bg-surface-muted">
+                    <Image
+                      src={item.imageRef}
+                      alt={title}
+                      fill
+                      sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                      className="object-cover transition-transform duration-300 hover:scale-105"
+                      loading="lazy"
+                    />
+                  </div>
+
+                  <div className="flex items-center justify-between pt-1">
                     <span className="rounded bg-surface-muted px-2.5 py-1 text-xs font-semibold text-brand-accent">
                       {item.category.toUpperCase()}
                     </span>
