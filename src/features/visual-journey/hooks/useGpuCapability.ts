@@ -30,8 +30,11 @@ export function useGpuCapability(): GpuCapability {
 
   useEffect(() => {
     // 1. Verificação de Reduced Motion
-    const motionQuery = window.matchMedia("(prefers-reduced-motion: reduce)");
-    const isReducedMotion = motionQuery.matches;
+    let isReducedMotion = false;
+    if (typeof window !== "undefined" && typeof window.matchMedia === "function") {
+      const motionQuery = window.matchMedia("(prefers-reduced-motion: reduce)");
+      isReducedMotion = Boolean(motionQuery.matches);
+    }
 
     // 2. Verificação de Save-Data (Conexão Econômica)
     const nav = navigator as unknown as { connection?: { saveData?: boolean } };

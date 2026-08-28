@@ -31,8 +31,9 @@ class WebGlErrorBoundary extends Component<
   }
 
   componentDidCatch(error: Error) {
-    // eslint-disable-next-line no-console
-    console.warn("[WebGL Fallback Triggered]", error);
+    if (process.env.NODE_ENV === "development") {
+      console.warn("[WebGL Fallback Triggered]", error);
+    }
   }
 
   render() {
@@ -74,8 +75,9 @@ export default function SceneContainer({
               "webglcontextlost",
               (e) => {
                 e.preventDefault();
-                // eslint-disable-next-line no-console
-                console.warn("[WebGL Context Lost] Handled safely.");
+                if (process.env.NODE_ENV === "development") {
+                  console.warn("[WebGL Context Lost] Handled safely.");
+                }
               },
               false
             );
