@@ -32,7 +32,8 @@ export function buildWhatsAppUrl(options: WhatsAppUrlOptions): string {
   const { phoneNumber, locale, context = "general", destinationTitle } = options;
   const cleanPhone = phoneNumber.replace(/\D/g, "");
 
-  let message = defaultMessages[locale]?.[context] || defaultMessages.pt.general;
+  const localeMessages = defaultMessages[locale] ?? defaultMessages.pt;
+  let message: string = (localeMessages[context] ?? defaultMessages.pt.general) ?? "Olá!";
 
   if (context === "destination" && destinationTitle) {
     message = message.replace("{destination}", destinationTitle);

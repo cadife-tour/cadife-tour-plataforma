@@ -63,7 +63,7 @@ export const Header: React.FC = () => {
           {/* Logo / Brand Name */}
           <div className="flex items-center gap-3">
             <a
-              href="#"
+              href="/"
               className="flex items-center gap-2 focus-visible:outline focus-visible:outline-2 focus-visible:outline-brand-accent rounded"
               aria-label="CADIFE Tour — Início"
             >
