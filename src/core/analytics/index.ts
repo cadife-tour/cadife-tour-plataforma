@@ -24,7 +24,6 @@ export function trackEvent(params: AnalyticsEventParams): void {
     if (typeof window !== "undefined") {
       // 1. Telemetria local de desenvolvimento
       if (process.env.NODE_ENV === "development") {
-        // eslint-disable-next-line no-console
         console.info("[Analytics Event]", params);
       }
 
@@ -44,7 +43,6 @@ export function trackEvent(params: AnalyticsEventParams): void {
     }
   } catch (error) {
     // Falha silenciosa para garantir que nunca impacte a experiência do usuário
-    // eslint-disable-next-line no-console
     console.error("[Analytics Error]", error);
   }
 }
