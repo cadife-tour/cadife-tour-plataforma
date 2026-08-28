@@ -24,6 +24,18 @@ export const LocaleProvider: React.FC<{ children: React.ReactNode }> = ({ childr
     }
   }, []);
 
+  useEffect(() => {
+    // Sincronização dinâmica do atributo lang no DOM (ISS-01)
+    if (typeof document !== "undefined") {
+      const htmlLangMap: Record<Locale, string> = {
+        pt: "pt-BR",
+        en: "en",
+        es: "es",
+      };
+      document.documentElement.lang = htmlLangMap[locale] ?? "pt-BR";
+    }
+  }, [locale]);
+
   const setLocale = (newLocale: Locale) => {
     setLocaleState(newLocale);
     localStorage.setItem("cadife_locale", newLocale);

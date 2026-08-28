@@ -13,11 +13,6 @@ export const metadata: Metadata = {
   metadataBase: new URL(process.env.NEXT_PUBLIC_APP_URL || "https://cadifetour.com.br"),
   alternates: {
     canonical: "/",
-    languages: {
-      "pt-BR": "/",
-      "en-US": "/?lang=en",
-      "es-ES": "/?lang=es",
-    },
   },
   openGraph: {
     title: "CADIFE Tour — Consultoria de Viagens Sob Medida",
@@ -27,6 +22,21 @@ export const metadata: Metadata = {
     siteName: "CADIFE Tour",
     locale: "pt_BR",
     type: "website",
+    images: [
+      {
+        url: "/assets/brand/logo.webp",
+        width: 768,
+        height: 264,
+        alt: "CADIFE Tour — Consultoria e Experiências de Viagem Sob Medida",
+      },
+    ],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "CADIFE Tour — Consultoria de Viagens Sob Medida",
+    description:
+      "Planejamento completo, roteiros personalizados e suporte humanizado do embarque ao retorno.",
+    images: ["/assets/brand/logo.webp"],
   },
   robots: {
     index: true,
