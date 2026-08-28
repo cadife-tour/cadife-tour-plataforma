@@ -4,6 +4,7 @@ import { LocaleProvider } from "@/core/i18n/LocaleContext";
 import { SkipToContent } from "@/shared/ui/SkipToContent/SkipToContent";
 import { Header } from "@/features/marketing/Header/Header";
 import { Footer } from "@/features/marketing/Footer/Footer";
+import { VisualJourney } from "@/features/visual-journey/VisualJourney";
 
 export const metadata: Metadata = {
   title: "CADIFE Tour — Consultoria e Experiências de Viagem Sob Medida",
@@ -43,6 +44,7 @@ export default function RootLayout({
       <body className="flex min-h-screen flex-col bg-background text-foreground antialiased selection:bg-brand-primary selection:text-white">
         <LocaleProvider>
           <SkipToContent />
+          <VisualJourney />
           <Header />
           <main id="main-content" className="flex-1">
             {children}
