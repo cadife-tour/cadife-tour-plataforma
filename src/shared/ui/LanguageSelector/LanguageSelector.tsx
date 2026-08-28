@@ -9,12 +9,13 @@ export const LanguageSelector: React.FC<{ className?: string }> = ({ className =
   const { locale, setLocale } = useLocale();
 
   const handleSelect = (newLocale: Locale) => {
-    setLocale(newLocale);
-    trackEvent({
-      event: "language_change",
-      locale: newLocale,
-      label: `Changed language to ${newLocale.toUpperCase()}`,
-    });
+    if (newLocale !== locale) {
+      trackEvent("language_change", {
+        from_locale: locale,
+        to_locale: newLocale,
+      });
+      setLocale(newLocale);
+    }
   };
 
   const languages: { code: Locale; label: string }[] = [

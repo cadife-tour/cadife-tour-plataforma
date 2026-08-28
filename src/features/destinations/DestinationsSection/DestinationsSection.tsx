@@ -1,6 +1,4 @@
-"use client";
-
-import React from "react";
+import React, { useEffect, useRef } from "react";
 import { Container } from "@/shared/ui/Container/Container";
 import { destinationsData, contactInfo } from "@/content/data";
 import { useLocale } from "@/core/i18n/LocaleContext";
@@ -9,6 +7,7 @@ import { trackEvent } from "@/core/analytics";
 
 export const DestinationsSection: React.FC = () => {
   const { locale } = useLocale();
+  const observedDestinations = useRef<Set<string>>(new Set());
 
   const labels = {
     pt: {
@@ -39,13 +38,43 @@ export const DestinationsSection: React.FC = () => {
 
   const t = labels[locale] || labels.pt;
 
+  // IntersectionObserver para registrar destination_viewed uma única vez por destino
+  useEffect(() => {
+    if (typeof window === "undefined" || !("IntersectionObserver" in window)) {
+      return;
+    }
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            const destId = entry.target.getAttribute("data-destination-id");
+            if (destId && !observedDestinations.current.has(destId)) {
+              observedDestinations.current.add(destId);
+              trackEvent("destination_viewed", {
+                destination_id: destId,
+                locale,
+              });
+            }
+          }
+        });
+      },
+      { threshold: 0.4 }
+    );
+
+    const elements = document.querySelectorAll("[data-destination-id]");
+    elements.forEach((el) => observer.observe(el));
+
+    return () => {
+      observer.disconnect();
+    };
+  }, [locale]);
+
   const handleDestinationClick = (destTitle: string) => {
-    trackEvent({
-      event: "whatsapp_conversion",
+    trackEvent("whatsapp_conversion", {
       destination: destTitle,
       cta_location: "destination_card",
       locale,
-      label: `CTA Destination: ${destTitle}`,
     });
   };
 
@@ -81,6 +110,7 @@ export const DestinationsSection: React.FC = () => {
             return (
               <article
                 key={item.id}
+                data-destination-id={item.id}
                 className="flex flex-col justify-between rounded-xl border border-border bg-surface p-7 transition-all duration-200 hover:border-brand-accent/40 hover:bg-surface-elevated shadow-sm"
               >
                 <div className="space-y-4">

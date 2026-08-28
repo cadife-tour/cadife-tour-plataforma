@@ -44,11 +44,9 @@ export const HowItWorksSection: React.FC = () => {
   });
 
   const handleCtaClick = () => {
-    trackEvent({
-      event: "whatsapp_conversion",
+    trackEvent("whatsapp_conversion", {
       cta_location: "how_it_works",
       locale,
-      label: "How It Works CTA",
     });
   };
 

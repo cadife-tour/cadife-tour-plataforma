@@ -48,11 +48,9 @@ export const Header: React.FC = () => {
   });
 
   const handleCtaClick = () => {
-    trackEvent({
-      event: "whatsapp_conversion",
-      cta_location: "hero",
+    trackEvent("whatsapp_conversion", {
+      cta_location: "header_nav",
       locale,
-      label: "Header Nav CTA",
     });
   };
 

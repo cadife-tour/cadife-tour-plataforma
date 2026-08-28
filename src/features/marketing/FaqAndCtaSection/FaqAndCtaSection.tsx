@@ -49,12 +49,19 @@ export const FaqAndCtaSection: React.FC = () => {
     context: "general",
   });
 
-  const handleCtaClick = () => {
-    trackEvent({
-      event: "whatsapp_conversion",
-      cta_location: "faq",
+  const handleToggleFaq = (idx: number, e: React.SyntheticEvent<HTMLDetailsElement>) => {
+    const isOpen = e.currentTarget.open;
+    trackEvent("faq_toggle", {
+      question_id: `faq_${idx + 1}`,
       locale,
-      label: "FAQ Final Banner CTA",
+      state: isOpen ? "opened" : "closed",
+    });
+  };
+
+  const handleCtaClick = () => {
+    trackEvent("whatsapp_conversion", {
+      cta_location: "faq_banner",
+      locale,
     });
   };
 
@@ -82,6 +89,7 @@ export const FaqAndCtaSection: React.FC = () => {
             return (
               <details
                 key={idx}
+                onToggle={(e) => handleToggleFaq(idx, e)}
                 className="group rounded-xl border border-border bg-surface p-5 transition-colors open:bg-surface-elevated"
               >
                 <summary className="flex cursor-pointer list-none items-center justify-between text-base font-semibold text-foreground focus-visible:outline focus-visible:outline-2 focus-visible:outline-brand-accent rounded p-1">

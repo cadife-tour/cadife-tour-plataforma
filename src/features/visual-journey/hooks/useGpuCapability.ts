@@ -1,6 +1,5 @@
-"use client";
-
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
+import { trackEvent } from "@/core/analytics";
 
 export interface GpuCapability {
   canRender3D: boolean;
@@ -20,6 +19,7 @@ export interface GpuCapability {
  * 4. Ajuste seguro de DPR (Device Pixel Ratio)
  */
 export function useGpuCapability(): GpuCapability {
+  const hasEmittedStatus = useRef(false);
   const [capability, setCapability] = useState<GpuCapability>({
     canRender3D: false,
     isReducedMotion: false,
@@ -68,6 +68,26 @@ export function useGpuCapability(): GpuCapability {
       hasWebGL,
       effectiveDpr,
     });
+
+    // 6. Emissão única do evento técnico webgl_status
+    if (!hasEmittedStatus.current) {
+      hasEmittedStatus.current = true;
+      let status: "active" | "fallback_reduced_motion" | "fallback_save_data" | "fallback_no_webgl" = "active";
+
+      if (isReducedMotion) {
+        status = "fallback_reduced_motion";
+      } else if (isSaveData) {
+        status = "fallback_save_data";
+      } else if (!hasWebGL) {
+        status = "fallback_no_webgl";
+      }
+
+      trackEvent("webgl_status", {
+        status,
+        dpr: effectiveDpr,
+        is_mobile: isMobile,
+      });
+    }
   }, []);
 
   return capability;

@@ -56,11 +56,9 @@ export const HeroSection: React.FC = () => {
   });
 
   const handleCtaClick = () => {
-    trackEvent({
-      event: "whatsapp_conversion",
-      cta_location: "hero",
+    trackEvent("whatsapp_conversion", {
+      cta_location: "hero_primary",
       locale,
-      label: "Hero Primary CTA",
     });
   };
 

@@ -42,9 +42,7 @@ export const AboutAndTrustSection: React.FC = () => {
   const t = labels[locale] || labels.pt;
 
   const handleReviewLinkClick = () => {
-    trackEvent({
-      event: "external_link_click",
-      label: "Google Reviews Link",
+    trackEvent("google_reviews_clicked", {
       locale,
     });
   };
