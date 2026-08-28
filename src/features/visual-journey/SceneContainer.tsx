@@ -30,13 +30,13 @@ class WebGlErrorBoundary extends Component<
     return { hasError: true };
   }
 
-  componentDidCatch(error: Error) {
+  override componentDidCatch(error: Error) {
     if (process.env.NODE_ENV === "development") {
       console.warn("[WebGL Fallback Triggered]", error);
     }
   }
 
-  render() {
+  override render() {
     if (this.state.hasError) {
       return this.props.fallback;
     }
