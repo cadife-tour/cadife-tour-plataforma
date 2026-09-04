@@ -12,6 +12,6 @@ export const ASSET_MANIFEST = {
     patagonia: "/assets/destinations/patagonia.webp",
   },
   videos: {
-    heroJourney: "/assets/hero/airplane-journey.mp4",
+    heroJourney: "/assets/hero/airplane-journey-scrub.mp4",
   },
 } as const;

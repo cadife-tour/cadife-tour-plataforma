@@ -24,8 +24,7 @@ export const TravelExperience: React.FC = () => {
   const { isReducedMotion } = useGpuCapability();
 
   useEffect(() => {
-    const timer = setTimeout(() => setIsLoaded(true), 400);
-    return () => clearTimeout(timer);
+    setIsLoaded(true);
   }, []);
 
   useEffect(() => {
@@ -49,7 +48,7 @@ export const TravelExperience: React.FC = () => {
           trigger: containerRef.current,
           start: "top top",
           end: "bottom bottom",
-          scrub: 0.8,
+          scrub: 0.12,
           onUpdate: (self) => {
             setProgress(self.progress);
           },
