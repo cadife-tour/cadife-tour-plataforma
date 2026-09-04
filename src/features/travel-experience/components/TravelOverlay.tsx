@@ -164,11 +164,11 @@ export const TravelOverlay: React.FC<TravelOverlayProps> = ({ progress }) => {
               <span>{t.airplane.badge}</span>
             </div>
 
-            <h1 className="text-4xl font-extrabold tracking-tight text-foreground sm:text-5xl lg:text-6xl leading-[1.1] drop-shadow-md">
+            <h1 className="text-4xl font-extrabold tracking-tight text-white sm:text-5xl lg:text-6xl leading-[1.1] [text-shadow:_0_2px_12px_rgba(0,0,0,0.8)]">
               {t.airplane.title}
             </h1>
 
-            <p className="text-lg text-foreground-muted sm:text-xl leading-relaxed max-w-2xl drop-shadow">
+            <p className="text-lg text-white/90 sm:text-xl leading-relaxed max-w-2xl [text-shadow:_0_2px_8px_rgba(0,0,0,0.8)]">
               {t.airplane.subtitle}
             </p>
 

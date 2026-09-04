@@ -127,9 +127,9 @@ export const TravelExperience: React.FC = () => {
           className="h-full w-full object-cover object-center will-change-transform"
         />
 
-        {/* Gradientes cinematográficos de contraste para os textos */}
-        <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-background via-background/20 to-background/50" />
-        <div className="pointer-events-none absolute inset-0 bg-gradient-to-r from-background/70 via-transparent to-background/30" />
+        {/* Gradientes cinematográficos de contraste para os textos e cabeçalho */}
+        <div className="pointer-events-none absolute inset-0 bg-gradient-to-b from-black/80 via-transparent to-black/70" />
+        <div className="pointer-events-none absolute inset-0 bg-gradient-to-r from-[#141312]/80 via-transparent to-[#141312]/40" />
 
         {/* Overlay com Tipografia, Semântica e CTAs HTML/React */}
         <TravelOverlay progress={progress} />

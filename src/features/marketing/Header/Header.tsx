@@ -71,7 +71,7 @@ export const Header: React.FC = () => {
 
   return (
     <header
-      className={`fixed top-0 left-0 right-0 z-50 w-full border-b border-border/80 bg-background/85 backdrop-blur-md transition-all duration-500 ease-in-out ${
+      className={`fixed top-0 left-0 right-0 z-50 w-full border-b border-white/10 bg-[#393532]/95 backdrop-blur-md shadow-md transition-all duration-500 ease-in-out ${
         isAtTop
           ? "translate-y-0 opacity-100 pointer-events-auto"
           : "-translate-y-full opacity-0 pointer-events-none"
@@ -83,7 +83,7 @@ export const Header: React.FC = () => {
           <div className="flex items-center gap-3">
             <a
               href="/"
-              className="flex items-center gap-2.5 focus-visible:outline focus-visible:outline-2 focus-visible:outline-brand-accent rounded group"
+              className="flex items-center gap-2.5 focus-visible:outline focus-visible:outline-2 focus-visible:outline-white rounded group"
               aria-label="CADIFE Tour — Início"
             >
               <img
@@ -93,11 +93,11 @@ export const Header: React.FC = () => {
                 height={36}
                 className="h-8 w-8 sm:h-9 sm:w-9 object-contain transition-transform duration-300 group-hover:scale-105"
               />
-              <span className="text-xl font-bold tracking-tight text-foreground sm:text-2xl">
-                CADIFE <span className="text-brand-primary font-medium">Tour</span>
+              <span className="text-xl font-bold tracking-tight text-white sm:text-2xl">
+                CADIFE <span className="text-brand-primary font-bold">Tour</span>
               </span>
             </a>
-            <span className="hidden text-xs text-foreground-subtle md:inline-block border-l border-border pl-3">
+            <span className="hidden text-xs text-white/70 font-normal md:inline-block border-l border-white/20 pl-3">
               {currentLabels.tagline}
             </span>
           </div>
@@ -106,25 +106,25 @@ export const Header: React.FC = () => {
           <nav className="hidden items-center gap-6 lg:flex" aria-label="Navegação Principal">
             <a
               href="#destinos"
-              className="text-sm font-medium text-foreground-muted transition-colors hover:text-foreground focus-visible:outline focus-visible:outline-2 focus-visible:outline-brand-accent rounded px-1"
+              className="text-sm font-medium text-white/85 transition-colors hover:text-white hover:underline underline-offset-4 focus-visible:outline focus-visible:outline-2 focus-visible:outline-white rounded px-1"
             >
               {currentLabels.destinations}
             </a>
             <a
               href="#como-funciona"
-              className="text-sm font-medium text-foreground-muted transition-colors hover:text-foreground focus-visible:outline focus-visible:outline-2 focus-visible:outline-brand-accent rounded px-1"
+              className="text-sm font-medium text-white/85 transition-colors hover:text-white hover:underline underline-offset-4 focus-visible:outline focus-visible:outline-2 focus-visible:outline-white rounded px-1"
             >
               {currentLabels.howItWorks}
             </a>
             <a
               href="#agencia"
-              className="text-sm font-medium text-foreground-muted transition-colors hover:text-foreground focus-visible:outline focus-visible:outline-2 focus-visible:outline-brand-accent rounded px-1"
+              className="text-sm font-medium text-white/85 transition-colors hover:text-white hover:underline underline-offset-4 focus-visible:outline focus-visible:outline-2 focus-visible:outline-white rounded px-1"
             >
               {currentLabels.about}
             </a>
             <a
               href="#faq"
-              className="text-sm font-medium text-foreground-muted transition-colors hover:text-foreground focus-visible:outline focus-visible:outline-2 focus-visible:outline-brand-accent rounded px-1"
+              className="text-sm font-medium text-white/85 transition-colors hover:text-white hover:underline underline-offset-4 focus-visible:outline focus-visible:outline-2 focus-visible:outline-white rounded px-1"
             >
               {currentLabels.faq}
             </a>
