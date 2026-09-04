@@ -1,6 +1,6 @@
 "use client";
 
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { Container } from "@/shared/ui/Container/Container";
 import { Button } from "@/shared/ui/Button/Button";
 import { LanguageSelector } from "@/shared/ui/LanguageSelector/LanguageSelector";
@@ -11,6 +11,21 @@ import { trackEvent } from "@/core/analytics";
 
 export const Header: React.FC = () => {
   const { locale } = useLocale();
+  const [isAtTop, setIsAtTop] = useState(true);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      // O header só fica visível se o usuário estiver no topo absoluto (scrollY < 15px)
+      setIsAtTop(window.scrollY < 15);
+    };
+
+    window.addEventListener("scroll", handleScroll, { passive: true });
+    handleScroll();
+
+    return () => {
+      window.removeEventListener("scroll", handleScroll);
+    };
+  }, []);
 
   const labels = {
     pt: {
@@ -55,7 +70,13 @@ export const Header: React.FC = () => {
   };
 
   return (
-    <header className="sticky top-0 z-40 w-full border-b border-border/80 bg-background/85 backdrop-blur-md">
+    <header
+      className={`fixed top-0 left-0 right-0 z-50 w-full border-b border-border/80 bg-background/85 backdrop-blur-md transition-all duration-500 ease-in-out ${
+        isAtTop
+          ? "translate-y-0 opacity-100 pointer-events-auto"
+          : "-translate-y-full opacity-0 pointer-events-none"
+      }`}
+    >
       <Container>
         <div className="flex h-16 items-center justify-between gap-4 sm:h-20">
           {/* Logo / Brand Name */}
