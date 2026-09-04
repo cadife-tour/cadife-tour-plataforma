@@ -1,52 +1,62 @@
-# Logs
-logs
-*.log
-npm-debug.log*
-yarn-debug.log*
-yarn-error.log*
-pnpm-debug.log*
-lerna-debug.log*
-
-# Diagnostic / Coverage
-.nyc_output
-coverage
-*.lcov
-
-# Dependency directories
+# ==============================================================================
+# 1. Dependências e Build de Produção do Next.js
+# ==============================================================================
 node_modules/
-.pnp
-.pnp.js
-
-# Next.js build output
 .next/
 out/
 build/
 dist/
+.turbo/
+*.tsbuildinfo
+next-env.d.ts
 
-# Environment files
+# ==============================================================================
+# 2. Logs, Cobertura e Diagnósticos
+# ==============================================================================
+logs/
+*.log
+npm-debug.log*
+yarn-debug.log*
+pnpm-debug.log*
+.nyc_output/
+coverage/
+
+# ==============================================================================
+# 3. Variáveis de Ambiente e Segredos
+# ==============================================================================
 .env*.local
 .env
 !.env.example
 
-# IDEs and Editors
-.vscode/*
-!.vscode/extensions.json
-!.vscode/settings.json
+# ==============================================================================
+# 4. Configurações de IDE e SO
+# ==============================================================================
+.vscode/
 .idea/
-*.suo
-*.ntvs*
-*.njsproj
-*.sln
-*.sw?
-
-# Operating System Files
 .DS_Store
 Thumbs.db
+*.sw?
 
-# Turbopack cache
-.turbo
-
-# Temporary / Agent generated working data
+# ==============================================================================
+# 5. Arquivos de Desenvolvimento de Agentes / IA / Prompts
+# ==============================================================================
+.agents/
+.claude/
 agent/
 prompt.md
 references.md
+skills-lock.json
+
+# ==============================================================================
+# 6. Materiais de Estudo, Documentação Interna e Backup Legado
+# ==============================================================================
+base/
+docs/
+ARCHITECTURE.md
+CONTRIBUTING.md
+
+# ==============================================================================
+# 7. Arquivos Pesados / Não Usados da Mídia do Hero
+# (Mantém apenas o airplane-journey-scrub.mp4 usado na página inicial)
+# ==============================================================================
+public/assets/hero/airplane-journey.mp4
