@@ -38,6 +38,16 @@ export const metadata: Metadata = {
       "Planejamento completo, roteiros personalizados e suporte humanizado do embarque ao retorno.",
     images: ["/assets/brand/logo.webp"],
   },
+  icons: {
+    icon: [
+      { url: "/favicon.ico", sizes: "32x32" },
+      { url: "/assets/brand/cadife-icon-192.png", sizes: "192x192", type: "image/png" },
+      { url: "/assets/brand/cadife-icon-full.png", sizes: "512x512", type: "image/png" },
+    ],
+    apple: [
+      { url: "/assets/brand/cadife-icon-192.png", sizes: "180x180", type: "image/png" },
+    ],
+  },
   robots: {
     index: true,
     follow: true,

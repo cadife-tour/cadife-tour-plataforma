@@ -26,6 +26,7 @@ const config: Config = {
           primary: "var(--color-brand-primary)",
           secondary: "var(--color-brand-secondary)",
           accent: "var(--color-brand-accent)",
+          dark: "var(--color-brand-dark)",
           gold: "var(--color-brand-gold)",
         },
         border: "var(--color-border)",

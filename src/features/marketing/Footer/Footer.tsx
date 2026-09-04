@@ -70,9 +70,18 @@ export const Footer: React.FC = () => {
         <div className="grid gap-10 sm:grid-cols-2 lg:grid-cols-4">
           {/* 1. Brand & Info */}
           <div className="space-y-4">
-            <span className="text-xl font-bold tracking-tight text-foreground">
-              CADIFE <span className="text-brand-accent font-light">Tour</span>
-            </span>
+            <div className="flex items-center gap-2.5">
+              <img
+                src="/assets/brand/cadife-icon-192.png"
+                alt="CADIFE Tour"
+                width={32}
+                height={32}
+                className="h-8 w-8 object-contain"
+              />
+              <span className="text-xl font-bold tracking-tight text-foreground">
+                CADIFE <span className="text-brand-primary font-medium">Tour</span>
+              </span>
+            </div>
             <p className="text-xs text-foreground-subtle leading-relaxed">
               {t.tagline}
             </p>

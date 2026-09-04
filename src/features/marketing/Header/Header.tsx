@@ -83,11 +83,18 @@ export const Header: React.FC = () => {
           <div className="flex items-center gap-3">
             <a
               href="/"
-              className="flex items-center gap-2 focus-visible:outline focus-visible:outline-2 focus-visible:outline-brand-accent rounded"
+              className="flex items-center gap-2.5 focus-visible:outline focus-visible:outline-2 focus-visible:outline-brand-accent rounded group"
               aria-label="CADIFE Tour — Início"
             >
+              <img
+                src="/assets/brand/cadife-icon-192.png"
+                alt="CADIFE Tour"
+                width={36}
+                height={36}
+                className="h-8 w-8 sm:h-9 sm:w-9 object-contain transition-transform duration-300 group-hover:scale-105"
+              />
               <span className="text-xl font-bold tracking-tight text-foreground sm:text-2xl">
-                CADIFE <span className="text-brand-accent font-light">Tour</span>
+                CADIFE <span className="text-brand-primary font-medium">Tour</span>
               </span>
             </a>
             <span className="hidden text-xs text-foreground-subtle md:inline-block border-l border-border pl-3">

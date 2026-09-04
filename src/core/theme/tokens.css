@@ -9,30 +9,31 @@
   /* ==========================================================================
      1. Color Palette (Semantic Tokens)
      ========================================================================== */
-  /* Base & Surfaces */
-  --color-bg: #090e17;                 /* Deep space/night sky background */
-  --color-surface: #111927;            /* Base card/section surface */
-  --color-surface-elevated: #1a2538;   /* Hover, popovers, elevated components */
-  --color-surface-muted: #162032;      /* Secondary/subtle background */
+  /* Base & Surfaces (Warm dark graphite based on Cadife #393532) */
+  --color-bg: #141312;                 /* Fundo ultra-escuro grafite quente */
+  --color-surface: #1e1b1a;            /* Superfície de cards */
+  --color-surface-elevated: #2c2826;   /* Superfície elevada / hover */
+  --color-surface-muted: #242120;      /* Superfície secundária */
 
   /* Typography Colors */
-  --color-text: #f8fafc;               /* Slate 50 (High contrast) */
-  --color-text-muted: #94a3b8;         /* Slate 400 */
-  --color-text-subtle: #64748b;        /* Slate 500 */
+  --color-text: #fdfdfd;               /* Branco puro (#FFFFFF) de alto contraste */
+  --color-text-muted: #a39e9b;         /* Cinza suave para legibilidade */
+  --color-text-subtle: #7a7571;        /* Cinza neutro (#7A7A7A do site original) */
 
-  /* Brand Accents (CADIFE Identity) */
-  --color-brand-primary: #0284c7;      /* Sky 600 (Aéreo / Horizonte) */
-  --color-brand-secondary: #0369a1;    /* Sky 700 */
-  --color-brand-accent: #38bdf8;       /* Sky 400 (Luz / Highlights) */
-  --color-brand-gold: #eab308;         /* Yellow 500 (Dourado de viagem / Sol / Qualidade) */
+  /* Brand Accents (CADIFE Tour Original Identity) */
+  --color-brand-primary: #dd0b0e;      /* Vermelho vibrante oficial Cadife */
+  --color-brand-secondary: #b8090b;    /* Vermelho mais escuro para hover */
+  --color-brand-accent: #f0282b;       /* Vermelho luminoso para highlights */
+  --color-brand-dark: #393532;         /* Grafite clássico da marca Cadife */
+  --color-brand-gold: #eab308;         /* Dourado quente de viagem / sol */
 
   /* Functional / Borders / States */
-  --color-border: rgba(255, 255, 255, 0.1);
-  --color-border-hover: rgba(255, 255, 255, 0.2);
-  --color-focus: #38bdf8;
+  --color-border: rgba(255, 255, 255, 0.12);
+  --color-border-hover: rgba(255, 255, 255, 0.25);
+  --color-focus: #dd0b0e;
   --color-success: #10b981;
   --color-warning: #f59e0b;
-  --color-error: #ef4444;
+  --color-error: #dd0b0e;
 
   /* ==========================================================================
      2. Typography Tokens (Font families marked for Design Discovery phase)
