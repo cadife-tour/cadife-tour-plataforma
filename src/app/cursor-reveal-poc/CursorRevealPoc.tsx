@@ -9,15 +9,14 @@ const simulationVertexShader = /* glsl */ `
   void main() { vUv = uv; gl_Position = vec4(position, 1.0); }
 `;
 
-// This pass owns the persistent reveal texture. It reads the previous target,
-// dissipates and gently diffuses it, then deposits one directional, irregular splat.
+// The two ping-pong targets carry a velocity field (RG) and reveal density (B).
+// Each frame advects that state, dissipates it, then injects cursor force locally.
 const simulationFragmentShader = /* glsl */ `
   uniform sampler2D uPrevious;
   uniform vec2 uResolution;
-  uniform vec2 uFrom;
-  uniform vec2 uTo;
-  uniform vec2 uVelocity;
-  uniform float uStrength;
+  uniform vec2 uCursor;
+  uniform vec2 uForce;
+  uniform float uIsMoving;
   uniform float uDelta;
   varying vec2 vUv;
 
@@ -30,33 +29,22 @@ const simulationFragmentShader = /* glsl */ `
 
   void main() {
     vec2 px = 1.0 / uResolution;
-    float previous = texture2D(uPrevious, vUv).r;
-    float neighborhood = (
-      texture2D(uPrevious, vUv + vec2(px.x, 0.0)).r +
-      texture2D(uPrevious, vUv - vec2(px.x, 0.0)).r +
-      texture2D(uPrevious, vUv + vec2(0.0, px.y)).r +
-      texture2D(uPrevious, vUv - vec2(0.0, px.y)).r
-    ) * 0.25;
-    float memory = mix(previous, neighborhood, 0.12) * exp(-0.75 * uDelta);
+    vec2 storedVelocity = texture2D(uPrevious, vUv).rg * 2.0 - 1.0;
+    vec2 sourceUv = clamp(vUv - storedVelocity * uDelta * 0.32, px, 1.0 - px);
+    vec4 transported = texture2D(uPrevious, sourceUv);
+    vec2 velocity = (transported.rg * 2.0 - 1.0) * exp(-2.3 * uDelta);
+    float density = transported.b * exp(-0.58 * uDelta);
 
-    vec2 segment = uTo - uFrom;
-    float segmentLength = max(length(segment), 0.0001);
-    vec2 direction = segment / segmentLength;
-    vec2 perpendicular = vec2(-direction.y, direction.x);
-    vec2 midpoint = (uFrom + uTo) * 0.5;
-    vec2 relative = vUv - midpoint;
-    float along = dot(relative, direction);
-    float across = dot(relative, perpendicular);
-    float speed = clamp(length(uVelocity) * 24.0, 0.0, 1.0);
-    float halfLength = segmentLength * 0.5 + mix(0.022, 0.105, speed);
-    float radius = mix(0.050, 0.082, speed);
-    float edgeNoise = (noise(vUv * 46.0 + uTo * 19.0) - 0.5) * radius * 0.35;
-    float capsule = max(abs(along) - halfLength, 0.0);
-    float distanceToRibbon = length(vec2(capsule, across * mix(1.0, 0.62, speed))) + edgeNoise;
-    float splat = 1.0 - smoothstep(radius * 0.35, radius, distanceToRibbon);
-    splat *= 0.82 + 0.18 * noise(vUv * 90.0 + vec2(uVelocity.y, -uVelocity.x) * 100.0);
+    vec2 relative = vUv - uCursor;
+    relative.x *= uResolution.x / uResolution.y;
+    float radius = 0.125 + clamp(length(uForce) * 0.020, 0.0, 0.035);
+    float edge = length(relative) + (noise(vUv * 38.0 + uCursor * 27.0) - 0.5) * 0.018;
+    float influence = 1.0 - smoothstep(radius * 0.35, radius, edge);
+    float wake = 0.65 + 0.35 * noise(vUv * 72.0 + uForce * 9.0);
+    velocity += uForce * influence * uIsMoving;
+    density = max(density, influence * wake * uIsMoving);
 
-    gl_FragColor = vec4(max(memory, splat * uStrength), 0.0, 0.0, 1.0);
+    gl_FragColor = vec4(velocity * 0.5 + 0.5, density, 1.0);
   }
 `;
 
@@ -66,10 +54,11 @@ const compositionFragmentShader = /* glsl */ `
   uniform sampler2D uRevealTexture;
   varying vec2 vUv;
   void main() {
-    float trail = texture2D(uRevealTexture, vUv).r;
-    float reveal = smoothstep(0.14, 0.60, trail);
+    vec4 simulation = texture2D(uRevealTexture, vUv);
+    vec2 flow = simulation.rg * 2.0 - 1.0;
+    float reveal = smoothstep(0.10, 0.52, simulation.b);
     vec3 base = texture2D(uImageA, vUv).rgb;
-    vec3 revealed = texture2D(uImageB, vUv).rgb;
+    vec3 revealed = texture2D(uImageB, clamp(vUv - flow * (0.014 + reveal * 0.018), 0.001, 0.999)).rgb;
     gl_FragColor = vec4(mix(base, revealed, reveal), 1.0);
   }
 `;
@@ -101,8 +90,11 @@ export default function CursorRevealPoc() {
     const targetB = createTarget();
     let readTarget = targetA;
     let writeTarget = targetB;
-    renderer.setRenderTarget(readTarget);
-    renderer.setClearColor(0x000000, 1);
+    // Neutral RG encodes zero flow; B starts with no reveal.
+    renderer.setClearColor(new THREE.Color(0.5, 0.5, 0), 1);
+    renderer.setRenderTarget(targetA);
+    renderer.clear();
+    renderer.setRenderTarget(targetB);
     renderer.clear();
     renderer.setRenderTarget(null);
 
@@ -114,15 +106,13 @@ export default function CursorRevealPoc() {
     };
     const easedCursor = new THREE.Vector2(-1, -1);
     const lastEasedCursor = new THREE.Vector2(-1, -1);
-    let lastPointerAt = 0;
 
     const simulationUniforms = {
       uPrevious: { value: readTarget.texture },
       uResolution: { value: new THREE.Vector2(640, 360) },
-      uFrom: { value: lastEasedCursor },
-      uTo: { value: easedCursor },
-      uVelocity: { value: cursor.velocity },
-      uStrength: { value: 0 },
+      uCursor: { value: easedCursor },
+      uForce: { value: cursor.velocity },
+      uIsMoving: { value: 0 },
       uDelta: { value: 1 / 60 },
     };
     const simulationMaterial = new THREE.ShaderMaterial({
@@ -157,9 +147,12 @@ export default function CursorRevealPoc() {
     const onPointerMove = (event: PointerEvent) => {
       cursor.previous.copy(cursor.current);
       cursor.current.set(event.clientX / window.innerWidth, 1 - event.clientY / window.innerHeight);
-      if (!cursor.active) cursor.previous.copy(cursor.current);
+      if (!cursor.active) {
+        cursor.previous.copy(cursor.current);
+        easedCursor.copy(cursor.current);
+        lastEasedCursor.copy(cursor.current);
+      }
       cursor.active = true;
-      lastPointerAt = performance.now();
     };
     window.addEventListener("resize", resize);
     window.addEventListener("pointermove", onPointerMove, { passive: true });
@@ -169,16 +162,18 @@ export default function CursorRevealPoc() {
     let frame = 0;
     const render = () => {
       const delta = Math.min(clock.getDelta(), 0.05);
-      const isMoving = cursor.active && performance.now() - lastPointerAt < 80;
+      const remainingDistance = easedCursor.distanceTo(cursor.current);
+      const isMoving = cursor.active && remainingDistance > 0.0005;
       if (isMoving) {
-        cursor.velocity.copy(cursor.current).sub(cursor.previous).multiplyScalar(1 / Math.max(delta, 0.001));
-        easedCursor.lerp(cursor.current, 1.0 - Math.exp(-18 * delta));
+        easedCursor.lerp(cursor.current, 1.0 - Math.exp(-7 * delta));
+        cursor.velocity.copy(easedCursor).sub(lastEasedCursor).multiplyScalar(1 / Math.max(delta, 0.001));
+      } else {
+        cursor.velocity.multiplyScalar(0.75);
       }
       simulationUniforms.uPrevious.value = readTarget.texture;
-      simulationUniforms.uFrom.value.copy(lastEasedCursor);
-      simulationUniforms.uTo.value.copy(easedCursor);
-      simulationUniforms.uVelocity.value.copy(cursor.velocity);
-      simulationUniforms.uStrength.value = isMoving ? 1 : 0;
+      simulationUniforms.uCursor.value.copy(easedCursor);
+      simulationUniforms.uForce.value.copy(cursor.velocity).multiplyScalar(0.0025).clampLength(0, 0.085);
+      simulationUniforms.uIsMoving.value = isMoving ? 1 : 0;
       simulationUniforms.uDelta.value = delta;
       renderer.setRenderTarget(writeTarget);
       renderer.render(simulationScene, camera);
@@ -187,8 +182,6 @@ export default function CursorRevealPoc() {
       compositionUniforms.uRevealTexture.value = readTarget.texture;
       renderer.render(compositionScene, camera);
       lastEasedCursor.copy(easedCursor);
-      cursor.previous.copy(cursor.current);
-      cursor.velocity.multiplyScalar(0.86);
       frame = requestAnimationFrame(render);
     };
     render();
