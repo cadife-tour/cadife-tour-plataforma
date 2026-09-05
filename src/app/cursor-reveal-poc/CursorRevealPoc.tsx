@@ -58,8 +58,9 @@ const compositionFragmentShader = /* glsl */ `
     vec2 flow = simulation.rg * 2.0 - 1.0;
     float reveal = smoothstep(0.10, 0.52, simulation.b);
     vec3 base = texture2D(uImageA, vUv).rgb;
-    vec3 revealed = texture2D(uImageB, clamp(vUv - flow * (0.014 + reveal * 0.018), 0.001, 0.999)).rgb;
+    vec3 revealed = texture2D(uImageB, clamp(vUv - flow * (0.050 + reveal * 0.075), 0.001, 0.999)).rgb;
     gl_FragColor = vec4(mix(base, revealed, reveal), 1.0);
+    #include <colorspace_fragment>
   }
 `;
 
@@ -123,8 +124,9 @@ export default function CursorRevealPoc() {
     simulationScene.add(new THREE.Mesh(new THREE.PlaneGeometry(2, 2), simulationMaterial));
 
     const loader = new THREE.TextureLoader();
-    const imageA = loader.load("/demo-ln4/office.png");
-    const imageB = loader.load("/demo-ln4/paradise.png");
+    // The unedited source images keep the POC's colour comparison trustworthy.
+    const imageA = loader.load("/demo-ln4/office-original.png");
+    const imageB = loader.load("/demo-ln4/paradise-original.png");
     imageA.colorSpace = THREE.SRGBColorSpace;
     imageB.colorSpace = THREE.SRGBColorSpace;
     const compositionUniforms = { uImageA: { value: imageA }, uImageB: { value: imageB }, uRevealTexture: { value: readTarget.texture } };
