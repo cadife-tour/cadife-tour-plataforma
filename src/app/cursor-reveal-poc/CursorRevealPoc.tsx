@@ -25,7 +25,7 @@ const advectionFragmentShader = /* glsl */ `
     vec2 compensatedPosition = originalPosition - error * 0.5;
     vec2 compensatedVelocity = texture2D(uVelocity, compensatedPosition).xy;
     vec2 sourceUv = clamp(compensatedPosition - compensatedVelocity * uDelta * aspect, 0.001, 0.999);
-    gl_FragColor = vec4(clamp(texture2D(uVelocity, sourceUv).xy * 0.96, -1.5, 1.5), 0.0, 1.0);
+    gl_FragColor = vec4(texture2D(uVelocity, sourceUv).xy * 0.96, 0.0, 1.0);
   }
 `;
 
@@ -42,7 +42,6 @@ const forceFragmentShader = /* glsl */ `
     float radius = 0.082 * (uResolution.x / uResolution.y);
     float influence = max(1.0 - length(relative) / radius, 0.0);
     velocity += uForce * influence * influence;
-    velocity = clamp(velocity, -1.5, 1.5);
     gl_FragColor = vec4(velocity, 0.0, 1.0);
   }
 `;
@@ -81,7 +80,6 @@ const projectionFragmentShader = /* glsl */ `
     float down = texture2D(uPressure, vUv - vec2(0.0, px.y)).x;
     float up = texture2D(uPressure, vUv + vec2(0.0, px.y)).x;
     vec2 velocity = texture2D(uVelocity, vUv).xy - vec2(right - left, up - down) * 0.007;
-    velocity = clamp(velocity, -1.5, 1.5);
     gl_FragColor = vec4(velocity, 0.0, 1.0);
   }
 `;
@@ -93,11 +91,10 @@ const compositionFragmentShader = /* glsl */ `
   varying vec2 vUv;
   void main() {
     vec2 flow = texture2D(uRevealTexture, vUv).rg;
-    float speed = min(length(flow), 1.0);
+    float speed = length(flow);
     vec2 encodedDirection = flow * 0.5 + 0.5;
     vec3 cursorTexture = mix(vec3(1.0), vec3(encodedDirection, 1.0), speed);
-    float directionalSignal = 1.0 - cursorTexture.r;
-    float reveal = smoothstep(0.08, 0.30, directionalSignal) * smoothstep(0.025, 0.18, speed);
+    float reveal = step(0.10, 1.0 - cursorTexture.r);
     vec3 base = texture2D(uImageA, vUv).rgb;
     vec3 revealed = texture2D(uImageB, vUv).rgb;
     gl_FragColor = vec4(mix(base, revealed, reveal), 1.0);
