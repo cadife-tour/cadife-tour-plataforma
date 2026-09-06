@@ -16,9 +16,16 @@ const advectionFragmentShader = /* glsl */ `
   varying vec2 vUv;
   void main() {
     vec2 aspect = vec2(max(uResolution.x, uResolution.y)) / uResolution;
-    vec2 velocity = texture2D(uVelocity, vUv).xy;
-    vec2 sourceUv = clamp(vUv - velocity * uDelta * aspect, 0.001, 0.999);
-    gl_FragColor = vec4(texture2D(uVelocity, sourceUv).xy * exp(-1.55 * uDelta), 0.0, 1.0);
+    vec2 originalPosition = vUv;
+    vec2 originalVelocity = texture2D(uVelocity, originalPosition).xy;
+    vec2 tracedPosition = originalPosition - originalVelocity * uDelta * aspect;
+    vec2 tracedVelocity = texture2D(uVelocity, tracedPosition).xy;
+    vec2 correctedPosition = tracedPosition + tracedVelocity * uDelta * aspect;
+    vec2 error = correctedPosition - originalPosition;
+    vec2 compensatedPosition = originalPosition - error * 0.5;
+    vec2 compensatedVelocity = texture2D(uVelocity, compensatedPosition).xy;
+    vec2 sourceUv = clamp(compensatedPosition - compensatedVelocity * uDelta * aspect, 0.001, 0.999);
+    gl_FragColor = vec4(texture2D(uVelocity, sourceUv).xy * 0.96, 0.0, 1.0);
   }
 `;
 
@@ -27,17 +34,14 @@ const forceFragmentShader = /* glsl */ `
   uniform vec2 uResolution;
   uniform vec2 uCursor;
   uniform vec2 uForce;
-  uniform float uIsMoving;
   varying vec2 vUv;
-  float hash(vec2 p) { return fract(sin(dot(p, vec2(127.1, 311.7))) * 43758.5453123); }
   void main() {
     vec2 velocity = texture2D(uVelocity, vUv).xy;
     vec2 relative = vUv - uCursor;
     relative.x *= uResolution.x / uResolution.y;
-    float radius = 0.105 + clamp(length(uForce) * 0.20, 0.0, 0.035);
-    float irregularity = (hash(floor(vUv * 80.0)) - 0.5) * 0.012;
-    float influence = 1.0 - smoothstep(radius * 0.28, radius, length(relative) + irregularity);
-    velocity += uForce * influence * uIsMoving;
+    float radius = 0.082 * (uResolution.x / uResolution.y);
+    float influence = max(1.0 - length(relative) / radius, 0.0);
+    velocity += uForce * influence * influence;
     gl_FragColor = vec4(velocity, 0.0, 1.0);
   }
 `;
@@ -50,7 +54,7 @@ const divergenceFragmentShader = /* glsl */ `
     float right = texture2D(uVelocity, vUv + vec2(px.x, 0.0)).x;
     float down = texture2D(uVelocity, vUv - vec2(0.0, px.y)).y;
     float up = texture2D(uVelocity, vUv + vec2(0.0, px.y)).y;
-    gl_FragColor = vec4((right - left + up - down) * 0.5, 0.0, 0.0, 1.0);
+    gl_FragColor = vec4((right - left + up - down) / (2.0 * 0.014), 0.0, 0.0, 1.0);
   }
 `;
 
@@ -63,7 +67,7 @@ const pressureFragmentShader = /* glsl */ `
     float down = texture2D(uPressure, vUv - vec2(0.0, px.y)).x;
     float up = texture2D(uPressure, vUv + vec2(0.0, px.y)).x;
     float divergence = texture2D(uDivergence, vUv).x;
-    gl_FragColor = vec4((left + right + down + up - divergence) * 0.25, 0.0, 0.0, 1.0);
+    gl_FragColor = vec4((left + right + down + up) / 5.0 - divergence, 0.0, 0.0, 1.0);
   }
 `;
 
@@ -75,7 +79,7 @@ const projectionFragmentShader = /* glsl */ `
     float right = texture2D(uPressure, vUv + vec2(px.x, 0.0)).x;
     float down = texture2D(uPressure, vUv - vec2(0.0, px.y)).x;
     float up = texture2D(uPressure, vUv + vec2(0.0, px.y)).x;
-    vec2 velocity = texture2D(uVelocity, vUv).xy - vec2(right - left, up - down) * 0.5;
+    vec2 velocity = texture2D(uVelocity, vUv).xy - vec2(right - left, up - down) * 0.007;
     gl_FragColor = vec4(velocity, 0.0, 1.0);
   }
 `;
@@ -86,13 +90,13 @@ const compositionFragmentShader = /* glsl */ `
   uniform sampler2D uRevealTexture;
   varying vec2 vUv;
   void main() {
-    vec4 simulation = texture2D(uRevealTexture, vUv);
-    vec2 flow = simulation.rg;
-    float flowStrength = length(flow);
-    float turbulentEdge = sin(vUv.x * 55.0 + flow.y * 140.0) * min(flowStrength, 0.008);
-    float reveal = smoothstep(0.002, 0.015, flowStrength + turbulentEdge);
+    vec2 flow = texture2D(uRevealTexture, vUv).rg;
+    float speed = length(flow);
+    vec2 encodedDirection = flow * 0.5 + 0.5;
+    vec3 cursorTexture = mix(vec3(1.0), vec3(encodedDirection, 1.0), speed);
+    float reveal = step(0.10, 1.0 - cursorTexture.r);
     vec3 base = texture2D(uImageA, vUv).rgb;
-    vec3 revealed = texture2D(uImageB, clamp(vUv - flow * 0.12, 0.001, 0.999)).rgb;
+    vec3 revealed = texture2D(uImageB, vUv).rgb;
     gl_FragColor = vec4(mix(base, revealed, reveal), 1.0);
     #include <colorspace_fragment>
   }
@@ -101,7 +105,6 @@ const compositionFragmentShader = /* glsl */ `
 type CursorState = {
   current: THREE.Vector2;
   previous: THREE.Vector2;
-  velocity: THREE.Vector2;
   active: boolean;
 };
 
@@ -150,11 +153,8 @@ export default function CursorRevealPoc() {
     const cursor: CursorState = {
       current: new THREE.Vector2(-1, -1),
       previous: new THREE.Vector2(-1, -1),
-      velocity: new THREE.Vector2(),
       active: false,
     };
-    const easedCursor = new THREE.Vector2(-1, -1);
-    const lastEasedCursor = new THREE.Vector2(-1, -1);
 
     const advectionUniforms = {
       uVelocity: { value: velocityRead.texture },
@@ -164,9 +164,8 @@ export default function CursorRevealPoc() {
     const forceUniforms = {
       uVelocity: { value: velocityRead.texture },
       uResolution: advectionUniforms.uResolution,
-      uCursor: { value: easedCursor },
-      uForce: { value: cursor.velocity },
-      uIsMoving: { value: 0 },
+      uCursor: { value: cursor.current },
+      uForce: { value: new THREE.Vector2() },
     };
     const divergenceUniforms = {
       uVelocity: { value: velocityRead.texture },
@@ -232,20 +231,17 @@ export default function CursorRevealPoc() {
       const width = window.innerWidth;
       const height = window.innerHeight;
       renderer.setSize(width, height, false);
-      const simulationHeight = 420;
-      const simulationWidth = Math.max(1, Math.round(simulationHeight * (width / height)));
+      const simulationWidth = Math.max(1, Math.round(width * 0.1));
+      const simulationHeight = Math.max(1, Math.round(height * 0.1));
       [targetA, targetB, divergenceTarget, pressureA, pressureB].forEach((target) =>
         target.setSize(simulationWidth, simulationHeight)
       );
       advectionUniforms.uResolution.value.set(simulationWidth, simulationHeight);
     };
     const onPointerMove = (event: PointerEvent) => {
-      cursor.previous.copy(cursor.current);
       cursor.current.set(event.clientX / window.innerWidth, 1 - event.clientY / window.innerHeight);
       if (!cursor.active) {
         cursor.previous.copy(cursor.current);
-        easedCursor.copy(cursor.current);
-        lastEasedCursor.copy(cursor.current);
       }
       cursor.active = true;
     };
@@ -255,59 +251,50 @@ export default function CursorRevealPoc() {
 
     const clock = new THREE.Clock();
     let frame = 0;
+    let elapsed = 0;
     const render = () => {
-      const delta = Math.min(clock.getDelta(), 0.05);
-      const remainingDistance = easedCursor.distanceTo(cursor.current);
-      const isMoving = cursor.active && remainingDistance > 0.0005;
-      if (isMoving) {
-        easedCursor.lerp(cursor.current, 1.0 - Math.exp(-7 * delta));
-        cursor.velocity
-          .copy(easedCursor)
-          .sub(lastEasedCursor)
-          .multiplyScalar(1 / Math.max(delta, 0.001));
-      } else {
-        cursor.velocity.multiplyScalar(0.75);
-      }
-      advectionUniforms.uVelocity.value = velocityRead.texture;
-      advectionUniforms.uDelta.value = delta;
-      simulationQuad.material = advectionMaterial;
-      renderer.setRenderTarget(velocityWrite);
-      renderer.render(simulationScene, camera);
-      [velocityRead, velocityWrite] = [velocityWrite, velocityRead];
-
-      forceUniforms.uVelocity.value = velocityRead.texture;
-      forceUniforms.uCursor.value.copy(easedCursor);
-      forceUniforms.uForce.value.copy(cursor.velocity).multiplyScalar(0.0045).clampLength(0, 0.13);
-      forceUniforms.uIsMoving.value = isMoving ? 1 : 0;
-      simulationQuad.material = forceMaterial;
-      renderer.setRenderTarget(velocityWrite);
-      renderer.render(simulationScene, camera);
-      [velocityRead, velocityWrite] = [velocityWrite, velocityRead];
-
-      divergenceUniforms.uVelocity.value = velocityRead.texture;
-      simulationQuad.material = divergenceMaterial;
-      renderer.setRenderTarget(divergenceTarget);
-      renderer.render(simulationScene, camera);
-
-      simulationQuad.material = pressureMaterial;
-      for (let iteration = 0; iteration < 12; iteration += 1) {
-        pressureUniforms.uPressure.value = pressureRead.texture;
-        renderer.setRenderTarget(pressureWrite);
+      elapsed += Math.min(clock.getDelta(), 0.05);
+      while (elapsed >= 1 / 60) {
+        advectionUniforms.uVelocity.value = velocityRead.texture;
+        advectionUniforms.uDelta.value = 0.014;
+        simulationQuad.material = advectionMaterial;
+        renderer.setRenderTarget(velocityWrite);
         renderer.render(simulationScene, camera);
-        [pressureRead, pressureWrite] = [pressureWrite, pressureRead];
-      }
+        [velocityRead, velocityWrite] = [velocityWrite, velocityRead];
 
-      projectionUniforms.uVelocity.value = velocityRead.texture;
-      projectionUniforms.uPressure.value = pressureRead.texture;
-      simulationQuad.material = projectionMaterial;
-      renderer.setRenderTarget(velocityWrite);
-      renderer.render(simulationScene, camera);
-      [velocityRead, velocityWrite] = [velocityWrite, velocityRead];
+        forceUniforms.uVelocity.value = velocityRead.texture;
+        forceUniforms.uForce.value.copy(cursor.current).sub(cursor.previous).multiplyScalar(50);
+        cursor.previous.copy(cursor.current);
+        simulationQuad.material = forceMaterial;
+        renderer.setRenderTarget(velocityWrite);
+        renderer.render(simulationScene, camera);
+        [velocityRead, velocityWrite] = [velocityWrite, velocityRead];
+
+        divergenceUniforms.uVelocity.value = velocityRead.texture;
+        simulationQuad.material = divergenceMaterial;
+        renderer.setRenderTarget(divergenceTarget);
+        renderer.render(simulationScene, camera);
+
+        simulationQuad.material = pressureMaterial;
+        for (let iteration = 0; iteration < 4; iteration += 1) {
+          pressureUniforms.uPressure.value = pressureRead.texture;
+          renderer.setRenderTarget(pressureWrite);
+          renderer.render(simulationScene, camera);
+          [pressureRead, pressureWrite] = [pressureWrite, pressureRead];
+        }
+
+        projectionUniforms.uVelocity.value = velocityRead.texture;
+        projectionUniforms.uPressure.value = pressureRead.texture;
+        simulationQuad.material = projectionMaterial;
+        renderer.setRenderTarget(velocityWrite);
+        renderer.render(simulationScene, camera);
+        [velocityRead, velocityWrite] = [velocityWrite, velocityRead];
+        elapsed %= 1 / 60;
+      }
 
       compositionUniforms.uRevealTexture.value = velocityRead.texture;
       renderer.setRenderTarget(null);
       renderer.render(compositionScene, camera);
-      lastEasedCursor.copy(easedCursor);
       frame = requestAnimationFrame(render);
     };
     render();
