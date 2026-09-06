@@ -146,12 +146,16 @@ export default function CursorRevealPoc() {
     let velocityWrite = targetB;
     let pressureRead = pressureA;
     let pressureWrite = pressureB;
-    renderer.setClearColor(0x000000, 1);
-    [targetA, targetB, divergenceTarget, pressureA, pressureB].forEach((target) => {
-      renderer.setRenderTarget(target);
-      renderer.clear();
-    });
-    renderer.setRenderTarget(null);
+    const simulationTargets = [targetA, targetB, divergenceTarget, pressureA, pressureB];
+    const clearSimulationTargets = () => {
+      renderer.setClearColor(0x000000, 1);
+      simulationTargets.forEach((target) => {
+        renderer.setRenderTarget(target);
+        renderer.clear();
+      });
+      renderer.setRenderTarget(null);
+    };
+    clearSimulationTargets();
 
     const cursor: CursorState = {
       current: new THREE.Vector2(-1, -1),
@@ -236,10 +240,9 @@ export default function CursorRevealPoc() {
       renderer.setSize(width, height, false);
       const simulationWidth = Math.max(1, Math.round(width * 0.1));
       const simulationHeight = Math.max(1, Math.round(height * 0.1));
-      [targetA, targetB, divergenceTarget, pressureA, pressureB].forEach((target) =>
-        target.setSize(simulationWidth, simulationHeight)
-      );
+      simulationTargets.forEach((target) => target.setSize(simulationWidth, simulationHeight));
       advectionUniforms.uResolution.value.set(simulationWidth, simulationHeight);
+      clearSimulationTargets();
     };
     const onPointerMove = (event: PointerEvent) => {
       cursor.current.set(event.clientX / window.innerWidth, 1 - event.clientY / window.innerHeight);
