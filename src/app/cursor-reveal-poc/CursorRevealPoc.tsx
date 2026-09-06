@@ -80,6 +80,8 @@ const projectionFragmentShader = /* glsl */ `
     float down = texture2D(uPressure, vUv - vec2(0.0, px.y)).x;
     float up = texture2D(uPressure, vUv + vec2(0.0, px.y)).x;
     vec2 velocity = texture2D(uVelocity, vUv).xy - vec2(right - left, up - down) * 0.007;
+    float speed = length(velocity);
+    velocity *= min(1.0, 1.2 / max(speed, 0.0001));
     gl_FragColor = vec4(velocity, 0.0, 1.0);
   }
 `;
