@@ -122,10 +122,16 @@ const compositionFragmentShader = /* glsl */ `
   uniform sampler2D uImageA;
   uniform sampler2D uImageB;
   uniform sampler2D uRevealTexture;
+  uniform sampler2D uVelocityTexture;
   varying vec2 vUv;
   void main() {
     float density = texture2D(uRevealTexture, vUv).r;
-    float reveal = smoothstep(0.08, 0.42, density);
+    vec2 flow = texture2D(uVelocityTexture, vUv).rg;
+    float speed = min(length(flow), 0.45);
+    vec2 encodedDirection = flow * 0.5 + 0.5;
+    float directionalReveal = step(0.10, 1.0 - mix(1.0, encodedDirection.x, speed));
+    float trailGate = smoothstep(0.025, 0.14, density);
+    float reveal = directionalReveal * trailGate;
     vec3 base = texture2D(uImageA, vUv).rgb;
     vec3 revealed = texture2D(uImageB, vUv).rgb;
     gl_FragColor = vec4(mix(base, revealed, reveal), 1.0);
@@ -288,6 +294,7 @@ export default function CursorRevealPoc() {
       uImageA: { value: imageA },
       uImageB: { value: imageB },
       uRevealTexture: { value: densityRead.texture },
+      uVelocityTexture: { value: velocityRead.texture },
     };
     const compositionMaterial = new THREE.ShaderMaterial({
       vertexShader: simulationVertexShader,
@@ -375,6 +382,7 @@ export default function CursorRevealPoc() {
       }
 
       compositionUniforms.uRevealTexture.value = densityRead.texture;
+      compositionUniforms.uVelocityTexture.value = velocityRead.texture;
       renderer.setRenderTarget(null);
       renderer.render(compositionScene, camera);
       frame = requestAnimationFrame(render);
