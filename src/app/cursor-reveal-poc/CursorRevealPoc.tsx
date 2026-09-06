@@ -9,16 +9,6 @@ const simulationVertexShader = /* glsl */ `
   void main() { vUv = uv; gl_Position = vec4(position, 1.0); }
 `;
 
-const fieldVertexShader = /* glsl */ `
-  uniform vec2 uBoundary;
-  varying vec2 vUv;
-  void main() {
-    vec2 positionInField = position.xy * (1.0 - 2.0 * uBoundary);
-    vUv = positionInField * 0.5 + 0.5;
-    gl_Position = vec4(positionInField, 0.0, 1.0);
-  }
-`;
-
 const advectionFragmentShader = /* glsl */ `
   uniform sampler2D uVelocity;
   uniform vec2 uResolution;
@@ -179,7 +169,6 @@ export default function CursorRevealPoc() {
       uVelocity: { value: velocityRead.texture },
       uResolution: { value: new THREE.Vector2(640, 360) },
       uDelta: { value: 1 / 60 },
-      uBoundary: { value: new THREE.Vector2() },
     };
     const forceUniforms = {
       uVelocity: { value: velocityRead.texture },
@@ -190,22 +179,19 @@ export default function CursorRevealPoc() {
     const divergenceUniforms = {
       uVelocity: { value: velocityRead.texture },
       uResolution: advectionUniforms.uResolution,
-      uBoundary: advectionUniforms.uBoundary,
     };
     const pressureUniforms = {
       uPressure: { value: pressureRead.texture },
       uDivergence: { value: divergenceTarget.texture },
       uResolution: advectionUniforms.uResolution,
-      uBoundary: advectionUniforms.uBoundary,
     };
     const projectionUniforms = {
       uVelocity: { value: velocityRead.texture },
       uPressure: { value: pressureRead.texture },
       uResolution: advectionUniforms.uResolution,
-      uBoundary: advectionUniforms.uBoundary,
     };
     const advectionMaterial = new THREE.ShaderMaterial({
-      vertexShader: fieldVertexShader,
+      vertexShader: simulationVertexShader,
       fragmentShader: advectionFragmentShader,
       uniforms: advectionUniforms,
     });
@@ -215,17 +201,17 @@ export default function CursorRevealPoc() {
       uniforms: forceUniforms,
     });
     const divergenceMaterial = new THREE.ShaderMaterial({
-      vertexShader: fieldVertexShader,
+      vertexShader: simulationVertexShader,
       fragmentShader: divergenceFragmentShader,
       uniforms: divergenceUniforms,
     });
     const pressureMaterial = new THREE.ShaderMaterial({
-      vertexShader: fieldVertexShader,
+      vertexShader: simulationVertexShader,
       fragmentShader: pressureFragmentShader,
       uniforms: pressureUniforms,
     });
     const projectionMaterial = new THREE.ShaderMaterial({
-      vertexShader: fieldVertexShader,
+      vertexShader: simulationVertexShader,
       fragmentShader: projectionFragmentShader,
       uniforms: projectionUniforms,
     });
@@ -258,7 +244,6 @@ export default function CursorRevealPoc() {
       const simulationHeight = Math.max(1, Math.round(height * 0.1));
       simulationTargets.forEach((target) => target.setSize(simulationWidth, simulationHeight));
       advectionUniforms.uResolution.value.set(simulationWidth, simulationHeight);
-      advectionUniforms.uBoundary.value.set(1 / simulationWidth, 1 / simulationHeight);
       clearSimulationTargets();
     };
     const onPointerMove = (event: PointerEvent) => {
