@@ -135,7 +135,7 @@ export default function CursorRevealPoc() {
         stencilBuffer: false,
         magFilter: THREE.LinearFilter,
         minFilter: THREE.LinearFilter,
-        type: THREE.HalfFloatType,
+        type: THREE.FloatType,
       });
     const targetA = createTarget();
     const targetB = createTarget();
