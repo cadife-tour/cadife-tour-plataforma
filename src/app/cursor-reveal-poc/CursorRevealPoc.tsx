@@ -98,39 +98,14 @@ const velocityEncodeFragmentShader = /* glsl */ `
   }
 `;
 
-const maskExtractionFragmentShader = /* glsl */ `
-  uniform sampler2D uCursorEffect;
-  uniform vec2 uTexel;
-  varying vec2 vUv;
-
-  float influenceAt(vec2 uv) {
-    vec3 cursorEffect = texture2D(uCursorEffect, uv).rgb;
-    return length(vec3(1.0) - cursorEffect);
-  }
-
-  void main() {
-    float center = influenceAt(vUv) * 0.5;
-    float horizontal = (influenceAt(vUv + vec2(uTexel.x, 0.0)) + influenceAt(vUv - vec2(uTexel.x, 0.0))) * 0.125;
-    float vertical = (influenceAt(vUv + vec2(0.0, uTexel.y)) + influenceAt(vUv - vec2(0.0, uTexel.y))) * 0.125;
-    float influence = min(center + horizontal + vertical, 1.0);
-    float mask = smoothstep(0.075, 0.28, influence);
-    gl_FragColor = vec4(vec3(mask), 1.0);
-  }
-`;
-
 const compositionFragmentShader = /* glsl */ `
   uniform sampler2D uImageA;
   uniform sampler2D uImageB;
   uniform sampler2D uRevealTexture;
-  uniform float uDebugMask;
   varying vec2 vUv;
   void main() {
-    float reveal = texture2D(uRevealTexture, vUv).r;
-    if (uDebugMask > 0.5) {
-      gl_FragColor = vec4(vec3(reveal), 1.0);
-      #include <colorspace_fragment>
-      return;
-    }
+    vec3 cursorTexture = texture2D(uRevealTexture, vUv).rgb;
+    float reveal = step(0.10, 1.0 - cursorTexture.r);
     vec3 base = texture2D(uImageA, vUv).rgb;
     vec3 revealed = texture2D(uImageB, vUv).rgb;
     gl_FragColor = vec4(mix(base, revealed, reveal), 1.0);
@@ -176,13 +151,6 @@ export default function CursorRevealPoc() {
     const pressureA = createTarget();
     const pressureB = createTarget();
     const encodedCursorTarget = new THREE.WebGLRenderTarget(640, 360, {
-      depthBuffer: false,
-      stencilBuffer: false,
-      magFilter: THREE.LinearFilter,
-      minFilter: THREE.LinearFilter,
-      type: THREE.UnsignedByteType,
-    });
-    const revealMaskTarget = new THREE.WebGLRenderTarget(640, 360, {
       depthBuffer: false,
       stencilBuffer: false,
       magFilter: THREE.LinearFilter,
@@ -266,15 +234,6 @@ export default function CursorRevealPoc() {
       fragmentShader: velocityEncodeFragmentShader,
       uniforms: velocityEncodeUniforms,
     });
-    const maskExtractionUniforms = {
-      uCursorEffect: { value: encodedCursorTarget.texture },
-      uTexel: { value: new THREE.Vector2(1 / 640, 1 / 360) },
-    };
-    const maskExtractionMaterial = new THREE.ShaderMaterial({
-      vertexShader: simulationVertexShader,
-      fragmentShader: maskExtractionFragmentShader,
-      uniforms: maskExtractionUniforms,
-    });
     const simulationQuad = new THREE.Mesh(new THREE.PlaneGeometry(2, 2), advectionMaterial);
     simulationScene.add(simulationQuad);
 
@@ -287,8 +246,7 @@ export default function CursorRevealPoc() {
     const compositionUniforms = {
       uImageA: { value: imageA },
       uImageB: { value: imageB },
-      uRevealTexture: { value: revealMaskTarget.texture },
-      uDebugMask: { value: new URLSearchParams(window.location.search).has("debugMask") ? 1 : 0 },
+      uRevealTexture: { value: encodedCursorTarget.texture },
     };
     const compositionMaterial = new THREE.ShaderMaterial({
       vertexShader: simulationVertexShader,
@@ -305,8 +263,6 @@ export default function CursorRevealPoc() {
       const simulationHeight = Math.max(1, Math.round(height * 0.1));
       simulationTargets.forEach((target) => target.setSize(simulationWidth, simulationHeight));
       encodedCursorTarget.setSize(width, height);
-      revealMaskTarget.setSize(width, height);
-      maskExtractionUniforms.uTexel.value.set(1 / width, 1 / height);
       advectionUniforms.uResolution.value.set(simulationWidth, simulationHeight);
       clearSimulationTargets();
     };
@@ -368,11 +324,7 @@ export default function CursorRevealPoc() {
       simulationQuad.material = velocityEncodeMaterial;
       renderer.setRenderTarget(encodedCursorTarget);
       renderer.render(simulationScene, camera);
-      maskExtractionUniforms.uCursorEffect.value = encodedCursorTarget.texture;
-      simulationQuad.material = maskExtractionMaterial;
-      renderer.setRenderTarget(revealMaskTarget);
-      renderer.render(simulationScene, camera);
-      compositionUniforms.uRevealTexture.value = revealMaskTarget.texture;
+      compositionUniforms.uRevealTexture.value = encodedCursorTarget.texture;
       renderer.setRenderTarget(null);
       renderer.render(compositionScene, camera);
       frame = requestAnimationFrame(render);
@@ -391,7 +343,6 @@ export default function CursorRevealPoc() {
       pressureMaterial.dispose();
       projectionMaterial.dispose();
       velocityEncodeMaterial.dispose();
-      maskExtractionMaterial.dispose();
       compositionMaterial.dispose();
       targetA.dispose();
       targetB.dispose();
@@ -399,7 +350,6 @@ export default function CursorRevealPoc() {
       pressureA.dispose();
       pressureB.dispose();
       encodedCursorTarget.dispose();
-      revealMaskTarget.dispose();
       simulationQuad.geometry.dispose();
       renderer.dispose();
     };
