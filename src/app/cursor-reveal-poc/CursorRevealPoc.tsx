@@ -61,7 +61,8 @@ const divergenceFragmentShader = /* glsl */ `
 const pressureFragmentShader = /* glsl */ `
   uniform sampler2D uPressure; uniform sampler2D uDivergence; uniform vec2 uResolution; varying vec2 vUv;
   void main() {
-    vec2 px = 1.0 / uResolution;
+    // Centered divergence and gradient require pressure samples two cells apart.
+    vec2 px = 2.0 / uResolution;
     float left = texture2D(uPressure, vUv - vec2(px.x, 0.0)).x;
     float right = texture2D(uPressure, vUv + vec2(px.x, 0.0)).x;
     float down = texture2D(uPressure, vUv - vec2(0.0, px.y)).x;
@@ -86,19 +87,25 @@ const projectionFragmentShader = /* glsl */ `
   }
 `;
 
+const velocityEncodeFragmentShader = /* glsl */ `
+  uniform sampler2D uVelocity;
+  varying vec2 vUv;
+  void main() {
+    vec2 velocity = texture2D(uVelocity, vUv).xy;
+    float speed = length(velocity);
+    vec2 direction = velocity * 0.5 + 0.5;
+    vec3 encoded = mix(vec3(1.0), vec3(direction, 1.0), speed);
+    gl_FragColor = vec4(encoded, 1.0);
+  }
+`;
+
 const compositionFragmentShader = /* glsl */ `
   uniform sampler2D uImageA;
   uniform sampler2D uImageB;
   uniform sampler2D uRevealTexture;
   varying vec2 vUv;
   void main() {
-    vec2 flow = texture2D(uRevealTexture, vUv).rg;
-    // The simulation may retain a high speed after a fast gesture. Saturating
-    // this value here prevents the final colour encoding from extrapolating
-    // into a full-screen mask; it does not change the cursor simulation.
-    float speed = min(length(flow), 0.45);
-    vec2 encodedDirection = flow * 0.5 + 0.5;
-    vec3 cursorTexture = mix(vec3(1.0), vec3(encodedDirection, 1.0), speed);
+    vec3 cursorTexture = texture2D(uRevealTexture, vUv).rgb;
     float reveal = step(0.10, 1.0 - cursorTexture.r);
     vec3 base = texture2D(uImageA, vUv).rgb;
     vec3 revealed = texture2D(uImageB, vUv).rgb;
@@ -113,7 +120,8 @@ type CursorState = {
   active: boolean;
 };
 
-export default function CursorRevealPoc() {
+interface CursorRevealPocProps { imageOfficeSrc?: string; imageParadiseSrc?: string; }
+export default function CursorRevealPoc({ imageOfficeSrc = "/demo-ln4/office-original.png", imageParadiseSrc = "/demo-ln4/paradise-original.png" }: CursorRevealPocProps) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
 
   useEffect(() => {
@@ -144,6 +152,13 @@ export default function CursorRevealPoc() {
     const divergenceTarget = createTarget();
     const pressureA = createTarget();
     const pressureB = createTarget();
+    const encodedCursorTarget = new THREE.WebGLRenderTarget(640, 360, {
+      depthBuffer: false,
+      stencilBuffer: false,
+      magFilter: THREE.LinearFilter,
+      minFilter: THREE.LinearFilter,
+      type: THREE.UnsignedByteType,
+    });
     let velocityRead = targetA;
     let velocityWrite = targetB;
     let pressureRead = pressureA;
@@ -215,19 +230,25 @@ export default function CursorRevealPoc() {
       fragmentShader: projectionFragmentShader,
       uniforms: projectionUniforms,
     });
+    const velocityEncodeUniforms = { uVelocity: { value: velocityRead.texture } };
+    const velocityEncodeMaterial = new THREE.ShaderMaterial({
+      vertexShader: simulationVertexShader,
+      fragmentShader: velocityEncodeFragmentShader,
+      uniforms: velocityEncodeUniforms,
+    });
     const simulationQuad = new THREE.Mesh(new THREE.PlaneGeometry(2, 2), advectionMaterial);
     simulationScene.add(simulationQuad);
 
     const loader = new THREE.TextureLoader();
     // The unedited source images keep the POC's colour comparison trustworthy.
-    const imageA = loader.load("/demo-ln4/office-original.png");
-    const imageB = loader.load("/demo-ln4/paradise-original.png");
+    const imageA = loader.load(imageOfficeSrc);
+    const imageB = loader.load(imageParadiseSrc);
     imageA.colorSpace = THREE.SRGBColorSpace;
     imageB.colorSpace = THREE.SRGBColorSpace;
     const compositionUniforms = {
       uImageA: { value: imageA },
       uImageB: { value: imageB },
-      uRevealTexture: { value: velocityRead.texture },
+      uRevealTexture: { value: encodedCursorTarget.texture },
     };
     const compositionMaterial = new THREE.ShaderMaterial({
       vertexShader: simulationVertexShader,
@@ -243,6 +264,7 @@ export default function CursorRevealPoc() {
       const simulationWidth = Math.max(1, Math.round(width * 0.1));
       const simulationHeight = Math.max(1, Math.round(height * 0.1));
       simulationTargets.forEach((target) => target.setSize(simulationWidth, simulationHeight));
+      encodedCursorTarget.setSize(width, height);
       advectionUniforms.uResolution.value.set(simulationWidth, simulationHeight);
       clearSimulationTargets();
     };
@@ -300,7 +322,11 @@ export default function CursorRevealPoc() {
         elapsed %= 1 / 60;
       }
 
-      compositionUniforms.uRevealTexture.value = velocityRead.texture;
+      velocityEncodeUniforms.uVelocity.value = velocityRead.texture;
+      simulationQuad.material = velocityEncodeMaterial;
+      renderer.setRenderTarget(encodedCursorTarget);
+      renderer.render(simulationScene, camera);
+      compositionUniforms.uRevealTexture.value = encodedCursorTarget.texture;
       renderer.setRenderTarget(null);
       renderer.render(compositionScene, camera);
       frame = requestAnimationFrame(render);
@@ -318,16 +344,18 @@ export default function CursorRevealPoc() {
       divergenceMaterial.dispose();
       pressureMaterial.dispose();
       projectionMaterial.dispose();
+      velocityEncodeMaterial.dispose();
       compositionMaterial.dispose();
       targetA.dispose();
       targetB.dispose();
       divergenceTarget.dispose();
       pressureA.dispose();
       pressureB.dispose();
+      encodedCursorTarget.dispose();
       simulationQuad.geometry.dispose();
       renderer.dispose();
     };
-  }, []);
+  }, [imageOfficeSrc, imageParadiseSrc]);
 
   return (
     <canvas

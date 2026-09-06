@@ -51,8 +51,8 @@ export const HeroSection: React.FC = () => {
           {/* O CANVAS DE REVELAÇÃO FLUIDA ESTILO LANDO NORRIS */}
           <div className="relative h-full w-full cursor-crosshair">
             <WebGLRevealHero
-              imageOfficeSrc="/demo-ln4/office.png"
-              imageParadiseSrc="/demo-ln4/paradise.png"
+              imageOfficeSrc="/demo-ln4/office-original.png"
+              imageParadiseSrc="/demo-ln4/paradise-original.png"
             />
           </div>
 
@@ -102,4 +102,3 @@ export const HeroSection: React.FC = () => {
     </div>
   );
 };
-
