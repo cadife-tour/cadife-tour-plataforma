@@ -91,7 +91,10 @@ const compositionFragmentShader = /* glsl */ `
   varying vec2 vUv;
   void main() {
     vec2 flow = texture2D(uRevealTexture, vUv).rg;
-    float speed = length(flow);
+    // The simulation may retain a high speed after a fast gesture. Saturating
+    // this value here prevents the final colour encoding from extrapolating
+    // into a full-screen mask; it does not change the cursor simulation.
+    float speed = min(length(flow), 0.45);
     vec2 encodedDirection = flow * 0.5 + 0.5;
     vec3 cursorTexture = mix(vec3(1.0), vec3(encodedDirection, 1.0), speed);
     float reveal = step(0.10, 1.0 - cursorTexture.r);
