@@ -84,20 +84,46 @@ const projectionFragmentShader = /* glsl */ `
   }
 `;
 
+const densityAdvectionFragmentShader = /* glsl */ `
+  uniform sampler2D uDensity;
+  uniform sampler2D uVelocity;
+  uniform vec2 uResolution;
+  uniform float uDelta;
+  varying vec2 vUv;
+  void main() {
+    vec2 aspect = vec2(max(uResolution.x, uResolution.y)) / uResolution;
+    vec2 velocity = clamp(texture2D(uVelocity, vUv).xy, -1.5, 1.5);
+    vec2 sourceUv = clamp(vUv - velocity * uDelta * aspect, 0.001, 0.999);
+    float density = texture2D(uDensity, sourceUv).r * 0.975;
+    gl_FragColor = vec4(density, 0.0, 0.0, 1.0);
+  }
+`;
+
+const densitySplatFragmentShader = /* glsl */ `
+  uniform sampler2D uDensity;
+  uniform vec2 uResolution;
+  uniform vec2 uCursor;
+  uniform vec2 uMotion;
+  varying vec2 vUv;
+  void main() {
+    vec2 relative = vUv - uCursor;
+    relative.x *= uResolution.x / uResolution.y;
+    float radius = 0.082 * (uResolution.x / uResolution.y);
+    float brush = max(1.0 - length(relative) / radius, 0.0);
+    float moving = smoothstep(0.0001, 0.003, length(uMotion));
+    float density = texture2D(uDensity, vUv).r;
+    gl_FragColor = vec4(max(density, brush * brush * moving), 0.0, 0.0, 1.0);
+  }
+`;
+
 const compositionFragmentShader = /* glsl */ `
   uniform sampler2D uImageA;
   uniform sampler2D uImageB;
   uniform sampler2D uRevealTexture;
   varying vec2 vUv;
   void main() {
-    vec2 flow = texture2D(uRevealTexture, vUv).rg;
-    // The simulation may retain a high speed after a fast gesture. Saturating
-    // this value here prevents the final colour encoding from extrapolating
-    // into a full-screen mask; it does not change the cursor simulation.
-    float speed = min(length(flow), 0.45);
-    vec2 encodedDirection = flow * 0.5 + 0.5;
-    vec3 cursorTexture = mix(vec3(1.0), vec3(encodedDirection, 1.0), speed);
-    float reveal = step(0.10, 1.0 - cursorTexture.r);
+    float density = texture2D(uRevealTexture, vUv).r;
+    float reveal = smoothstep(0.08, 0.42, density);
     vec3 base = texture2D(uImageA, vUv).rgb;
     vec3 revealed = texture2D(uImageB, vUv).rgb;
     gl_FragColor = vec4(mix(base, revealed, reveal), 1.0);
@@ -142,11 +168,23 @@ export default function CursorRevealPoc() {
     const divergenceTarget = createTarget();
     const pressureA = createTarget();
     const pressureB = createTarget();
+    const densityA = createTarget();
+    const densityB = createTarget();
     let velocityRead = targetA;
     let velocityWrite = targetB;
     let pressureRead = pressureA;
     let pressureWrite = pressureB;
-    const simulationTargets = [targetA, targetB, divergenceTarget, pressureA, pressureB];
+    let densityRead = densityA;
+    let densityWrite = densityB;
+    const simulationTargets = [
+      targetA,
+      targetB,
+      divergenceTarget,
+      pressureA,
+      pressureB,
+      densityA,
+      densityB,
+    ];
     const clearSimulationTargets = () => {
       renderer.setClearColor(0x000000, 1);
       simulationTargets.forEach((target) => {
@@ -188,6 +226,18 @@ export default function CursorRevealPoc() {
       uPressure: { value: pressureRead.texture },
       uResolution: advectionUniforms.uResolution,
     };
+    const densityAdvectionUniforms = {
+      uDensity: { value: densityRead.texture },
+      uVelocity: { value: velocityRead.texture },
+      uResolution: advectionUniforms.uResolution,
+      uDelta: { value: 0.014 },
+    };
+    const densitySplatUniforms = {
+      uDensity: { value: densityRead.texture },
+      uResolution: advectionUniforms.uResolution,
+      uCursor: { value: cursor.current },
+      uMotion: { value: new THREE.Vector2() },
+    };
     const advectionMaterial = new THREE.ShaderMaterial({
       vertexShader: simulationVertexShader,
       fragmentShader: advectionFragmentShader,
@@ -213,6 +263,16 @@ export default function CursorRevealPoc() {
       fragmentShader: projectionFragmentShader,
       uniforms: projectionUniforms,
     });
+    const densityAdvectionMaterial = new THREE.ShaderMaterial({
+      vertexShader: simulationVertexShader,
+      fragmentShader: densityAdvectionFragmentShader,
+      uniforms: densityAdvectionUniforms,
+    });
+    const densitySplatMaterial = new THREE.ShaderMaterial({
+      vertexShader: simulationVertexShader,
+      fragmentShader: densitySplatFragmentShader,
+      uniforms: densitySplatUniforms,
+    });
     const simulationQuad = new THREE.Mesh(new THREE.PlaneGeometry(2, 2), advectionMaterial);
     simulationScene.add(simulationQuad);
 
@@ -225,7 +285,7 @@ export default function CursorRevealPoc() {
     const compositionUniforms = {
       uImageA: { value: imageA },
       uImageB: { value: imageB },
-      uRevealTexture: { value: velocityRead.texture },
+      uRevealTexture: { value: densityRead.texture },
     };
     const compositionMaterial = new THREE.ShaderMaterial({
       vertexShader: simulationVertexShader,
@@ -295,10 +355,24 @@ export default function CursorRevealPoc() {
         renderer.setRenderTarget(velocityWrite);
         renderer.render(simulationScene, camera);
         [velocityRead, velocityWrite] = [velocityWrite, velocityRead];
+
+        densityAdvectionUniforms.uDensity.value = densityRead.texture;
+        densityAdvectionUniforms.uVelocity.value = velocityRead.texture;
+        simulationQuad.material = densityAdvectionMaterial;
+        renderer.setRenderTarget(densityWrite);
+        renderer.render(simulationScene, camera);
+        [densityRead, densityWrite] = [densityWrite, densityRead];
+
+        densitySplatUniforms.uDensity.value = densityRead.texture;
+        densitySplatUniforms.uMotion.value.copy(forceUniforms.uForce.value).multiplyScalar(1 / 50);
+        simulationQuad.material = densitySplatMaterial;
+        renderer.setRenderTarget(densityWrite);
+        renderer.render(simulationScene, camera);
+        [densityRead, densityWrite] = [densityWrite, densityRead];
         elapsed %= 1 / 60;
       }
 
-      compositionUniforms.uRevealTexture.value = velocityRead.texture;
+      compositionUniforms.uRevealTexture.value = densityRead.texture;
       renderer.setRenderTarget(null);
       renderer.render(compositionScene, camera);
       frame = requestAnimationFrame(render);
@@ -316,12 +390,16 @@ export default function CursorRevealPoc() {
       divergenceMaterial.dispose();
       pressureMaterial.dispose();
       projectionMaterial.dispose();
+      densityAdvectionMaterial.dispose();
+      densitySplatMaterial.dispose();
       compositionMaterial.dispose();
       targetA.dispose();
       targetB.dispose();
       divergenceTarget.dispose();
       pressureA.dispose();
       pressureB.dispose();
+      densityA.dispose();
+      densityB.dispose();
       simulationQuad.geometry.dispose();
       renderer.dispose();
     };
