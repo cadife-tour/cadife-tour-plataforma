@@ -128,11 +128,17 @@ export default function CursorRevealPoc({ imageOfficeSrc = "/demo-ln4/office-ori
     const canvas = canvasRef.current;
     if (!canvas) return;
 
-    const renderer = new THREE.WebGLRenderer({
-      canvas,
-      antialias: false,
-      powerPreference: "high-performance",
-    });
+    let renderer: THREE.WebGLRenderer;
+    try {
+      renderer = new THREE.WebGLRenderer({
+        canvas,
+        antialias: false,
+        powerPreference: "high-performance",
+      });
+    } catch {
+      // Fallback gracioso se WebGL não for suportado no ambiente (ex: SSR, jsdom/testes)
+      return;
+    }
     renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
     renderer.outputColorSpace = THREE.SRGBColorSpace;
 

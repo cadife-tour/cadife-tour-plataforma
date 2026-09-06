@@ -12,7 +12,6 @@ export default function LandoStyleHeroPage() {
 
   // Raio da lente de revelação dinâmica sob o cursor (igual ao site do Lando Norris)
   const [lensRadius, setLensRadius] = useState(140);
-  const [revealMode, setRevealMode] = useState<"lens" | "horizontal" | "click">("lens");
 
   const containerRef = useRef<HTMLDivElement>(null);
 
@@ -223,7 +222,7 @@ export default function LandoStyleHeroPage() {
             {/* 1. CAMADA BASE: A FOTO DO ESCRITÓRIO (ROUTINE / WORK) */}
             <div className="absolute inset-0 h-full w-full">
               <Image
-                src="/demo-ln4/office.png"
+                src="/demo-ln4/office-original.png"
                 alt="Rotina de Escritório (Base)"
                 fill
                 priority
@@ -246,7 +245,7 @@ export default function LandoStyleHeroPage() {
               }}
             >
               <Image
-                src="/demo-ln4/paradise.png"
+                src="/demo-ln4/paradise-original.png"
                 alt="Paraíso e Liberdade (Revelado pelo Cursor)"
                 fill
                 priority
@@ -326,7 +325,7 @@ export default function LandoStyleHeroPage() {
         <div className="relative flex flex-col items-center justify-center max-w-xl text-center">
           <div className="relative w-[320px] sm:w-[420px] aspect-[4/3] rounded-2xl overflow-hidden shadow-2xl border border-white/20">
             <Image
-              src="/demo-ln4/paradise.png"
+              src="/demo-ln4/paradise-original.png"
               alt="Lando Style Paradise Celebration"
               fill
               className="object-cover filter contrast-125 saturate-50 brightness-90"

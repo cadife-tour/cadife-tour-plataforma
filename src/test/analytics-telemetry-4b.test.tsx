@@ -50,9 +50,12 @@ describe("Fase 4B — Telemetria & Analytics Privacy-First", () => {
       </LocaleProvider>
     );
 
-    const enButton = screen.getByRole("button", { name: /mudar idioma para en/i });
-    expect(enButton).toBeInTheDocument();
-    fireEvent.click(enButton);
+    const trigger = screen.getByRole("button", { name: /idioma selecionado/i });
+    fireEvent.click(trigger);
+
+    const enOption = screen.getByRole("option", { name: /english/i });
+    expect(enOption).toBeInTheDocument();
+    fireEvent.click(enOption);
   });
 
   it("renders DestinationsSection and sets data-destination-id for view tracking", () => {

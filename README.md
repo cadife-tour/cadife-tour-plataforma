@@ -1,69 +1,86 @@
 # CADIFE Tour — Website Experience
 
 > **Uma nova experiência. Uma nova memória.**  
-> Protótipo funcional de alta performance para a nova experiência digital da CADIFE Tour.
+> Plataforma digital imersiva e de alta performance desenvolvida para a **CADIFE Tour** (Consultoria de Viagens sob medida).
 
 ---
 
 ## ✈️ 1. Visão do Projeto
 
-O site da **CADIFE Tour** foi idealizado para ir além de um site institucional tradicional. A proposta é criar uma **experiência digital imersiva** que transmita movimento, viagem, confiança e acompanhamento humano antes mesmo do primeiro contato.
+O projeto da **CADIFE Tour** foi desenvolvido com foco em estética premium, fluidez a 60fps e máxima taxa de conversão. Em vez de uma página estática tradicional, combina **design editorial cinematográfico** com **interatividade em tempo real**, guiando o viajante desde o primeiro impacto visual até o contato direto com os consultores via WhatsApp.
 
-- **Formato:** One Page interativa orientada por scroll (Scrollytelling).
-- **Diferencial:** A **Hero Experience**, uma narrativa cinematográfica controlada pela rolagem do usuário (interior da aeronave → aproximação da janela → travessia das nuvens → revelação do destino).
-- **Foco de Conversão:** Todos os pontos de contato e CTAs contextuais conduzem ao objetivo comercial principal: iniciar um atendimento consultivo e humanizado via **WhatsApp**.
+- **Formato:** One Page imersiva orientada por narrativa e scroll (Scrollytelling).
+- **Core de Conversão:** Todos os fluxos, cartões de destino e CTAs direcionam para atendimento consultivo humanizado via links contextuais do WhatsApp.
+- **Internacionalização:** Suporte completo e reativo para **Português (PT)**, **Inglês (EN)** e **Espanhol (ES)**.
 
 ---
 
-## 🛠️ 2. Stack Tecnológica & Decisões de Frontend
+## 🌟 2. As Duas Versões do Frontend (Hero Experience)
 
-Para alcançar fidelidade visual de 60fps sem sobrecarregar navegadores mobile ou consumir recursos excessivos de GPU, adotamos uma **arquitetura híbrida e performática**:
+A Hero Section da página principal (`/`) conta com **duas experiências de ponta integradas**, que podem ser alternadas instantaneamente pelo seletor flutuante presente no canto superior:
 
-| Camada | Tecnologia | Motivação & Papel |
+```
+                  ┌──────────────────────────────────────────────┐
+                  │          CADIFE TOUR HERO SELECTOR           │
+                  │   [✨ Foto Revelação]   [🎬 Jornada em Vídeo] │
+                  └──────────────────────────────────────────────┘
+```
+
+### 1️⃣ Versão 1: Foto Revelação Interativa (WebGL Fluid / Estilo Lando Norris)
+Inspirada no efeito visual de revelação orgânica do site do piloto Lando Norris (OFF+BRAND), esta versão apresenta uma tela limpa e de alto impacto:
+- **Física de Fluidos em Tempo Real:** Motor WebGL customizado em Three.js simulando equações de Navier-Stokes (advecção de velocidade, cálculo de divergência, resolvedor de pressão de Poisson com espaçamento centrado de amostras e projeção).
+- **Revelação sob o Cursor:** O movimento do mouse ou toque na tela cria ondas inerciais dinâmicas que fatiam a rotina cinzenta do escritório e revelam a praia paradisíaca sob o ponto de interação.
+- **Fidelidade Cromática Pura:** Utiliza texturas originais sRGB sem pós-processamentos ou filtros degradantes (`/demo-ln4/office-original.png` e `/demo-ln4/paradise-original.png`).
+- **Resiliência e Fallback:** Proteção graciosa com detecção de contexto GPU/WebGL; se o dispositivo ou ambiente não suportar WebGL, a página mantém integridade visual e funcional.
+
+### 2️⃣ Versão 2: Jornada Cinematográfica em Vídeo (Travel Experience)
+A experiência original focada em scrollytelling cinematográfico:
+- **Video Scrubbing a 60fps:** Sincronização cirúrgica entre a posição de rolagem (`scroll progress`) e a reprodução do vídeo da viagem via **GSAP ScrollTrigger**.
+- **Mídia Otimizada:** Vídeo `airplane-journey-scrub.mp4` (5.1 MB) re-encodado com GOP reduzido (`-g 12`) e `faststart`, permitindo busca instantânea de quadros em qualquer sentido de rolagem sem travamentos.
+- **Narrativa de Bordo:** Transição suave da cabine da aeronave, aproximação da janela, travessia pelas nuvens e apresentação dos destinos.
+
+---
+
+## 🗺️ 3. Rotas da Aplicação
+
+| Rota | Descrição |
+| :--- | :--- |
+| **`/`** | **Página Principal (One Page Oficial):** Apresenta a Hero com alternância instantânea entre a Foto Revelação e a Jornada em Vídeo, além das seções de Destinos em Destaque, Como Funciona, A Agência, FAQ e Rodapé de Conversão. |
+| **`/cursor-reveal-poc`** | **Laboratório WebGL Fluid:** Rota técnica isolada contendo o canvas puro de simulação física de fluidos e máscara de revelação do cursor em tela cheia. |
+| **`/demo-escape`** | **Protótipo Editorial LN4:** Demonstração conceitual completa no estilo visual do manifesto LN4, com lente de revelação ajustável (100px / 160px / 240px), letreiro marquee contínuo e cartões tipográficos. |
+
+---
+
+## 🛠️ 4. Stack Tecnológica
+
+| Camada | Tecnologia | Papel no Projeto |
 | :--- | :--- | :--- |
-| **Framework** | **Next.js 15 (App Router)** | Renderização ágil, SEO semântico, rotas otimizadas e Server Components. |
-| **Linguagem** | **TypeScript** | Tipagem estrita de contratos de dados, rotas, manifesto de assets e eventos. |
-| **Estilização** | **Tailwind CSS + CSS Custom Properties** | Design tokens centralizados (`tokens.css`) com as cores originais da marca: Vermelho Cadife (`#DD0B0E`), Grafite institucional (`#393532`) e superfícies escuras cinematográficas. |
-| **Motion & Scroll** | **GSAP + ScrollTrigger** | Mapeamento cirúrgico de `scroll progress` para a timeline da experiência, com scrubbing hiper-responsivo (`scrub: 0.12`). |
-| **Vídeo & Scrubbing** | **HTML5 Video com GOP Reduzido** | Vídeo em 1080p re-encodado com keyframes frequentes (`-g 12`) e `faststart`, permitindo que o navegador busque quadros instantaneamente durante a rolagem sem travar. |
-| **Gráficos 3D / WebGL** | **Three.js & React Three Fiber** | Base pronta para camadas de profundidade, partículas e modelos tridimensionais progressivos. |
-| **Internacionalização** | **Context API nativa (i18n)** | Suporte completo para **PT-BR**, **EN** e **ES**, com seletor de idiomas em menu dropdown e bandeiras vetoriais. |
+| **Framework** | **Next.js 15 (App Router)** | Renderização ágil, Server Components, metadados SEO semânticos e roteamento. |
+| **Linguagem** | **TypeScript 5** | Tipagem estrita de contratos de dados, rotas, manifesto de assets e eventos. |
+| **Estilização** | **Tailwind CSS + Tokens CSS** | Design system centralizado (`tokens.css` e `globals.css`) com as cores da marca Cadife: Vermelho `#DD0B0E`, Grafite `#393532` e superfícies escuras cinematográficas. |
+| **Animação & Motion** | **GSAP + ScrollTrigger** | Mapeamento ultra-preciso de rolagem para a timeline da jornada em vídeo. |
+| **Gráficos 3D / Shaders** | **Three.js** | Simulação fluidodinâmica baseada em GPU e shaders GLSL para revelação interativa. |
+| **Internacionalização** | **React Context API (i18n)** | Alternância dinâmica de idiomas (PT, EN, ES) com dropdown acessível e bandeiras SVG vetoriais. |
+| **Testes Automatizados** | **Vitest + Testing Library** | Testes unitários e de integração cobrindo SEO, i18n, telemetria e renderização de componentes. |
 
 ---
 
-## 🎯 3. O Que Temos Implementado (Estado Atual)
+## 📁 5. Arquitetura Limpa de Assets
 
-1. **Header Institucional:**
-   - Logotipo oficial e ícone original Cadife Tour.
-   - Navegação por âncoras para as seções principais.
-   - Seletor de idiomas dropdown com bandeiras vetoriais (PT / EN / ES).
-   - Botão direto de contato via WhatsApp com mensagem pré-configurada.
-   - Ocultação automática inteligente durante a navegação pela experiência.
-
-2. **Hero Cinematográfica Interativa:**
-   - Sincronização direta de scroll com o vídeo de bordo (`airplane-journey-scrub.mp4`).
-   - Camadas de tipografia de alto contraste com sombras projetadas para leitura perfeita em qualquer momento da cena.
-   - Micro-animações e indicadores de scroll.
-   - CTA direto para planejamento da viagem.
-
-3. **Seções Institucionais da One Page:**
-   - **Destinos em Destaque:** Apresentação de roteiros com CTAs contextualizados por destino.
-   - **Como Funciona:** Explicação do processo de consultoria sob medida em passos claros.
-   - **A Agência & Diferenciais:** História da agência, valores e prova de credibilidade.
-   - **Dúvidas Frequentes (FAQ):** Respostas para as principais perguntas dos viajantes.
-   - **Rodapé Completo:** Informações de contato, conformidade, dados institucionais e links diretos.
-
-4. **Acessibilidade & Resiliência:**
-   - Suporte nativo a `prefers-reduced-motion` com fallback estático automático para quem desativar animações.
-   - Estrutura de botões acessíveis, foco por teclado visível e tags semânticas completas para motores de busca (SEO).
+Para garantir que o repositório no GitHub permaneça leve e rápido de clonar, os arquivos foram estritamente filtrados:
+- **`public/assets/brand/`**: Logotipo oficial vetorial, ícone original e variações para favicons.
+- **`public/assets/destinations/`**: Imagens WebP comprimidas de alta resolução para os cards de destinos (Cruzeiros, Europa, Patagônia).
+- **`public/assets/hero/airplane-journey-scrub.mp4`**: Único arquivo de vídeo ativo mantido no controle de versão (5.1 MB otimizado). Versões brutas ou não utilizadas ficam isoladas no `.gitignore`.
+- **`public/demo-ln4/`**: Apenas as matrizes originais sem filtro (`office-original.png` e `paradise-original.png`). Cópias redundantes e variações de teste foram eliminadas.
+- **Arquivos temporários (`scratch/`, `scripts/`, logs)**: Explicitamente ignorados no Git e no ESLint.
 
 ---
 
-## 🚀 4. Como Executar Localmente
+## 🚀 6. Como Executar Localmente
 
 ### Pré-requisitos
-- **Node.js** 18.18+ ou superior
-- Gerenciador de pacotes **npm**, **pnpm** ou **yarn**
+- **Node.js** 20+ ou superior
+- **npm** (ou **pnpm** / **yarn**)
 
 ### Instalação e Execução
 
@@ -81,26 +98,30 @@ npm install
 npm run dev
 ```
 
-Abra [http://localhost:3000](http://localhost:3000) no seu navegador para visualizar a experiência funcional.
+Abra [http://localhost:3000](http://localhost:3000) no seu navegador para explorar a aplicação.
 
-### Outros Comandos Úteis
+---
+
+## 🛡️ 7. Comandos de Qualidade e CI
+
+O projeto segue guardrails automatizados idênticos aos executados no **GitHub Actions** (`.github/workflows/ci.yml`):
 
 ```bash
-# Verificação de tipos TypeScript
+# 1. Validação estrita de Lint (zero warnings)
+npm run lint
+
+# 2. Checagem de tipos TypeScript
 npm run typecheck
 
-# Execução dos testes automatizados
+# 3. Bateria completa de testes automatizados (27 testes)
 npm run test
 
-# Build de produção
+# 4. Build de produção
 npm run build
 ```
 
 ---
 
-## 🧭 5. Próximos Passos & Evolução (Roadmap de Frontend)
+## 📄 Licença
 
-- [ ] **Expansão da Sequência de Destinos:** Adicionar novas etapas à timeline da Hero (Argentina, Peru, Cruzeiros, Europa) seguindo a mesma mecânica de nuvens e transições.
-- [ ] **Exploração do Conceito B (Metamorfose do Viajante):** Experimentar protótipos onde o viajante permanece como âncora visual e o ambiente/roupa se transformam com a rolagem.
-- [ ] **Integração Dinâmica do Google Reviews:** Conexão com API oficial para alimentar os depoimentos de clientes reais em tempo real.
-- [ ] **Modelos 3D Interativos:** Introdução progressiva de elementos `.glb` de monumentos e cenários via React Three Fiber em dispositivos com suporte a WebGL.
+Este projeto é de propriedade da **CADIFE Tour**. Todos os direitos reservados.

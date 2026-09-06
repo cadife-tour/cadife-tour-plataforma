@@ -20,6 +20,8 @@ export default tseslint.config(
       ".claude/**",
       "agent/**",
       "next-env.d.ts",
+      "scratch/**",
+      "scripts/**",
     ],
   },
   js.configs.recommended,

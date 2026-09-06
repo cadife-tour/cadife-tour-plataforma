@@ -27,6 +27,13 @@ export const HeroSection: React.FC = () => {
       {/* VERSÃO 1: FOTO COM EFEITO LANDO NORRIS EM TELA CHEIA LIMPA */}
       {activeHero === "reveal" && (
         <section className="relative mt-16 sm:mt-20 h-[calc(100vh-4rem)] sm:h-[calc(100vh-5rem)] w-full overflow-hidden bg-[#141312] text-white">
+          {/* Título semântico H1 para SEO e Acessibilidade (sr-only no modo foto limpa) */}
+          <h1 className="sr-only">
+            {isPt
+              ? "CADIFE Tour — Uma nova experiência. Uma nova memória."
+              : "CADIFE Tour — A new experience. A new memory."}
+          </h1>
+
           {/* SELETOR FLUTUANTE DISCRETO COM AS CORES DA CADIFE TOUR */}
           <div className="absolute top-6 right-4 sm:right-8 z-30 flex items-center gap-1.5 rounded-full bg-[#141312]/85 p-1.5 backdrop-blur-xl border border-white/15 shadow-[0_4px_24px_rgba(0,0,0,0.6)]">
             <button
