@@ -8,14 +8,26 @@ import { StaticAtmosphere } from "@/features/visual-journey/fallback/StaticAtmos
 import { TravelOverlay } from "./components/TravelOverlay";
 import { LoadingScreen } from "./components/LoadingScreen";
 import { ASSET_MANIFEST } from "./assets/assetManifest";
-import { TRAVEL_EXPERIENCE_CONFIG } from "./config/travelExperienceConfig";
+import {
+  TRAVEL_EXPERIENCE_CONFIG,
+  type TravelExperienceMode,
+} from "./config/travelExperienceConfig";
+
+export interface TravelExperienceProps {
+  mode?: TravelExperienceMode;
+  targetDestination?: string;
+}
 
 /**
  * TravelExperience:
  * Hero Cinematográfico com scrubbing de vídeo ultra fluido diretamente conectado
  * ao GSAP ScrollTrigger timeline (técnica profissional estilo Apple / Awwwards).
+ * Suporta modo 'single' (destino focado) e 'full' (jornada completa).
  */
-export const TravelExperience: React.FC = () => {
+export const TravelExperience: React.FC<TravelExperienceProps> = ({
+  mode = "single",
+  targetDestination = "chile",
+}) => {
   const containerRef = useRef<HTMLDivElement>(null);
   const videoRef = useRef<HTMLVideoElement>(null);
   const [progress, setProgress] = useState(0);
@@ -48,21 +60,23 @@ export const TravelExperience: React.FC = () => {
           trigger: containerRef.current,
           start: "top top",
           end: "bottom bottom",
-          scrub: 0.12,
+          scrub: 0.2, // Amortecimento inercial sedoso calibrado (bidirecional e sem jitter)
           onUpdate: (self) => {
             setProgress(self.progress);
           },
         },
       });
 
-      // O vídeo completa 100% da sua duração em 85% do scroll, permitindo apreciar os Andes e o CTA do Chile com calma
+      // O vídeo completa a jornada até os Andes em 85% do scroll
       tl.to(videoProxy, {
         currentTime: duration,
         ease: "none",
         duration: 0.85,
         onUpdate: () => {
           if (video && !isNaN(videoProxy.currentTime)) {
-            video.currentTime = Math.min(videoProxy.currentTime, duration - 0.001);
+            // Clamping estrito e seguro para garantir consistência bidirecional
+            const clampedTime = Math.max(0, Math.min(videoProxy.currentTime, duration - 0.001));
+            video.currentTime = clampedTime;
           }
         },
       });
@@ -96,16 +110,23 @@ export const TravelExperience: React.FC = () => {
   if (isReducedMotion) {
     return (
       <section
-        className="relative min-h-[90vh] flex flex-col justify-center border-b border-border overflow-hidden"
+        className="relative flex min-h-[90vh] flex-col justify-center overflow-hidden border-b border-border bg-background"
         aria-label="Experiência de Viagem CADIFE Tour"
+        data-testid="travel-experience-fallback"
       >
         <StaticAtmosphere />
-        <TravelOverlay progress={1.0} />
+        <TravelOverlay
+          progress={1.0}
+          mode={mode}
+          targetDestination={targetDestination}
+          isStaticFallback={true}
+        />
       </section>
     );
   }
 
-  const sectionHeight = `${TRAVEL_EXPERIENCE_CONFIG.heroScrollHeightVh}vh`;
+  const sectionHeight =
+    mode === "full" ? "800vh" : `${TRAVEL_EXPERIENCE_CONFIG.heroScrollHeightVh}vh`;
 
   return (
     <section
@@ -132,7 +153,7 @@ export const TravelExperience: React.FC = () => {
         <div className="pointer-events-none absolute inset-0 bg-gradient-to-r from-[#141312]/80 via-transparent to-[#141312]/40" />
 
         {/* Overlay com Tipografia, Semântica e CTAs HTML/React */}
-        <TravelOverlay progress={progress} />
+        <TravelOverlay progress={progress} mode={mode} targetDestination={targetDestination} />
 
         {/* Loading / Status leve no canto da tela */}
         <LoadingScreen isReady={isLoaded} />

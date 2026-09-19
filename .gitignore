@@ -43,6 +43,8 @@ Thumbs.db
 .agents/
 .claude/
 agent/
+AGENTS.md
+CLAUDE.md
 prompt.md
 references.md
 skills-lock.json
