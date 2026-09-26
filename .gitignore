@@ -54,7 +54,8 @@ scripts/
 # 6. Materiais de Estudo, Documentação Interna e Backup Legado
 # ==============================================================================
 base/
-docs/
+docs/*
+!docs/HERO_STORYBOARD.md
 ARCHITECTURE.md
 CONTRIBUTING.md
 
