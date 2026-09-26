@@ -2,7 +2,7 @@
 
 - **Issue:** [#7 — Consolidar storyboard e copy da Hero imersiva](https://github.com/cadife-tour/cadife-tour-plataforma/issues/7)
 - **Estado:** proposta editorial pronta para validação; nenhuma headline de destino é apresentada como aprovada pela CADIFE Tour.
-- **Fonte da issue:** descrição e critérios de aceite fornecidos em capturas pelo solicitante em 26/09/2026. Comentários e alterações posteriores da issue não estavam acessíveis nesta sessão.
+- **Fonte da issue:** descrição e critérios de aceite da issue #7, consultados no GitHub em 26/09/2026.
 - **Dependência declarada na issue:** épica #3 — Hero / Jornada imersiva.
 - **Próxima validação:** spike #8 — viabilidade técnica de Avião → Nuvens → Andes.
 
@@ -43,7 +43,7 @@ Os intervalos usam o progresso da **Hero completa**, de 0 a 100, e são contígu
 | 13    | `resort`    |    85–94% | Pausa e convite à escolha              | Cena abre espaço para conteúdo da página    | Resort / praia #26                                |
 | 14    | `exit`      |   94–100% | Encerrar a viagem visual               | **Sua viagem em movimento**                 | Composição HTML/CSS; #19                          |
 
-O foco na **janela** é um beat interno da transição **Avião → Nuvens** pedida na issue. Ele preserva a sequência descrita em `docs/ai/HERO_EXPERIENCE.md` e não exige uma cena de destino adicional.
+O foco na **janela** é um beat interno da transição **Avião → Nuvens** pedida na issue. Ele mantém a continuidade espacial da narrativa e não exige uma cena de destino adicional.
 
 ## 3. Abertura e passagem para as nuvens
 
