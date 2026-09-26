@@ -127,11 +127,11 @@ export const TravelOverlay: React.FC<TravelOverlayProps> = ({
   // Opacidade de cada camada do overlay
   // Airplane/Intro: forte de 0 a 0.2, fade out em 0.25
   const introOpacity = Math.max(0, Math.min(1, 1 - progress / 0.25));
-  // Clouds text: surge sutilmente em 0.3 a 0.45
+  // Clouds text: acompanha a travessia no clipe de oito segundos.
   const cloudsOpacity =
-    progress >= 0.28 && progress <= 0.52 ? Math.sin(((progress - 0.28) / 0.24) * Math.PI) : 0;
-  // Chile: surge a partir de 0.55 até 1.0
-  const chileOpacity = Math.max(0, Math.min(1, (progress - 0.52) / 0.2));
+    progress >= 0.42 && progress <= 0.69 ? Math.sin(((progress - 0.42) / 0.27) * Math.PI) : 0;
+  // Chile: aparece quando as montanhas entram no vídeo e permanece no frame final.
+  const chileOpacity = Math.max(0, Math.min(1, (progress - 0.69) / 0.13));
 
   const handleIntroCta = () => {
     trackEvent("whatsapp_conversion", {

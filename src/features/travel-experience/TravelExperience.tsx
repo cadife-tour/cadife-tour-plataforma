@@ -9,7 +9,7 @@ import { TravelOverlay } from "./components/TravelOverlay";
 import { ASSET_MANIFEST } from "./assets/assetManifest";
 import { clamp } from "./timeline/timelineUtils";
 
-const VIDEO_END_PROGRESS = 0.7;
+const VIDEO_END_PROGRESS = 0.85;
 const FRAME_INTERVAL = 1 / 24;
 
 function StaticJourney() {
@@ -40,7 +40,7 @@ function StaticJourney() {
           }}
         />
         <div className="pointer-events-none absolute inset-0 bg-gradient-to-r from-black/75 via-black/30 to-transparent" />
-        <TravelOverlay progress={0.4} staticFallback />
+        <TravelOverlay progress={0.57} staticFallback />
       </div>
       <div className="relative min-h-screen overflow-hidden bg-[#141312]">
         <Image
@@ -58,8 +58,8 @@ function StaticJourney() {
 }
 
 /**
- * POC híbrida: o vídeo cobre a cabine e a passagem pelas nuvens; um frame
- * estável sustenta os Andes e o CTA. Todo o conteúdo permanece em HTML.
+ * POC híbrida: vídeo para a jornada inteira e nuvens em CSS para a transição.
+ * Um frame do mesmo vídeo serve apenas como fallback estático. Conteúdo em HTML.
  */
 export function TravelExperience() {
   const containerRef = useRef<HTMLElement>(null);
@@ -125,11 +125,9 @@ export function TravelExperience() {
 
   if (useStaticFallback) return <StaticJourney />;
 
-  const andesOpacity = clamp((progress - 0.54) / 0.18);
-  const cloudArrival = clamp((progress - 0.34) / 0.16);
-  const cloudDeparture = clamp((0.76 - progress) / 0.2);
-  const cloudOpacity = Math.min(cloudArrival, cloudDeparture) * 0.45;
-  const mountainDepth = clamp((progress - 0.7) / 0.3);
+  const cloudArrival = clamp((progress - 0.4) / 0.12);
+  const cloudDeparture = clamp((0.72 - progress) / 0.12);
+  const cloudOpacity = Math.min(cloudArrival, cloudDeparture) * 0.35;
 
   return (
     <section
@@ -151,15 +149,6 @@ export function TravelExperience() {
           className="h-full w-full object-cover object-center"
         />
 
-        <div
-          className="pointer-events-none absolute inset-0 bg-cover bg-center"
-          aria-hidden="true"
-          style={{
-            backgroundImage: `url("${ASSET_MANIFEST.images.chileAndes}")`,
-            opacity: andesOpacity,
-            transform: `scale(${1.04 + mountainDepth * 0.04}) translateY(${mountainDepth * -1.5}%)`,
-          }}
-        />
         <div
           className="pointer-events-none absolute inset-0"
           aria-hidden="true"
