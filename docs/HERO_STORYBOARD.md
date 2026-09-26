@@ -54,7 +54,7 @@ O foco na **janela** é um beat interno da transição **Avião → Nuvens** ped
 - **Copy EN:** headline **“A new experience. A new memory.”**; apoio **“The world begins on the other side of the window.”**
 - **Copy ES:** headline **“Una nueva experiencia. Un nuevo recuerdo.”**; apoio **“El mundo comienza al otro lado de la ventana.”**
 - **Ação:** indicador **“Role para começar sua viagem”** / **“Scroll to begin your journey”** / **“Desliza para comenzar tu viaje”**. É orientação de rolagem, não botão. Manter acesso direto à navegação e ao atendimento mesmo antes de rolar.
-- **Mídia proposta:** vídeo de abertura com texto HTML; o `airplane-journey-scrub.mp4` atual (6 s, 1920×1080, ~5,1 MB) serve como POC. Poster estático e imagem de cabine são fallback. Não tratar o clipe atual como cobertura das dez paradas.
+- **Mídia proposta:** vídeo de abertura com texto HTML. A POC #8 reaproveita a fonte em um trecho de 4,6 s, 1920×1080, ~3,8 MB, com poster e frame estático dos Andes como fallback. Não tratar o clipe atual como cobertura das dez paradas.
 
 ### `window` — passagem, 9–15%
 

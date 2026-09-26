@@ -46,6 +46,7 @@ export type AnalyticsEventMap = {
       | "active"
       | "fallback_reduced_motion"
       | "fallback_save_data"
+      | "fallback_low_power"
       | "fallback_no_webgl"
       | "fallback_error";
     dpr?: number;

@@ -20,7 +20,7 @@ O projeto da **CADIFE Tour** foi desenvolvido com foco em estética premium, flu
 A página principal (`/`) abre diretamente na jornada cinematográfica em vídeo. A implementação atual apresenta a abertura Avião → Nuvens → Andes/Chile. O [storyboard da jornada completa](docs/HERO_STORYBOARD.md) define a sequência editorial, as dez paradas e a saída para **Sua viagem em movimento**; os assets e a integração das demais cenas são trabalhos posteriores.
 
 - **Scrollytelling:** a posição de rolagem controla o vídeo com GSAP ScrollTrigger.
-- **Mídia atual:** `airplane-journey-scrub.mp4`, arquivo de 5,1 MB preparado para busca de quadros. A qualidade visual da fonte ainda precisa de revisão na etapa de produção de assets.
+- **Mídia atual:** `airplane-journey-scrub.mp4`, trecho de 4,6 s e ~3,8 MB preparado para busca de quadros; poster e imagem estática sustentam a experiência híbrida. A qualidade intrínseca da fonte ainda precisa de revisão na produção de assets.
 - **Conversão:** CTAs contextuais para atendimento humano no WhatsApp.
 
 A Foto Revelação permanece acessível em `/cursor-reveal-poc` como protótipo independente, fora da homepage.
@@ -57,7 +57,7 @@ Para garantir que o repositório no GitHub permaneça leve e rápido de clonar, 
 
 - **`public/assets/brand/`**: Logotipo oficial vetorial, ícone original e variações para favicons.
 - **`public/assets/destinations/`**: Imagens WebP comprimidas de alta resolução para os cards de destinos (Cruzeiros, Europa, Patagônia).
-- **`public/assets/hero/airplane-journey-scrub.mp4`**: Único arquivo de vídeo ativo mantido no controle de versão (5.1 MB otimizado). Versões brutas ou não utilizadas ficam isoladas no `.gitignore`.
+- **`public/assets/hero/airplane-journey-scrub.mp4`**: Único arquivo de vídeo ativo mantido no controle de versão (~3,8 MB otimizado). O poster e o still dos Andes são arquivos WebP versionados. Versões brutas ou não utilizadas ficam isoladas no `.gitignore`.
 - **`public/demo-ln4/`**: Apenas as matrizes originais sem filtro (`office-original.png` e `paradise-original.png`). Cópias redundantes e variações de teste foram eliminadas.
 - **Arquivos temporários (`scratch/`, `scripts/`, logs)**: Explicitamente ignorados no Git e no ESLint.
 

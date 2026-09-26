@@ -11,6 +11,7 @@ import { getPhaseFromProgress } from "../timeline/timelineUtils";
 
 interface TravelOverlayProps {
   progress: number;
+  staticFallback?: boolean;
 }
 
 /**
@@ -18,7 +19,10 @@ interface TravelOverlayProps {
  * Renderiza textos, títulos e CTAs em HTML semântico e acessível,
  * reagindo com transição suave ao progresso do scroll do Hero (Avião -> Janela -> Nuvens -> Chile).
  */
-export const TravelOverlay: React.FC<TravelOverlayProps> = ({ progress }) => {
+export const TravelOverlay: React.FC<TravelOverlayProps> = ({
+  progress,
+  staticFallback = false,
+}) => {
   const { locale } = useLocale();
   const _currentPhase = getPhaseFromProgress(progress);
 
@@ -26,81 +30,81 @@ export const TravelOverlay: React.FC<TravelOverlayProps> = ({ progress }) => {
   const content = {
     pt: {
       airplane: {
-        badge: "Uma nova experiência. Uma nova memória.",
-        title: "Sua próxima grande jornada planejada com excelência humana.",
+        badge: "CADIFE Tour",
+        title: "Uma nova experiência. Uma nova memória.",
         subtitle: "O mundo começa do outro lado da janela.",
-        scrollHint: "Role para iniciar a viagem",
+        scrollHint: "Role para começar sua viagem",
         primaryCta: "Planejar Minha Viagem",
         secondaryCta: "Explorar Destinos",
       },
       clouds: {
         badge: "Cruzando Novos Céus",
-        title: "Atravessando horizontes em direção ao extraordinário.",
-        subtitle: "Cada detalhe da rota cuidadosamente desenhado para você.",
+        title: "Além das nuvens, novos caminhos.",
+        subtitle: "Uma jornada de possibilidades começa a ganhar forma.",
       },
       chile: {
         badge: "Destino em Destaque — América do Sul",
-        title: "Chile: Onde a imponência dos Andes encontra o infinito.",
-        subtitle:
-          "Das montanhas nevadas e vinhedos do Valle Central à beleza selvagem da Patagônia chilena.",
-        primaryCta: "Quero Conhecer o Chile",
+        title: "Chile: diante da imensidão dos Andes.",
+        subtitle: "Montanhas e horizontes que convidam a ir mais longe.",
+        primaryCta: "Quero conhecer esta opção",
         secondaryCta: "Ver Roteiros Completos",
       },
       trustPill1: "Atendimento 100% Humano",
       trustPill2: "Roteiros Personalizados",
       trustPill3: "Suporte 24h na Viagem",
+      newTab: "abre em nova aba",
     },
     en: {
       airplane: {
-        badge: "A new experience. A lasting memory.",
-        title: "Your next great journey planned with true human dedication.",
+        badge: "CADIFE Tour",
+        title: "A new experience. A new memory.",
         subtitle: "The world begins just beyond the window.",
-        scrollHint: "Scroll to begin journey",
+        scrollHint: "Scroll to begin your journey",
         primaryCta: "Plan My Journey",
         secondaryCta: "Explore Destinations",
       },
       clouds: {
         badge: "Crossing New Skies",
-        title: "Traversing horizons towards the extraordinary.",
-        subtitle: "Every detail of your route thoughtfully curated.",
+        title: "Beyond the clouds, new paths.",
+        subtitle: "A journey of possibilities begins to take shape.",
       },
       chile: {
         badge: "Featured Destination — South America",
-        title: "Chile: Where the majesty of the Andes meets the infinite.",
-        subtitle:
-          "From snow-capped peaks and Central Valley vineyards to wild Patagonian landscapes.",
-        primaryCta: "Discover Chile",
+        title: "Chile: before the vast Andes.",
+        subtitle: "Mountains and horizons that invite you to go further.",
+        primaryCta: "Explore this option",
         secondaryCta: "View Full Itineraries",
       },
       trustPill1: "100% Human Advisory",
       trustPill2: "Tailored Itineraries",
       trustPill3: "24/7 Travel Assistance",
+      newTab: "opens in a new tab",
     },
     es: {
       airplane: {
-        badge: "Una nueva experiencia. Una nueva memoria.",
-        title: "Su próximo gran viaje planificado con dedicación humana.",
+        badge: "CADIFE Tour",
+        title: "Una nueva experiencia. Un nuevo recuerdo.",
         subtitle: "El mundo comienza al otro lado de la ventana.",
-        scrollHint: "Deslice para iniciar el viaje",
+        scrollHint: "Desliza para comenzar tu viaje",
         primaryCta: "Planificar Mi Viaje",
         secondaryCta: "Explorar Destinos",
       },
       clouds: {
         badge: "Cruzando Nuevos Cielos",
-        title: "Atravesando horizontes hacia lo extraordinario.",
-        subtitle: "Cada detalle de su ruta cuidadosamente diseñado.",
+        title: "Más allá de las nubes, nuevos caminos.",
+        subtitle: "Un viaje de posibilidades comienza a tomar forma.",
       },
       chile: {
         badge: "Destino Destacado — Sudamérica",
-        title: "Chile: Donde la imponencia de los Andes encuentra el infinito.",
-        subtitle:
-          "De montañas nevadas y viñedos del Valle Central a la belleza salvaje de la Patagonia.",
-        primaryCta: "Quiero Conocer Chile",
+        title: "Chile: ante la inmensidad de los Andes.",
+        subtitle: "Montañas y horizontes que invitan a ir más lejos.",
+        primaryCta: "Quiero conocer esta opción",
         secondaryCta: "Ver Itinerarios Completos",
       },
       trustPill1: "Atención 100% Humana",
       trustPill2: "Itinerarios a Medida",
       trustPill3: "Soporte 24h en Destino",
+      newTab: "se abre en una pestaña nueva",
     },
   };
 
@@ -125,9 +129,7 @@ export const TravelOverlay: React.FC<TravelOverlayProps> = ({ progress }) => {
   const introOpacity = Math.max(0, Math.min(1, 1 - progress / 0.25));
   // Clouds text: surge sutilmente em 0.3 a 0.45
   const cloudsOpacity =
-    progress >= 0.28 && progress <= 0.52
-      ? Math.sin(((progress - 0.28) / 0.24) * Math.PI)
-      : 0;
+    progress >= 0.28 && progress <= 0.52 ? Math.sin(((progress - 0.28) / 0.24) * Math.PI) : 0;
   // Chile: surge a partir de 0.55 até 1.0
   const chileOpacity = Math.max(0, Math.min(1, (progress - 0.52) / 0.2));
 
@@ -146,29 +148,32 @@ export const TravelOverlay: React.FC<TravelOverlayProps> = ({ progress }) => {
   };
 
   return (
-    <div className="absolute inset-0 flex flex-col justify-center pointer-events-none z-10">
+    <div className="pointer-events-none absolute inset-0 z-10 flex flex-col justify-center">
       <Container>
-        <div className="max-w-3xl relative min-h-[460px] flex items-center">
+        <div className="relative flex min-h-[460px] max-w-3xl items-center">
           {/* 1. INTRO / AIRPLANE */}
           <div
-            className={`space-y-6 transition-all duration-300 ${
+            className={`space-y-6 ${
               introOpacity > 0.05
                 ? "pointer-events-auto opacity-100"
-                : "pointer-events-none opacity-0 invisible"
+                : "pointer-events-none invisible opacity-0"
             }`}
             style={{ opacity: introOpacity }}
             aria-hidden={introOpacity <= 0.05}
           >
-            <div className="inline-flex items-center gap-2.5 rounded-full border border-border bg-surface/80 backdrop-blur-md px-4 py-1.5 text-xs font-semibold text-brand-accent shadow-sm">
-              <span className="h-2 w-2 rounded-full bg-brand-accent animate-pulse" aria-hidden="true" />
+            <div className="bg-surface/80 inline-flex items-center gap-2.5 rounded-full border border-border px-4 py-1.5 text-xs font-semibold text-white shadow-sm backdrop-blur-md">
+              <span
+                className={`h-2 w-2 rounded-full bg-brand-accent ${staticFallback ? "" : "animate-pulse"}`}
+                aria-hidden="true"
+              />
               <span>{t.airplane.badge}</span>
             </div>
 
-            <h1 className="text-4xl font-extrabold tracking-tight text-white sm:text-5xl lg:text-6xl leading-[1.1] [text-shadow:_0_2px_12px_rgba(0,0,0,0.8)]">
+            <h1 className="text-4xl font-extrabold leading-[1.1] tracking-tight text-white [text-shadow:_0_2px_12px_rgba(0,0,0,0.8)] sm:text-5xl lg:text-6xl">
               {t.airplane.title}
             </h1>
 
-            <p className="text-lg text-white/90 sm:text-xl leading-relaxed max-w-2xl [text-shadow:_0_2px_8px_rgba(0,0,0,0.8)]">
+            <p className="max-w-2xl text-lg leading-relaxed text-white/90 [text-shadow:_0_2px_8px_rgba(0,0,0,0.8)] sm:text-xl">
               {t.airplane.subtitle}
             </p>
 
@@ -179,7 +184,7 @@ export const TravelOverlay: React.FC<TravelOverlayProps> = ({ progress }) => {
                   target="_blank"
                   rel="noopener noreferrer"
                   onClick={handleIntroCta}
-                  aria-label={`${t.airplane.primaryCta} no WhatsApp (abre em nova aba)`}
+                  aria-label={`${t.airplane.primaryCta} — WhatsApp (${t.newTab})`}
                 >
                   {t.airplane.primaryCta}
                 </a>
@@ -189,26 +194,28 @@ export const TravelOverlay: React.FC<TravelOverlayProps> = ({ progress }) => {
               </Button>
             </div>
 
-            <div className="flex items-center gap-2 pt-4 text-xs font-medium text-brand-accent animate-bounce">
-              <span>↓</span>
-              <span>{t.airplane.scrollHint}</span>
-            </div>
+            {!staticFallback && (
+              <div className="flex items-center gap-2 pt-4 text-xs font-medium text-white/90">
+                <span>↓</span>
+                <span>{t.airplane.scrollHint}</span>
+              </div>
+            )}
           </div>
 
           {/* 2. TRANSITION / CLOUDS */}
           {cloudsOpacity > 0.02 && (
             <div
-              className="absolute inset-0 flex flex-col justify-center space-y-4 pointer-events-none transition-opacity duration-300"
+              className="pointer-events-none absolute inset-0 flex flex-col justify-center space-y-4"
               style={{ opacity: cloudsOpacity }}
-              aria-hidden="true"
+              aria-hidden={cloudsOpacity <= 0.05}
             >
-              <div className="inline-flex w-fit items-center gap-2 rounded-full border border-white/20 bg-black/40 backdrop-blur-md px-4 py-1 text-xs font-medium text-white shadow-sm">
+              <div className="inline-flex w-fit items-center gap-2 rounded-full border border-white/20 bg-black/40 px-4 py-1 text-xs font-medium text-white shadow-sm backdrop-blur-md">
                 <span>{t.clouds.badge}</span>
               </div>
-              <h2 className="text-3xl font-bold tracking-tight text-white sm:text-4xl max-w-xl drop-shadow-lg">
+              <h2 className="max-w-xl text-3xl font-bold tracking-tight text-white [text-shadow:_0_2px_12px_rgba(0,0,0,0.8)] sm:text-4xl">
                 {t.clouds.title}
               </h2>
-              <p className="text-base text-white/80 max-w-lg drop-shadow">
+              <p className="max-w-lg text-base text-white/95 [text-shadow:_0_2px_8px_rgba(0,0,0,0.8)]">
                 {t.clouds.subtitle}
               </p>
             </div>
@@ -216,24 +223,24 @@ export const TravelOverlay: React.FC<TravelOverlayProps> = ({ progress }) => {
 
           {/* 3. REVEAL / CHILE */}
           <div
-            className={`absolute inset-0 flex flex-col justify-center space-y-6 transition-all duration-500 ${
+            className={`absolute inset-0 flex flex-col justify-center space-y-6 ${
               chileOpacity > 0.05
                 ? "pointer-events-auto opacity-100"
-                : "pointer-events-none opacity-0 invisible"
+                : "pointer-events-none invisible opacity-0"
             }`}
             style={{ opacity: chileOpacity }}
             aria-hidden={chileOpacity <= 0.05}
           >
-            <div className="inline-flex w-fit items-center gap-2.5 rounded-full border border-brand-accent/40 bg-surface/90 backdrop-blur-md px-4 py-1.5 text-xs font-semibold text-brand-accent shadow-sm">
+            <div className="border-brand-accent/40 bg-surface/90 inline-flex w-fit items-center gap-2.5 rounded-full border px-4 py-1.5 text-xs font-semibold text-white shadow-sm backdrop-blur-md">
               <span className="h-2 w-2 rounded-full bg-brand-accent" aria-hidden="true" />
               <span>{t.chile.badge}</span>
             </div>
 
-            <h2 className="text-4xl font-extrabold tracking-tight text-foreground sm:text-5xl lg:text-6xl leading-[1.1] drop-shadow-md">
+            <h2 className="text-4xl font-extrabold leading-[1.1] tracking-tight text-white [text-shadow:_0_2px_12px_rgba(0,0,0,0.8)] sm:text-5xl lg:text-6xl">
               {t.chile.title}
             </h2>
 
-            <p className="text-lg text-foreground-muted sm:text-xl leading-relaxed max-w-2xl drop-shadow">
+            <p className="max-w-2xl text-lg leading-relaxed text-white/95 [text-shadow:_0_2px_8px_rgba(0,0,0,0.8)] sm:text-xl">
               {t.chile.subtitle}
             </p>
 
@@ -244,7 +251,7 @@ export const TravelOverlay: React.FC<TravelOverlayProps> = ({ progress }) => {
                   target="_blank"
                   rel="noopener noreferrer"
                   onClick={handleChileCta}
-                  aria-label={`${t.chile.primaryCta} no WhatsApp (abre em nova aba)`}
+                  aria-label={`${t.chile.primaryCta}: Chile — WhatsApp (${t.newTab})`}
                 >
                   {t.chile.primaryCta}
                 </a>
@@ -255,17 +262,23 @@ export const TravelOverlay: React.FC<TravelOverlayProps> = ({ progress }) => {
             </div>
 
             {/* Trust Indicators na fase Chile */}
-            <div className="flex flex-wrap items-center gap-4 pt-4 border-t border-border/60 text-xs font-medium text-foreground-muted sm:text-sm">
+            <div className="flex flex-wrap items-center gap-4 border-t border-white/40 pt-4 text-xs font-medium text-white/90 sm:text-sm">
               <div className="flex items-center gap-2">
-                <span className="text-brand-accent font-bold" aria-hidden="true">✓</span>
+                <span className="font-bold text-brand-accent" aria-hidden="true">
+                  ✓
+                </span>
                 <span>{t.trustPill1}</span>
               </div>
               <div className="flex items-center gap-2">
-                <span className="text-brand-accent font-bold" aria-hidden="true">✓</span>
+                <span className="font-bold text-brand-accent" aria-hidden="true">
+                  ✓
+                </span>
                 <span>{t.trustPill2}</span>
               </div>
               <div className="flex items-center gap-2">
-                <span className="text-brand-accent font-bold" aria-hidden="true">✓</span>
+                <span className="font-bold text-brand-accent" aria-hidden="true">
+                  ✓
+                </span>
                 <span>{t.trustPill3}</span>
               </div>
             </div>
