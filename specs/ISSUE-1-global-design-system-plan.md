@@ -38,7 +38,7 @@ Os caminhos finais podem ser ajustados aos padrões existentes, sem alterar o es
 
 ## Integração e proteção do checkout
 
-- Base confirmada: `68bb936`; implementação executada em worktree isolada `codex/issue-1-design-system`.
+- Implementação iniciada na base `68bb936` e rebased em `origin/main` (`6dbacba`) antes da publicação; PR usa `main` como base. Trabalho executado em worktree isolada `codex/issue-1-design-system`.
 - Há uma alteração pré-existente em `.gitignore` não relacionada. Preservá-la; não incluir no escopo nem reverter/stagear em conjunto.
 - O workflow de entrega da issue exige PR; manter a mudança em branch e não mesclar nem fechar a issue.
 
