@@ -72,7 +72,10 @@ const languages: LanguageOption[] = [
   { code: "es", shortLabel: "ES", name: "Español", flag: <SpainFlag /> },
 ];
 
-export const LanguageSelector: React.FC<{ className?: string }> = ({ className = "" }) => {
+export const LanguageSelector: React.FC<{
+  className?: string;
+  trackChanges?: boolean;
+}> = ({ className = "", trackChanges = true }) => {
   const { locale, setLocale } = useLocale();
   const [isOpen, setIsOpen] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
@@ -81,10 +84,12 @@ export const LanguageSelector: React.FC<{ className?: string }> = ({ className =
 
   const handleSelect = (newLocale: Locale) => {
     if (newLocale !== locale) {
-      trackEvent("language_change", {
-        from_locale: locale,
-        to_locale: newLocale,
-      });
+      if (trackChanges) {
+        trackEvent("language_change", {
+          from_locale: locale,
+          to_locale: newLocale,
+        });
+      }
       setLocale(newLocale);
     }
     setIsOpen(false);
@@ -124,9 +129,9 @@ export const LanguageSelector: React.FC<{ className?: string }> = ({ className =
         aria-haspopup="listbox"
         aria-expanded={isOpen}
         aria-label={`Idioma selecionado: ${currentLanguage.name}. Clique para alterar.`}
-        className="flex items-center gap-2 rounded-full border border-white/20 bg-black/40 hover:bg-black/60 px-3 py-1.5 text-xs font-semibold text-white shadow-sm backdrop-blur-md transition-all hover:border-white/40 focus-visible:outline focus-visible:outline-2 focus-visible:outline-brand-primary"
+        className="flex items-center gap-2 rounded-full border border-white/20 bg-black/40 px-3 py-1.5 text-xs font-semibold text-white shadow-sm backdrop-blur-md transition-all hover:border-white/40 hover:bg-black/60 focus-visible:outline focus-visible:outline-2 focus-visible:outline-brand-primary"
       >
-        <span className="flex items-center shadow-xs overflow-hidden rounded-xs">
+        <span className="shadow-xs rounded-xs flex items-center overflow-hidden">
           {currentLanguage.flag}
         </span>
         <span className="font-bold tracking-wide">{currentLanguage.shortLabel}</span>
@@ -149,7 +154,7 @@ export const LanguageSelector: React.FC<{ className?: string }> = ({ className =
         <div
           role="listbox"
           aria-label="Opções de idioma"
-          className="absolute right-0 mt-2 w-44 origin-top-right rounded-xl border border-white/15 bg-[#282523]/95 p-1.5 shadow-2xl backdrop-blur-xl z-50 animate-in fade-in zoom-in-95 duration-150"
+          className="animate-in fade-in zoom-in-95 absolute right-0 z-50 mt-2 w-44 origin-top-right rounded-xl border border-white/15 bg-[#282523]/95 p-1.5 shadow-2xl backdrop-blur-xl duration-150"
         >
           {languages.map((lang) => {
             const isSelected = lang.code === locale;
@@ -162,18 +167,18 @@ export const LanguageSelector: React.FC<{ className?: string }> = ({ className =
                 onClick={() => handleSelect(lang.code)}
                 className={`flex w-full items-center justify-between rounded-lg px-3 py-2 text-xs font-medium transition-all ${
                   isSelected
-                    ? "bg-brand-primary text-white shadow-xs font-semibold"
+                    ? "shadow-xs bg-brand-primary font-semibold text-white"
                     : "text-white/90 hover:bg-white/10 hover:text-white"
                 }`}
               >
                 <div className="flex items-center gap-2.5">
-                  <span className="flex items-center overflow-hidden rounded-xs shadow-xs">
+                  <span className="rounded-xs shadow-xs flex items-center overflow-hidden">
                     {lang.flag}
                   </span>
                   <span>{lang.name}</span>
                 </div>
                 <span
-                  className={`text-[10px] uppercase font-bold tracking-wider ${
+                  className={`text-[10px] font-bold uppercase tracking-wider ${
                     isSelected ? "text-white/90" : "text-white/50"
                   }`}
                 >

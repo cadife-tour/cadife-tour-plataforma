@@ -110,6 +110,18 @@ npm run build
 
 ---
 
+### Biblioteca de componentes
+
+Execute a aplicação e abra `/design-system` para consultar os tokens visuais e exemplos
+interativos dos componentes compartilhados. A rota não aparece na navegação comercial e não é
+indexada por mecanismos de busca.
+
+Ao criar um componente reutilizável em `src/shared/ui/`, exporte-o e registre-o em
+`sharedUiComponents` em `src/shared/ui/index.ts`. Adicione também ao catálogo em
+`src/shared/ui/catalog.tsx` uma descrição, o caminho do arquivo e uma demonstração dos estados que
+o componente realmente oferece. O teste `design-system.test.tsx` verifica se o inventário e o
+catálogo permanecem alinhados.
+
 ## 📄 Licença
 
 Este projeto é de propriedade da **CADIFE Tour**. Todos os direitos reservados.
