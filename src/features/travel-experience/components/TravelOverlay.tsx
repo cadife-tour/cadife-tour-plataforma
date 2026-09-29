@@ -39,6 +39,7 @@ export const TravelOverlay: React.FC<TravelOverlayProps> = ({
         subtitle: "CADIFE Tour • Joinville — Brasil",
         scrollHint: "Role para iniciar sua viagem",
         primaryCta: "Planejar Minha Viagem",
+        primaryCtaAria: "Planejar Minha Viagem no WhatsApp (abre em nova aba)",
         secondaryCta: "Explorar Destinos",
       },
       window: {
@@ -57,6 +58,7 @@ export const TravelOverlay: React.FC<TravelOverlayProps> = ({
         subtitle:
           "Entre montanhas e horizontes infinitos. Das cordilheiras nevadas e vinhedos do Valle Central à Patagônia.",
         primaryCta: "Quero Conhecer o Chile",
+        primaryCtaAria: "Quero Conhecer o Chile no WhatsApp (abre em nova aba)",
         secondaryCta: "Ver Roteiros Completos",
       },
       trustPill1: "Atendimento 100% Humano",
@@ -70,6 +72,7 @@ export const TravelOverlay: React.FC<TravelOverlayProps> = ({
         subtitle: "CADIFE Tour • Joinville — Brazil",
         scrollHint: "Scroll to begin journey",
         primaryCta: "Plan My Journey",
+        primaryCtaAria: "Plan My Journey on WhatsApp (opens in new tab)",
         secondaryCta: "Explore Destinations",
       },
       window: {
@@ -88,6 +91,7 @@ export const TravelOverlay: React.FC<TravelOverlayProps> = ({
         subtitle:
           "Between mountains and infinite horizons. From snow-capped peaks and vineyards to Patagonia.",
         primaryCta: "Discover Chile",
+        primaryCtaAria: "Discover Chile on WhatsApp (opens in new tab)",
         secondaryCta: "View Full Itineraries",
       },
       trustPill1: "100% Human Advisory",
@@ -101,6 +105,7 @@ export const TravelOverlay: React.FC<TravelOverlayProps> = ({
         subtitle: "CADIFE Tour • Joinville — Brasil",
         scrollHint: "Deslice para iniciar el viaje",
         primaryCta: "Planificar Mi Viaje",
+        primaryCtaAria: "Planificar Mi Viaje en WhatsApp (abre en nueva pestaña)",
         secondaryCta: "Explorar Destinos",
       },
       window: {
@@ -119,6 +124,7 @@ export const TravelOverlay: React.FC<TravelOverlayProps> = ({
         subtitle:
           "Entre montañas y horizontes infinitos. De picos nevados y viñedos a la Patagonia salvaje.",
         primaryCta: "Quero Conocer Chile",
+        primaryCtaAria: "Quero Conocer Chile en WhatsApp (abre en nueva pestaña)",
         secondaryCta: "Ver Itinerarios Completos",
       },
       trustPill1: "Atención 100% Humana",
@@ -183,7 +189,7 @@ export const TravelOverlay: React.FC<TravelOverlayProps> = ({
                   destinationTitle="Chile & Cordilheira dos Andes"
                   source="hero_fallback_static"
                   size="lg"
-                  aria-label={`${t.chile.primaryCta} no WhatsApp (abre em nova aba)`}
+                  aria-label={t.chile.primaryCtaAria}
                 >
                   {t.chile.primaryCta}
                 </WhatsAppCta>
@@ -254,7 +260,7 @@ export const TravelOverlay: React.FC<TravelOverlayProps> = ({
               <WhatsAppCta
                 source="hero_airplane_intro"
                 size="lg"
-                aria-label={`${t.airplane.primaryCta} no WhatsApp (abre em nova aba)`}
+                aria-label={t.airplane.primaryCtaAria}
               >
                 {t.airplane.primaryCta}
               </WhatsAppCta>
@@ -334,7 +340,7 @@ export const TravelOverlay: React.FC<TravelOverlayProps> = ({
                 destinationTitle="Chile & Cordilheira dos Andes"
                 source="hero_chile_destination"
                 size="lg"
-                aria-label={`${t.chile.primaryCta} no WhatsApp (abre em nova aba)`}
+                aria-label={t.chile.primaryCtaAria}
               >
                 {t.chile.primaryCta}
               </WhatsAppCta>

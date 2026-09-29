@@ -13,16 +13,21 @@ const LocaleContext = createContext<LocaleContextValue>({
   setLocale: () => {},
 });
 
-export const LocaleProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  const [locale, setLocaleState] = useState<Locale>("pt");
+export const LocaleProvider: React.FC<{
+  children: React.ReactNode;
+  initialLocale?: Locale;
+}> = ({ children, initialLocale }) => {
+  const [locale, setLocaleState] = useState<Locale>(initialLocale || "pt");
 
   useEffect(() => {
-    // Tenta recuperar preferência salva no browser sem redirecionamento forçado
-    const saved = localStorage.getItem("cadife_locale") as Locale | null;
-    if (saved && (saved === "pt" || saved === "en" || saved === "es")) {
-      setLocaleState(saved);
+    // Tenta recuperar preferência salva no browser sem redirecionamento forçado se initialLocale não for fixo
+    if (!initialLocale) {
+      const saved = localStorage.getItem("cadife_locale") as Locale | null;
+      if (saved && (saved === "pt" || saved === "en" || saved === "es")) {
+        setLocaleState(saved);
+      }
     }
-  }, []);
+  }, [initialLocale]);
 
   useEffect(() => {
     // Sincronização dinâmica do atributo lang no DOM (ISS-01)
@@ -41,11 +46,7 @@ export const LocaleProvider: React.FC<{ children: React.ReactNode }> = ({ childr
     localStorage.setItem("cadife_locale", newLocale);
   };
 
-  return (
-    <LocaleContext.Provider value={{ locale, setLocale }}>
-      {children}
-    </LocaleContext.Provider>
-  );
+  return <LocaleContext.Provider value={{ locale, setLocale }}>{children}</LocaleContext.Provider>;
 };
 
 export const useLocale = (): LocaleContextValue => useContext(LocaleContext);
