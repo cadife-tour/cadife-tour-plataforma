@@ -54,7 +54,7 @@ O foco na **janela** é um beat interno da transição **Avião → Nuvens** ped
 - **Copy EN:** headline **“A new experience. A new memory.”**; apoio **“The world begins on the other side of the window.”**
 - **Copy ES:** headline **“Una nueva experiencia. Un nuevo recuerdo.”**; apoio **“El mundo comienza al otro lado de la ventana.”**
 - **Ação:** indicador **“Role para começar sua viagem”** / **“Scroll to begin your journey”** / **“Desliza para comenzar tu viaje”**. É orientação de rolagem, não botão. Manter acesso direto à navegação e ao atendimento mesmo antes de rolar.
-- **Mídia proposta:** vídeo de abertura com texto HTML. A POC #8 usa um clipe de 8 s, 1280×720, ~3,9 MB, gerado no Google Flow e otimizado para busca por quadros. Poster e frame estático dos Andes servem ao fallback. Não tratar o clipe atual como cobertura das dez paradas.
+- **Mídia proposta:** vídeo de abertura com texto HTML; o `airplane-journey-scrub.mp4` atual (6 s, 1920×1080, ~5,1 MB) serve como POC. Poster estático e imagem de cabine são fallback. Não tratar o clipe atual como cobertura das dez paradas.
 
 ### `window` — passagem, 9–15%
 
@@ -212,3 +212,15 @@ Para todas as paradas abaixo, o CTA visível é **“Quero conhecer esta opção
 **Pendências para aprovação:** CADIFE Tour/PO devem validar as headlines e os apoios propostos, a representação visual da Espanha, a cadência de dez destinos e o contato oficial usado pelos CTAs. A #8 deve confirmar a viabilidade da mídia e do scroll. Estes itens não impedem que a #7 seja apresentada como _versão pronta para validação_, conforme o critério da issue; impedem afirmar aprovação final ou performance comprovada.
 
 **Diferença conhecida para o código atual:** `TravelOverlay.tsx` narra abertura, nuvens e Chile; `TravelExperience` usa um vídeo de seis segundos e ainda não implementa o percurso completo nem os modos `single`/`full`. Portanto, este storyboard especifica trabalho futuro e não descreve a Hero completa como já implementada.
+
+## 8. Escopo adicional registrado no PR #65
+
+Além de entregar o storyboard da issue #7, o [PR #65](https://github.com/cadife-tour/cadife-tour-plataforma/pull/65) também altera a experiência atualmente exibida na homepage:
+
+- `/` passa a abrir diretamente em `TravelExperience`, sem seletor entre a Foto Revelação e a jornada em vídeo.
+- A Foto Revelação deixa de ser uma opção da homepage; seu protótipo continua disponível em `/cursor-reveal-poc`.
+- O wrapper `WebGLRevealHero` usado pelo seletor da homepage é removido.
+
+Essa alteração adicional registra a jornada em vídeo como experiência principal da homepage. Ela está relacionada ao objetivo mais amplo do épico #3 e prepara a homepage para o checkpoint técnico da #8, mas não é um critério de aceite da #7. O [PR #66](https://github.com/cadife-tour/cadife-tour-plataforma/pull/66), que implementa o spike da #8, está empilhado sobre o #65.
+
+Esse registro descreve somente a escolha da experiência inicial e a localização do protótipo. Não significa que as quatorze cenas do storyboard, os assets finais ou o desempenho em dispositivos reais já estejam implementados ou aprovados.
