@@ -1,0 +1,420 @@
+.page {
+  width: calc(100% - 2rem);
+  max-width: 80rem;
+  margin: 0 auto;
+  padding: clamp(6rem, 8vw, 8rem) 0 4rem;
+}
+
+.header {
+  max-width: 54rem;
+  margin-bottom: 2.5rem;
+}
+
+.header h1 {
+  margin: 0.7rem 0 0;
+  color: var(--color-text);
+  font-family: var(--font-heading);
+  font-size: clamp(2.5rem, 7vw, 5.25rem);
+  font-weight: 650;
+  letter-spacing: -0.055em;
+  line-height: 0.98;
+}
+
+.eyebrow,
+.componentCategory {
+  margin: 0;
+  color: var(--color-brand-accent);
+  font-size: var(--text-xs);
+  font-weight: 700;
+  letter-spacing: 0.14em;
+}
+
+.lede {
+  max-width: 42rem;
+  margin: 1.25rem 0 0;
+  color: var(--color-text-muted);
+  font-size: clamp(1rem, 2vw, 1.25rem);
+  line-height: 1.6;
+}
+
+.navigation {
+  position: sticky;
+  z-index: 10;
+  top: 0.75rem;
+  display: flex;
+  width: fit-content;
+  gap: 0.5rem;
+  margin-bottom: 4rem;
+  padding: 0.4rem;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-full);
+  background: color-mix(in srgb, var(--color-bg) 88%, transparent);
+  backdrop-filter: blur(12px);
+}
+
+.navigation a {
+  padding: 0.7rem 1rem;
+  border-radius: var(--radius-full);
+  color: var(--color-text-muted);
+  font-size: var(--text-sm);
+  font-weight: 600;
+  text-decoration: none;
+  transition:
+    color var(--duration-fast) var(--ease-standard),
+    background-color var(--duration-fast) var(--ease-standard);
+}
+
+.navigation a:hover,
+.navigation a:focus-visible {
+  background: var(--color-surface-elevated);
+  color: var(--color-text);
+}
+
+.section {
+  scroll-margin-top: 6rem;
+  margin-top: 5rem;
+}
+
+.sectionHeading {
+  max-width: 48rem;
+  margin-bottom: 2rem;
+}
+
+.sectionHeading h2 {
+  margin: 0.45rem 0;
+  color: var(--color-text);
+  font-size: clamp(1.8rem, 4vw, 3rem);
+  letter-spacing: -0.035em;
+  line-height: 1.1;
+}
+
+.sectionHeading > p:last-child,
+.componentHeading > div > p:last-child {
+  margin: 0.6rem 0 0;
+  color: var(--color-text-muted);
+  line-height: 1.6;
+}
+
+.tokenGroup {
+  margin-top: 1.5rem;
+  padding: clamp(1rem, 3vw, 1.5rem);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-xl);
+  background: var(--color-surface);
+}
+
+.tokenGroup h3,
+.componentHeading h3 {
+  margin: 0;
+  color: var(--color-text);
+  font-size: var(--text-lg);
+  font-weight: 650;
+}
+
+.colorGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 12rem), 1fr));
+  gap: 0.75rem;
+  margin-top: 1rem;
+}
+
+.colorToken {
+  display: grid;
+  grid-template-columns: 2.5rem minmax(0, 1fr);
+  align-items: center;
+  gap: 0.2rem 0.7rem;
+  min-width: 0;
+  padding: 0.75rem;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  background: var(--color-bg);
+  color: var(--color-text);
+  font-size: var(--text-sm);
+}
+
+.swatch {
+  grid-row: span 2;
+  width: 2.5rem;
+  height: 2.5rem;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+}
+
+.colorToken code,
+.tokenHint,
+.typeToken code,
+.radiusToken code,
+.shadowToken code,
+.motionSample code,
+.source code,
+.footer code {
+  overflow-wrap: anywhere;
+  color: var(--color-text-subtle);
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  font-size: var(--text-xs);
+}
+
+.tokenColumns {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1.5rem;
+}
+
+.layoutColumns {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1.5rem;
+  margin-top: 1.25rem;
+}
+
+.layoutColumns h4 {
+  margin: 0 0 0.75rem;
+  color: var(--color-text-muted);
+  font-size: var(--text-sm);
+}
+
+.spacingList,
+.breakpointList {
+  display: grid;
+  gap: 0.65rem;
+}
+
+.spacingToken,
+.breakpointToken {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(3rem, 1fr);
+  align-items: center;
+  gap: 0.75rem;
+  min-width: 0;
+  min-height: 2rem;
+  padding: 0.4rem 0.6rem;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  background: var(--color-bg);
+}
+
+.breakpointToken {
+  grid-template-columns: 1fr;
+}
+
+.spacingToken code,
+.breakpointToken code {
+  overflow-wrap: anywhere;
+  color: var(--color-text-muted);
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  font-size: var(--text-xs);
+}
+
+.spacingTrack {
+  display: flex;
+  justify-content: flex-start;
+  min-width: 0;
+  height: 0.8rem;
+}
+
+.spacingBar {
+  height: 100%;
+  border-radius: var(--radius-full);
+  background: var(--color-brand-accent);
+}
+
+.tokenHint {
+  margin: 0.65rem 0 0;
+  color: var(--color-text-muted);
+  font-family: inherit;
+  font-size: var(--text-sm);
+}
+
+.typeList {
+  display: grid;
+  gap: 0.65rem;
+  margin-top: 1rem;
+}
+
+.typeToken {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 1rem;
+  min-width: 0;
+  padding-bottom: 0.55rem;
+  border-bottom: 1px solid var(--color-border);
+}
+
+.typeToken span {
+  max-width: 75%;
+  overflow: hidden;
+  color: var(--color-text);
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.radiusGrid,
+.shadowGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(6rem, 1fr));
+  gap: 0.75rem;
+  margin-top: 1rem;
+}
+
+.radiusToken,
+.shadowToken {
+  display: grid;
+  place-items: center;
+  gap: 0.7rem;
+  min-width: 0;
+  min-height: 6rem;
+  padding: 0.75rem;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  background: var(--color-bg);
+}
+
+.radiusToken span {
+  width: 2.8rem;
+  height: 2.8rem;
+  background: var(--color-brand-primary);
+}
+
+.subheading {
+  margin-top: 2rem !important;
+}
+
+.shadowToken {
+  background: var(--color-surface-elevated);
+}
+
+.motionGrid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 1rem;
+  margin-top: 1rem;
+}
+
+.motionSample {
+  display: grid;
+  align-content: center;
+  gap: 0.65rem;
+  min-height: 7rem;
+  padding: 1rem;
+  color: var(--color-text-muted);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  background: var(--color-bg);
+  font-size: var(--text-sm);
+  text-align: left;
+  cursor: pointer;
+  transition:
+    transform var(--duration-normal) var(--ease-expressive),
+    border-color var(--duration-normal) var(--ease-standard),
+    background-color var(--duration-normal) var(--ease-standard);
+}
+
+.motionSample:hover,
+.motionSample:focus-visible {
+  transform: translateY(-0.2rem);
+  border-color: var(--color-brand-accent);
+  background: var(--color-surface-elevated);
+}
+
+.motionFast {
+  transition-duration: var(--duration-fast);
+}
+
+.motionNormal {
+  transition-duration: var(--duration-normal);
+}
+
+.motionSlow {
+  transition-duration: var(--duration-slow);
+}
+
+.componentGrid {
+  display: grid;
+  gap: 1rem;
+}
+
+.componentCard {
+  min-width: 0;
+  padding: clamp(1rem, 3vw, 1.5rem);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-xl);
+  background: var(--color-surface);
+}
+
+.componentHeading {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.componentCategory {
+  margin-bottom: 0.45rem;
+  color: var(--color-text-subtle);
+  font-size: 0.65rem;
+}
+
+.componentHeading > code {
+  flex: 0 0 auto;
+  padding: 0.35rem 0.55rem;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-full);
+  color: var(--color-brand-accent);
+  font-size: var(--text-xs);
+}
+
+.preview {
+  min-width: 0;
+  margin-top: 1.5rem;
+  padding: clamp(1rem, 3vw, 1.5rem);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  background: var(--color-bg);
+}
+
+.source {
+  margin: 1rem 0 0;
+  color: var(--color-text-muted);
+  font-size: var(--text-xs);
+}
+
+.source code {
+  margin-left: 0.35rem;
+}
+
+.footer {
+  margin-top: 4rem;
+  padding-top: 1.25rem;
+  border-top: 1px solid var(--color-border);
+  color: var(--color-text-muted);
+  font-size: var(--text-sm);
+}
+
+@media (max-width: 760px) {
+  .tokenColumns,
+  .layoutColumns,
+  .motionGrid {
+    grid-template-columns: 1fr;
+  }
+
+  .section {
+    margin-top: 3.5rem;
+  }
+
+  .navigation {
+    position: static;
+    margin-bottom: 2.5rem;
+  }
+
+  .colorGrid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+@media (max-width: 420px) {
+  .radiusGrid,
+  .shadowGrid {
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 6rem), 1fr));
+  }
+}
