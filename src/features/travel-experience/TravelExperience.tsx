@@ -8,12 +8,20 @@ import { useGpuCapability } from "@/features/visual-journey/hooks/useGpuCapabili
 import { TravelOverlay } from "./components/TravelOverlay";
 import { ASSET_MANIFEST } from "./assets/assetManifest";
 import { clamp } from "./timeline/timelineUtils";
-import type { TravelExperienceMode } from "./config/travelExperienceConfig";
+import { type TravelExperienceMode, getDestinationConfig } from "./config/travelExperienceConfig";
 
 const VIDEO_END_PROGRESS = 0.85;
 const FRAME_INTERVAL = 1 / 24;
 
-function StaticJourney() {
+interface StaticJourneyProps {
+  mode?: TravelExperienceMode;
+  targetDestination?: string;
+}
+
+function StaticJourney({ mode, targetDestination }: StaticJourneyProps) {
+  const destination = getDestinationConfig(targetDestination);
+  const destinationStill = destination.media.stillImage || ASSET_MANIFEST.images.chileAndes;
+
   return (
     <section
       className="w-full border-b border-border"
@@ -30,7 +38,12 @@ function StaticJourney() {
           className="object-cover"
         />
         <div className="pointer-events-none absolute inset-0 bg-gradient-to-r from-black/85 via-black/45 to-black/10" />
-        <TravelOverlay progress={0} staticFallback />
+        <TravelOverlay
+          progress={0}
+          staticFallback
+          mode={mode}
+          targetDestination={targetDestination}
+        />
       </div>
       <div className="relative min-h-screen overflow-hidden bg-slate-300">
         <div
@@ -41,18 +54,22 @@ function StaticJourney() {
           }}
         />
         <div className="pointer-events-none absolute inset-0 bg-gradient-to-r from-black/75 via-black/30 to-transparent" />
-        <TravelOverlay progress={0.57} staticFallback />
+        <TravelOverlay
+          progress={0.57}
+          staticFallback
+          mode={mode}
+          targetDestination={targetDestination}
+        />
       </div>
       <div className="relative min-h-screen overflow-hidden bg-[#141312]">
-        <Image
-          src={ASSET_MANIFEST.images.chileAndes}
-          alt=""
-          fill
-          sizes="100vw"
-          className="object-cover"
-        />
+        <Image src={destinationStill} alt="" fill sizes="100vw" className="object-cover" />
         <div className="pointer-events-none absolute inset-0 bg-gradient-to-r from-black/85 via-black/40 to-transparent" />
-        <TravelOverlay progress={1} staticFallback />
+        <TravelOverlay
+          progress={1}
+          staticFallback
+          mode={mode}
+          targetDestination={targetDestination}
+        />
       </div>
     </section>
   );
@@ -134,16 +151,17 @@ export function TravelExperience({
     };
   }, [isHydrated, useStaticFallback]);
 
-  if (useStaticFallback) return <StaticJourney />;
+  if (useStaticFallback) return <StaticJourney mode={mode} targetDestination={targetDestination} />;
 
   const cloudArrival = clamp((progress - 0.4) / 0.12);
   const cloudDeparture = clamp((0.72 - progress) / 0.12);
   const cloudOpacity = Math.min(cloudArrival, cloudDeparture) * 0.35;
+  const heightClass = mode === "full" ? "h-[500vh] lg:h-[700vh]" : "h-[350svh] md:h-[500vh]";
 
   return (
     <section
       ref={containerRef}
-      className="relative h-[350svh] w-full border-b border-border md:h-[500vh]"
+      className={`relative ${heightClass} w-full border-b border-border`}
       aria-label="Experiência de Viagem CADIFE Tour — Trilha Interativa"
       data-testid="travel-experience-hero"
     >

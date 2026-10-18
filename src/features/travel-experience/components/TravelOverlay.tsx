@@ -8,7 +8,7 @@ import { buildWhatsAppUrl } from "@/shared/utils/whatsapp";
 import { contactInfo } from "@/content/data";
 import { trackEvent } from "@/core/analytics";
 import { getPhaseFromProgress } from "../timeline/timelineUtils";
-import type { TravelExperienceMode } from "../config/travelExperienceConfig";
+import { getDestinationConfig, type TravelExperienceMode } from "../config/travelExperienceConfig";
 
 export interface TravelOverlayProps {
   progress: number;
@@ -21,20 +21,25 @@ export interface TravelOverlayProps {
 /**
  * TravelOverlay:
  * Renderiza textos, títulos e CTAs em HTML semântico e acessível,
- * reagindo com transição suave ao progresso do scroll do Hero (Avião -> Nuvens -> Chile).
+ * reagindo com transição suave ao progresso do scroll do Hero (Avião -> Nuvens -> Destino).
+ * Suporta destinos configuráveis dinamicamente via targetDestination.
  */
 export const TravelOverlay: React.FC<TravelOverlayProps> = ({
   progress,
   staticFallback = false,
   isStaticFallback = false,
   mode: _mode = "single",
-  targetDestination: _targetDestination = "chile",
+  targetDestination = "chile",
 }) => {
   const isFallback = staticFallback || isStaticFallback;
   const { locale } = useLocale();
   const _currentPhase = getPhaseFromProgress(progress);
 
-  // Textos para cada fase da jornada
+  // Configuração dinâmica do destino ativo
+  const destinationConfig = getDestinationConfig(targetDestination);
+  const destContent = destinationConfig.content[locale] || destinationConfig.content.pt;
+
+  // Textos para abertura e transições da jornada
   const content = {
     pt: {
       airplane: {
@@ -49,13 +54,6 @@ export const TravelOverlay: React.FC<TravelOverlayProps> = ({
         badge: "Cruzando Novos Céus",
         title: "Além das nuvens, novos caminhos.",
         subtitle: "Uma jornada de possibilidades começa a ganhar forma.",
-      },
-      chile: {
-        badge: "Destino em Destaque — América do Sul",
-        title: "Chile: diante da imensidão dos Andes.",
-        subtitle: "Montanhas e horizontes que convidam a ir mais longe.",
-        primaryCta: "Quero conhecer esta opção",
-        secondaryCta: "Ver Roteiros Completos",
       },
       trustPill1: "Atendimento 100% Humano",
       trustPill2: "Roteiros Personalizados",
@@ -76,13 +74,6 @@ export const TravelOverlay: React.FC<TravelOverlayProps> = ({
         title: "Beyond the clouds, new paths.",
         subtitle: "A journey of possibilities begins to take shape.",
       },
-      chile: {
-        badge: "Featured Destination — South America",
-        title: "Chile: before the vast Andes.",
-        subtitle: "Mountains and horizons that invite you to go further.",
-        primaryCta: "Explore this option",
-        secondaryCta: "View Full Itineraries",
-      },
       trustPill1: "100% Human Advisory",
       trustPill2: "Tailored Itineraries",
       trustPill3: "24/7 Travel Assistance",
@@ -102,13 +93,6 @@ export const TravelOverlay: React.FC<TravelOverlayProps> = ({
         title: "Más allá de las nubes, nuevos caminos.",
         subtitle: "Un viaje de posibilidades comienza a tomar forma.",
       },
-      chile: {
-        badge: "Destino Destacado — Sudamérica",
-        title: "Chile: ante la inmensidad de los Andes.",
-        subtitle: "Montañas y horizontes que invitan a ir más lejos.",
-        primaryCta: "Quiero conocer esta opción",
-        secondaryCta: "Ver Itinerarios Completos",
-      },
       trustPill1: "Atención 100% Humana",
       trustPill2: "Itinerarios a Medida",
       trustPill3: "Soporte 24h en Destino",
@@ -125,11 +109,14 @@ export const TravelOverlay: React.FC<TravelOverlayProps> = ({
     context: "quote",
   });
 
-  const chileWhatsappUrl = buildWhatsAppUrl({
+  const destinationWhatsappUrl = buildWhatsAppUrl({
     phoneNumber: contactInfo.whatsappNumber,
     locale,
     context: "destination",
-    destinationTitle: "Chile & Cordilheira dos Andes",
+    destinationTitle:
+      destinationConfig.id === "chile"
+        ? "Chile & Cordilheira dos Andes"
+        : destinationConfig.country,
   });
 
   // Opacidade de cada camada do overlay
@@ -138,8 +125,8 @@ export const TravelOverlay: React.FC<TravelOverlayProps> = ({
   // Clouds text: acompanha a travessia no clipe de oito segundos.
   const cloudsOpacity =
     progress >= 0.42 && progress <= 0.69 ? Math.sin(((progress - 0.42) / 0.27) * Math.PI) : 0;
-  // Chile: aparece quando as montanhas entram no vídeo e permanece no frame final.
-  const chileOpacity = Math.max(0, Math.min(1, (progress - 0.69) / 0.13));
+  // Destino ativo: surge a partir de 0.69 e consolida até o fim.
+  const destinationOpacity = Math.max(0, Math.min(1, (progress - 0.69) / 0.13));
 
   const handleIntroCta = () => {
     trackEvent("whatsapp_conversion", {
@@ -148,12 +135,18 @@ export const TravelOverlay: React.FC<TravelOverlayProps> = ({
     });
   };
 
-  const handleChileCta = () => {
+  const handleDestinationCta = () => {
     trackEvent("whatsapp_conversion", {
-      cta_location: "hero_chile_destination",
+      cta_location: `hero_${destinationConfig.id}_destination`,
+      destination: destinationConfig.id,
       locale,
     });
   };
+
+  const destinationAriaLabel =
+    destinationConfig.id === "chile"
+      ? `${destContent.primaryCta}: ${destinationConfig.country} — WhatsApp (${t.newTab})`
+      : `${destContent.primaryCta} — WhatsApp (${t.newTab})`;
 
   return (
     <div className="pointer-events-none absolute inset-0 z-10 flex flex-col justify-center">
@@ -229,47 +222,47 @@ export const TravelOverlay: React.FC<TravelOverlayProps> = ({
             </div>
           )}
 
-          {/* 3. REVEAL / CHILE */}
+          {/* 3. REVEAL / CONFIGURABLE DESTINATION */}
           <div
             className={`absolute inset-0 flex flex-col justify-center space-y-6 ${
-              chileOpacity > 0.05
+              destinationOpacity > 0.05
                 ? "pointer-events-auto opacity-100"
                 : "pointer-events-none invisible opacity-0"
             }`}
-            style={{ opacity: chileOpacity }}
-            aria-hidden={chileOpacity <= 0.05}
+            style={{ opacity: destinationOpacity }}
+            aria-hidden={destinationOpacity <= 0.05}
           >
             <div className="border-brand-accent/40 bg-surface/90 inline-flex w-fit items-center gap-2.5 rounded-full border px-4 py-1.5 text-xs font-semibold text-white shadow-sm backdrop-blur-md">
               <span className="h-2 w-2 rounded-full bg-brand-accent" aria-hidden="true" />
-              <span>{t.chile.badge}</span>
+              <span>{destContent.badge}</span>
             </div>
 
             <h2 className="text-4xl font-extrabold leading-[1.1] tracking-tight text-white [text-shadow:_0_2px_12px_rgba(0,0,0,0.8)] sm:text-5xl lg:text-6xl">
-              {t.chile.title}
+              {destContent.title}
             </h2>
 
             <p className="max-w-2xl text-lg leading-relaxed text-white/95 [text-shadow:_0_2px_8px_rgba(0,0,0,0.8)] sm:text-xl">
-              {t.chile.subtitle}
+              {destContent.subtitle}
             </p>
 
             <div className="flex flex-wrap items-center gap-4 pt-2">
               <Button size="lg" asChild>
                 <a
-                  href={chileWhatsappUrl}
+                  href={destinationWhatsappUrl}
                   target="_blank"
                   rel="noopener noreferrer"
-                  onClick={handleChileCta}
-                  aria-label={`${t.chile.primaryCta}: Chile — WhatsApp (${t.newTab})`}
+                  onClick={handleDestinationCta}
+                  aria-label={destinationAriaLabel}
                 >
-                  {t.chile.primaryCta}
+                  {destContent.primaryCta}
                 </a>
               </Button>
               <Button variant="outline" size="lg" asChild>
-                <a href="#destinos">{t.chile.secondaryCta}</a>
+                <a href="#destinos">{destContent.secondaryCta}</a>
               </Button>
             </div>
 
-            {/* Trust Indicators na fase Chile */}
+            {/* Trust Indicators na fase do destino */}
             <div className="flex flex-wrap items-center gap-4 border-t border-white/40 pt-4 text-xs font-medium text-white/90 sm:text-sm">
               <div className="flex items-center gap-2">
                 <span className="font-bold text-brand-accent" aria-hidden="true">
