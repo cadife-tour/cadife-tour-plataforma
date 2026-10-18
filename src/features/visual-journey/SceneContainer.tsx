@@ -57,7 +57,7 @@ export default function SceneContainer({
   return (
     <WebGlErrorBoundary fallback={<StaticAtmosphere />}>
       <div
-        className="fixed inset-0 -z-10 pointer-events-none overflow-hidden"
+        className="pointer-events-none fixed inset-0 -z-10 overflow-hidden"
         aria-hidden="true"
         data-testid="webgl-canvas-container"
       >

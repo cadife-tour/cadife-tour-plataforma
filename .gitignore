@@ -57,6 +57,8 @@ scripts/
 # ==============================================================================
 base/
 docs/*
+!docs/HERO_STORYBOARD.md
+!docs/HERO_ARCHITECTURE_SPIKE.md
 !docs/PEDRO_IMPLEMENTATION_PLAN.md
 ARCHITECTURE.md
 CONTRIBUTING.md

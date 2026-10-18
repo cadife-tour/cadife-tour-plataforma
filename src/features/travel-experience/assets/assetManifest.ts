@@ -1,6 +1,6 @@
 /**
- * Manifesto de assets para a experiência 3D.
- * Centraliza URLs e caminhos para permitir substituição imediata quando modelos .glb forem adicionados.
+ * Manifesto de mídia da Hero.
+ * Os modelos experimentais não são carregados pela POC híbrida.
  */
 export const ASSET_MANIFEST = {
   models: {
@@ -13,5 +13,9 @@ export const ASSET_MANIFEST = {
   },
   videos: {
     heroJourney: "/assets/hero/airplane-journey-scrub.mp4",
+  },
+  images: {
+    airplanePoster: "/assets/hero/airplane-poster.webp",
+    chileAndes: "/assets/hero/andes-still.webp",
   },
 } as const;

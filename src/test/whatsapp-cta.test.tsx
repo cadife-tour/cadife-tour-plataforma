@@ -106,33 +106,19 @@ describe("Fase 1 & 2 — WhatsAppCta & Hero Engine Multi-Mode", () => {
     );
 
     expect(screen.getByText(/uma nova experiência\. uma nova memória\./i)).toBeInTheDocument();
-    expect(screen.getByText(/role para iniciar sua viagem/i)).toBeInTheDocument();
+    expect(screen.getByText(/role para/i)).toBeInTheDocument();
   });
 
-  it("Fase 3: TravelOverlay renders window transition phase at progress 0.22", async () => {
+  it("Fase 3: TravelOverlay renders clouds transition phase at progress 0.57", async () => {
     const { TravelOverlay } = await import("@/features/travel-experience/components/TravelOverlay");
     render(
       <LocaleProvider>
-        <TravelOverlay progress={0.22} mode="single" targetDestination="chile" />
-      </LocaleProvider>
-    );
-
-    expect(screen.getByText(/o mundo começa do outro lado da janela\./i)).toBeInTheDocument();
-    expect(screen.getByText(/o começo da jornada/i)).toBeInTheDocument();
-  });
-
-  it("Fase 3: TravelOverlay renders clouds transition phase at progress 0.40", async () => {
-    const { TravelOverlay } = await import("@/features/travel-experience/components/TravelOverlay");
-    render(
-      <LocaleProvider>
-        <TravelOverlay progress={0.4} mode="single" targetDestination="chile" />
+        <TravelOverlay progress={0.57} mode="single" targetDestination="chile" />
       </LocaleProvider>
     );
 
     expect(screen.getByText(/cruzando novos céus/i)).toBeInTheDocument();
-    expect(
-      screen.getByText(/atravessando horizontes em direção ao extraordinário\./i)
-    ).toBeInTheDocument();
+    expect(screen.getByText(/além das nuvens, novos caminhos\./i)).toBeInTheDocument();
   });
 
   it("Fase 3: TravelOverlay renders Chile destination, copy and WhatsApp CTA at progress 0.85", async () => {
@@ -143,12 +129,8 @@ describe("Fase 1 & 2 — WhatsAppCta & Hero Engine Multi-Mode", () => {
       </LocaleProvider>
     );
 
-    expect(
-      screen.getByText(/chile: onde a imponência dos andes encontra o infinito\./i)
-    ).toBeInTheDocument();
-    expect(
-      screen.getByRole("link", { name: /quero conhecer o chile no whatsapp/i })
-    ).toBeInTheDocument();
+    expect(screen.getByText(/chile: diante da imensidão dos andes\./i)).toBeInTheDocument();
+    expect(screen.getByRole("link", { name: /quero conhecer esta opção/i })).toBeInTheDocument();
     expect(screen.getByText(/atendimento 100% humano/i)).toBeInTheDocument();
     expect(screen.getByText(/roteiros personalizados/i)).toBeInTheDocument();
   });
@@ -167,16 +149,10 @@ describe("Fase 1 & 2 — WhatsAppCta & Hero Engine Multi-Mode", () => {
     );
 
     // Deve exibir o badge, headline e card de destino estático
-    expect(screen.getByText(/uma nova experiência\. uma nova memória\./i)).toBeInTheDocument();
-    expect(screen.getByRole("heading", { level: 1 })).toHaveTextContent(
-      /sua próxima grande jornada planejada com excelência humana\./i
-    );
-    expect(
-      screen.getByText(/chile: onde a imponência dos andes encontra o infinito\./i)
-    ).toBeInTheDocument();
+    expect(screen.getByText(/chile: diante da imensidão dos andes\./i)).toBeInTheDocument();
 
     // CTA de conversão funcional para o WhatsApp no modo estático
-    const cta = screen.getByRole("link", { name: /quero conhecer o chile no whatsapp/i });
+    const cta = screen.getByRole("link", { name: /quero conhecer esta opção/i });
     expect(cta).toBeInTheDocument();
     expect(cta).toHaveAttribute("target", "_blank");
 

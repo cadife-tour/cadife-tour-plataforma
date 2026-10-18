@@ -12,10 +12,7 @@ interface TravelVideoScrubberProps {
  * Elemento de vídeo fixo em tela cheia que reproduz a jornada frame a frame
  * estritamente atrelada à posição do scroll do usuário (desce -> avança, sobe -> volta).
  */
-export const TravelVideoScrubber: React.FC<TravelVideoScrubberProps> = ({
-  progress,
-  src,
-}) => {
+export const TravelVideoScrubber: React.FC<TravelVideoScrubberProps> = ({ progress, src }) => {
   const videoRef = useRef<HTMLVideoElement>(null);
   const targetTimeRef = useRef(0);
   const rafRef = useRef<number | null>(null);
@@ -74,7 +71,7 @@ export const TravelVideoScrubber: React.FC<TravelVideoScrubberProps> = ({
   }, []);
 
   return (
-    <div className="absolute inset-0 h-full w-full pointer-events-none overflow-hidden bg-background">
+    <div className="pointer-events-none absolute inset-0 h-full w-full overflow-hidden bg-background">
       <video
         ref={videoRef}
         src={src}
@@ -85,8 +82,8 @@ export const TravelVideoScrubber: React.FC<TravelVideoScrubberProps> = ({
         className="h-full w-full object-cover object-center transition-opacity duration-500"
       />
       {/* Vinhetas escuras e gradientes cinematográficos para garantir legibilidade perfeita do texto */}
-      <div className="absolute inset-0 bg-gradient-to-t from-background via-background/20 to-background/50" />
-      <div className="absolute inset-0 bg-gradient-to-r from-background/70 via-transparent to-background/30" />
+      <div className="via-background/20 to-background/50 absolute inset-0 bg-gradient-to-t from-background" />
+      <div className="from-background/70 to-background/30 absolute inset-0 bg-gradient-to-r via-transparent" />
     </div>
   );
 };

@@ -10,22 +10,22 @@
      1. Color Palette (Semantic Tokens)
      ========================================================================== */
   /* Base & Surfaces (Warm dark graphite based on Cadife #393532) */
-  --color-bg: #141312;                 /* Fundo ultra-escuro grafite quente */
-  --color-surface: #1e1b1a;            /* Superfície de cards */
-  --color-surface-elevated: #2c2826;   /* Superfície elevada / hover */
-  --color-surface-muted: #242120;      /* Superfície secundária */
+  --color-bg: #141312; /* Fundo ultra-escuro grafite quente */
+  --color-surface: #1e1b1a; /* Superfície de cards */
+  --color-surface-elevated: #2c2826; /* Superfície elevada / hover */
+  --color-surface-muted: #242120; /* Superfície secundária */
 
   /* Typography Colors */
-  --color-text: #fdfdfd;               /* Branco puro (#FFFFFF) de alto contraste */
-  --color-text-muted: #a39e9b;         /* Cinza suave para legibilidade */
-  --color-text-subtle: #7a7571;        /* Cinza neutro (#7A7A7A do site original) */
+  --color-text: #fdfdfd; /* Branco puro (#FFFFFF) de alto contraste */
+  --color-text-muted: #a39e9b; /* Cinza suave para legibilidade */
+  --color-text-subtle: #7a7571; /* Cinza neutro (#7A7A7A do site original) */
 
   /* Brand Accents (CADIFE Tour Original Identity) */
-  --color-brand-primary: #dd0b0e;      /* Vermelho vibrante oficial Cadife */
-  --color-brand-secondary: #b8090b;    /* Vermelho mais escuro para hover */
-  --color-brand-accent: #f0282b;       /* Vermelho luminoso para highlights */
-  --color-brand-dark: #393532;         /* Grafite clássico da marca Cadife */
-  --color-brand-gold: #eab308;         /* Dourado quente de viagem / sol */
+  --color-brand-primary: #dd0b0e; /* Vermelho vibrante oficial Cadife */
+  --color-brand-secondary: #b8090b; /* Vermelho mais escuro para hover */
+  --color-brand-accent: #f0282b; /* Vermelho luminoso para highlights */
+  --color-brand-dark: #393532; /* Grafite clássico da marca Cadife */
+  --color-brand-gold: #eab308; /* Dourado quente de viagem / sol */
 
   /* Functional / Borders / States */
   --color-border: rgba(255, 255, 255, 0.12);
@@ -38,28 +38,30 @@
   /* ==========================================================================
      2. Typography Tokens (Font families marked for Design Discovery phase)
      ========================================================================== */
-  --font-sans: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
+  --font-sans:
+    system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell,
+    "Open Sans", "Helvetica Neue", sans-serif;
   --font-heading: var(--font-sans);
 
   /* Font Sizes & Line Heights */
-  --text-xs: 0.75rem;     /* 12px */
-  --text-sm: 0.875rem;    /* 14px */
-  --text-base: 1rem;       /* 16px */
-  --text-lg: 1.125rem;    /* 18px */
-  --text-xl: 1.25rem;     /* 20px */
-  --text-2xl: 1.5rem;     /* 24px */
-  --text-3xl: 1.875rem;   /* 30px */
-  --text-4xl: 2.25rem;    /* 36px */
-  --text-5xl: 3rem;       /* 48px */
-  --text-6xl: 3.75rem;    /* 60px */
+  --text-xs: 0.75rem; /* 12px */
+  --text-sm: 0.875rem; /* 14px */
+  --text-base: 1rem; /* 16px */
+  --text-lg: 1.125rem; /* 18px */
+  --text-xl: 1.25rem; /* 20px */
+  --text-2xl: 1.5rem; /* 24px */
+  --text-3xl: 1.875rem; /* 30px */
+  --text-4xl: 2.25rem; /* 36px */
+  --text-5xl: 3rem; /* 48px */
+  --text-6xl: 3.75rem; /* 60px */
 
   /* ==========================================================================
      3. Radii & Spacing
      ========================================================================== */
-  --radius-sm: 0.375rem;  /* 6px */
-  --radius-md: 0.5rem;    /* 8px */
-  --radius-lg: 0.75rem;   /* 12px */
-  --radius-xl: 1rem;      /* 16px */
+  --radius-sm: 0.375rem; /* 6px */
+  --radius-md: 0.5rem; /* 8px */
+  --radius-lg: 0.75rem; /* 12px */
+  --radius-xl: 1rem; /* 16px */
   --radius-full: 9999px;
 
   /* ==========================================================================
