@@ -8,21 +8,29 @@ import { buildWhatsAppUrl } from "@/shared/utils/whatsapp";
 import { contactInfo } from "@/content/data";
 import { trackEvent } from "@/core/analytics";
 import { getPhaseFromProgress } from "../timeline/timelineUtils";
+import type { TravelExperienceMode } from "../config/travelExperienceConfig";
 
-interface TravelOverlayProps {
+export interface TravelOverlayProps {
   progress: number;
   staticFallback?: boolean;
+  isStaticFallback?: boolean;
+  mode?: TravelExperienceMode;
+  targetDestination?: string;
 }
 
 /**
  * TravelOverlay:
  * Renderiza textos, títulos e CTAs em HTML semântico e acessível,
- * reagindo com transição suave ao progresso do scroll do Hero (Avião -> Janela -> Nuvens -> Chile).
+ * reagindo com transição suave ao progresso do scroll do Hero (Avião -> Nuvens -> Chile).
  */
 export const TravelOverlay: React.FC<TravelOverlayProps> = ({
   progress,
   staticFallback = false,
+  isStaticFallback = false,
+  mode: _mode = "single",
+  targetDestination: _targetDestination = "chile",
 }) => {
+  const isFallback = staticFallback || isStaticFallback;
   const { locale } = useLocale();
   const _currentPhase = getPhaseFromProgress(progress);
 
@@ -163,7 +171,7 @@ export const TravelOverlay: React.FC<TravelOverlayProps> = ({
           >
             <div className="bg-surface/80 inline-flex items-center gap-2.5 rounded-full border border-border px-4 py-1.5 text-xs font-semibold text-white shadow-sm backdrop-blur-md">
               <span
-                className={`h-2 w-2 rounded-full bg-brand-accent ${staticFallback ? "" : "animate-pulse"}`}
+                className={`h-2 w-2 rounded-full bg-brand-accent ${isFallback ? "" : "animate-pulse"}`}
                 aria-hidden="true"
               />
               <span>{t.airplane.badge}</span>
@@ -194,7 +202,7 @@ export const TravelOverlay: React.FC<TravelOverlayProps> = ({
               </Button>
             </div>
 
-            {!staticFallback && (
+            {!isFallback && (
               <div className="flex items-center gap-2 pt-4 text-xs font-medium text-white/90">
                 <span>↓</span>
                 <span>{t.airplane.scrollHint}</span>

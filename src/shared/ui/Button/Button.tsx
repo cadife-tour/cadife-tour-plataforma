@@ -14,10 +14,14 @@ export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
       "inline-flex items-center justify-center font-medium rounded-md transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 disabled:opacity-50 disabled:pointer-events-none cursor-pointer";
 
     const variantStyles = {
-      primary: "bg-brand-primary text-foreground hover:bg-brand-secondary focus-visible:outline-brand-accent",
-      secondary: "bg-surface-elevated text-foreground hover:bg-surface-muted focus-visible:outline-brand-accent",
-      outline: "border border-border text-foreground hover:bg-surface-elevated hover:border-brand-accent focus-visible:outline-brand-accent",
-      ghost: "text-foreground-muted hover:text-foreground hover:bg-surface-elevated focus-visible:outline-brand-accent",
+      primary:
+        "bg-brand-primary text-foreground hover:bg-brand-secondary focus-visible:outline-brand-accent",
+      secondary:
+        "bg-surface-elevated text-foreground hover:bg-surface-muted focus-visible:outline-brand-accent",
+      outline:
+        "border border-border text-foreground hover:bg-surface-elevated hover:border-brand-accent focus-visible:outline-brand-accent",
+      ghost:
+        "text-foreground-muted hover:text-foreground hover:bg-surface-elevated focus-visible:outline-brand-accent",
     };
 
     const sizeStyles = {

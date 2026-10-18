@@ -23,10 +23,7 @@ interface MountainPeak {
  * de montanha, cumes nevados, luz dourada andina e neblina de altitude.
  * Se houver um .glb do Chile no futuro, useGLTF pode ser plugado imediatamente.
  */
-export const ChileScene: React.FC<ChileSceneProps> = ({
-  progress,
-  opacity = 1,
-}) => {
+export const ChileScene: React.FC<ChileSceneProps> = ({ progress, opacity = 1 }) => {
   const chileGroupRef = useRef<THREE.Group>(null);
 
   // Aparece a partir de progress >= 0.40 com entrada gradual e atinge destaque pleno em 0.60 - 1.0

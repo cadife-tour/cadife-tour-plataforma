@@ -2,12 +2,9 @@
 
 import React, { useState, useEffect } from "react";
 import { Container } from "@/shared/ui/Container/Container";
-import { Button } from "@/shared/ui/Button/Button";
 import { LanguageSelector } from "@/shared/ui/LanguageSelector/LanguageSelector";
+import { WhatsAppCta } from "@/shared/ui/WhatsAppCta";
 import { useLocale } from "@/core/i18n/LocaleContext";
-import { buildWhatsAppUrl } from "@/shared/utils/whatsapp";
-import { contactInfo } from "@/content/data";
-import { trackEvent } from "@/core/analytics";
 
 export const Header: React.FC = () => {
   const { locale } = useLocale();
@@ -35,6 +32,7 @@ export const Header: React.FC = () => {
       about: "A Agência",
       faq: "Dúvidas",
       cta: "Falar com Consultor",
+      ctaAria: "Falar com Consultor no WhatsApp (abre em nova aba)",
     },
     en: {
       tagline: "Bespoke Travel Advisory",
@@ -43,6 +41,7 @@ export const Header: React.FC = () => {
       about: "About Us",
       faq: "FAQ",
       cta: "Talk to an Advisor",
+      ctaAria: "Talk to an Advisor on WhatsApp (opens in new tab)",
     },
     es: {
       tagline: "Asesoría de Viajes",
@@ -51,30 +50,18 @@ export const Header: React.FC = () => {
       about: "La Agencia",
       faq: "Preguntas",
       cta: "Hablar con un Asesor",
+      ctaAria: "Hablar con un Asesor en WhatsApp (abre en nueva pestaña)",
     },
   };
 
   const currentLabels = labels[locale] || labels.pt;
 
-  const whatsappUrl = buildWhatsAppUrl({
-    phoneNumber: contactInfo.whatsappNumber,
-    locale,
-    context: "general",
-  });
-
-  const handleCtaClick = () => {
-    trackEvent("whatsapp_conversion", {
-      cta_location: "header_nav",
-      locale,
-    });
-  };
-
   return (
     <header
-      className={`fixed top-0 left-0 right-0 z-50 w-full border-b border-white/10 bg-[#393532]/95 backdrop-blur-md shadow-md transition-all duration-500 ease-in-out ${
+      className={`fixed left-0 right-0 top-0 z-50 w-full border-b border-white/10 bg-[#393532]/95 shadow-md backdrop-blur-md transition-all duration-500 ease-in-out ${
         isAtTop
-          ? "translate-y-0 opacity-100 pointer-events-auto"
-          : "-translate-y-full opacity-0 pointer-events-none"
+          ? "pointer-events-auto translate-y-0 opacity-100"
+          : "pointer-events-none -translate-y-full opacity-0"
       }`}
     >
       <Container>
@@ -83,7 +70,7 @@ export const Header: React.FC = () => {
           <div className="flex items-center gap-3">
             <a
               href="/"
-              className="flex items-center gap-2.5 focus-visible:outline focus-visible:outline-2 focus-visible:outline-white rounded group"
+              className="group flex items-center gap-2.5 rounded focus-visible:outline focus-visible:outline-2 focus-visible:outline-white"
               aria-label="CADIFE Tour — Início"
             >
               <img
@@ -91,13 +78,13 @@ export const Header: React.FC = () => {
                 alt="CADIFE Tour"
                 width={36}
                 height={36}
-                className="h-8 w-8 sm:h-9 sm:w-9 object-contain transition-transform duration-300 group-hover:scale-105"
+                className="h-8 w-8 object-contain transition-transform duration-300 group-hover:scale-105 sm:h-9 sm:w-9"
               />
               <span className="text-xl font-bold tracking-tight text-white sm:text-2xl">
-                CADIFE <span className="text-brand-primary font-bold">Tour</span>
+                CADIFE <span className="font-bold text-brand-primary">Tour</span>
               </span>
             </a>
-            <span className="hidden text-xs text-white/70 font-normal md:inline-block border-l border-white/20 pl-3">
+            <span className="hidden border-l border-white/20 pl-3 text-xs font-normal text-white/70 md:inline-block">
               {currentLabels.tagline}
             </span>
           </div>
@@ -106,25 +93,25 @@ export const Header: React.FC = () => {
           <nav className="hidden items-center gap-6 lg:flex" aria-label="Navegação Principal">
             <a
               href="#destinos"
-              className="text-sm font-medium text-white/85 transition-colors hover:text-white hover:underline underline-offset-4 focus-visible:outline focus-visible:outline-2 focus-visible:outline-white rounded px-1"
+              className="rounded px-1 text-sm font-medium text-white/85 underline-offset-4 transition-colors hover:text-white hover:underline focus-visible:outline focus-visible:outline-2 focus-visible:outline-white"
             >
               {currentLabels.destinations}
             </a>
             <a
               href="#como-funciona"
-              className="text-sm font-medium text-white/85 transition-colors hover:text-white hover:underline underline-offset-4 focus-visible:outline focus-visible:outline-2 focus-visible:outline-white rounded px-1"
+              className="rounded px-1 text-sm font-medium text-white/85 underline-offset-4 transition-colors hover:text-white hover:underline focus-visible:outline focus-visible:outline-2 focus-visible:outline-white"
             >
               {currentLabels.howItWorks}
             </a>
             <a
               href="#agencia"
-              className="text-sm font-medium text-white/85 transition-colors hover:text-white hover:underline underline-offset-4 focus-visible:outline focus-visible:outline-2 focus-visible:outline-white rounded px-1"
+              className="rounded px-1 text-sm font-medium text-white/85 underline-offset-4 transition-colors hover:text-white hover:underline focus-visible:outline focus-visible:outline-2 focus-visible:outline-white"
             >
               {currentLabels.about}
             </a>
             <a
               href="#faq"
-              className="text-sm font-medium text-white/85 transition-colors hover:text-white hover:underline underline-offset-4 focus-visible:outline focus-visible:outline-2 focus-visible:outline-white rounded px-1"
+              className="rounded px-1 text-sm font-medium text-white/85 underline-offset-4 transition-colors hover:text-white hover:underline focus-visible:outline focus-visible:outline-2 focus-visible:outline-white"
             >
               {currentLabels.faq}
             </a>
@@ -133,17 +120,15 @@ export const Header: React.FC = () => {
           {/* Actions: Language Selector & WhatsApp CTA */}
           <div className="flex items-center gap-3">
             <LanguageSelector />
-            <Button size="sm" className="hidden sm:inline-flex" asChild>
-              <a
-                href={whatsappUrl}
-                target="_blank"
-                rel="noopener noreferrer"
-                onClick={handleCtaClick}
-                aria-label={`${currentLabels.cta} no WhatsApp (abre em nova aba)`}
-              >
-                {currentLabels.cta}
-              </a>
-            </Button>
+            <WhatsAppCta
+              source="header_nav"
+              size="sm"
+              variant="primary"
+              className="hidden sm:inline-flex"
+              aria-label={currentLabels.ctaAria}
+            >
+              {currentLabels.cta}
+            </WhatsAppCta>
           </div>
         </div>
       </Container>

@@ -8,6 +8,7 @@ import { useGpuCapability } from "@/features/visual-journey/hooks/useGpuCapabili
 import { TravelOverlay } from "./components/TravelOverlay";
 import { ASSET_MANIFEST } from "./assets/assetManifest";
 import { clamp } from "./timeline/timelineUtils";
+import type { TravelExperienceMode } from "./config/travelExperienceConfig";
 
 const VIDEO_END_PROGRESS = 0.85;
 const FRAME_INTERVAL = 1 / 24;
@@ -57,11 +58,21 @@ function StaticJourney() {
   );
 }
 
+export interface TravelExperienceProps {
+  mode?: TravelExperienceMode;
+  targetDestination?: string;
+}
+
 /**
+ * TravelExperience:
  * POC híbrida: vídeo para a jornada inteira e nuvens em CSS para a transição.
  * Um frame do mesmo vídeo serve apenas como fallback estático. Conteúdo em HTML.
+ * Suporta modo 'single' e 'full'.
  */
-export function TravelExperience() {
+export function TravelExperience({
+  mode = "single",
+  targetDestination = "chile",
+}: TravelExperienceProps = {}) {
   const containerRef = useRef<HTMLElement>(null);
   const videoRef = useRef<HTMLVideoElement>(null);
   const [progress, setProgress] = useState(0);
@@ -162,7 +173,7 @@ export function TravelExperience() {
 
         <div className="pointer-events-none absolute inset-0 bg-gradient-to-r from-black/85 via-black/40 to-transparent" />
         <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-black/20" />
-        <TravelOverlay progress={progress} />
+        <TravelOverlay progress={progress} mode={mode} targetDestination={targetDestination} />
       </div>
     </section>
   );

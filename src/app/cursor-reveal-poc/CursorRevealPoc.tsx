@@ -120,8 +120,14 @@ type CursorState = {
   active: boolean;
 };
 
-interface CursorRevealPocProps { imageOfficeSrc?: string; imageParadiseSrc?: string; }
-export default function CursorRevealPoc({ imageOfficeSrc = "/demo-ln4/office-original.png", imageParadiseSrc = "/demo-ln4/paradise-original.png" }: CursorRevealPocProps) {
+interface CursorRevealPocProps {
+  imageOfficeSrc?: string;
+  imageParadiseSrc?: string;
+}
+export default function CursorRevealPoc({
+  imageOfficeSrc = "/demo-ln4/office-original.png",
+  imageParadiseSrc = "/demo-ln4/paradise-original.png",
+}: CursorRevealPocProps) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
 
   useEffect(() => {
