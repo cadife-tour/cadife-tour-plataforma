@@ -47,7 +47,7 @@ export const FaqAndCtaSection: React.FC<FaqAndCtaSectionProps> = ({ phoneNumber 
       bannerCta: "Falar com Consultor no WhatsApp",
       bannerCtaAria: "Falar com Consultor no WhatsApp (abre em nova aba)",
       emailCta: "Falar com Consultor por E-mail",
-      emailAriaLabel: "Falar com Consultor por E-mail — contato@cadifetour.com.br",
+      emailAriaLabel: "Falar com Consultor por E-mail — contato@cadifetour.com",
       emailSubject: "Planejamento de Roteiro Personalizado — CADIFE Tour",
     },
     en: {
@@ -62,11 +62,11 @@ export const FaqAndCtaSection: React.FC<FaqAndCtaSectionProps> = ({ phoneNumber 
       bannerCta: "Connect on WhatsApp",
       bannerCtaAria: "Connect on WhatsApp (opens in new tab)",
       emailCta: "Contact Advisor by Email",
-      emailAriaLabel: "Contact Advisor by Email — contato@cadifetour.com.br",
+      emailAriaLabel: "Contact Advisor by Email — contato@cadifetour.com",
       emailSubject: "Travel Itinerary Inquiry — CADIFE Tour",
     },
     es: {
-      badge: "Preguntas Frequentes",
+      badge: "Preguntas Frecuentes",
       title: "Dudas comunes sobre nuestros servicios",
       subtitle: "Todo lo que necesita saber antes de comenzar la planificación de su viaje.",
       bannerTitle: "¿Listo para convertir su próximo destino en realidad?",
@@ -77,7 +77,7 @@ export const FaqAndCtaSection: React.FC<FaqAndCtaSectionProps> = ({ phoneNumber 
       bannerCta: "Hablar por WhatsApp",
       bannerCtaAria: "Hablar por WhatsApp (abre en nueva pestaña)",
       emailCta: "Contactar Asesor por Correo",
-      emailAriaLabel: "Contactar Asesor por Correo — contato@cadifetour.com.br",
+      emailAriaLabel: "Contactar Asesor por Correo — contato@cadifetour.com",
       emailSubject: "Consulta de Itinerario de Viaje — CADIFE Tour",
     },
   };

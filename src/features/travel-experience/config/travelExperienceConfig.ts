@@ -3,6 +3,7 @@ import type { Locale } from "@/content/types";
 export type JourneyPhaseName =
   "AIRPLANE" | "WINDOW" | "CLOUDS" | "CHILE" | "DESTINATION" | "RESORT";
 
+/** Infraestrutura para modos futuros; ainda não seleciona a jornada executada na PR #68. */
 export type TravelExperienceMode = "full" | "single";
 
 export interface PhaseConfig {
@@ -517,8 +518,9 @@ export const TRAVEL_EXPERIENCE_CONFIG: TravelExperienceConfig = {
 };
 
 /**
- * Retorna as configurações e fases da jornada de acordo com o modo escolhido
- * (Full Journey na Homepage ou Single Destination em Landing Pages específicas).
+ * Prepara configurações para Full Journey e Single Destination.
+ * Follow-up: integrar à timeline, seleção de mídia, overlay e fallback da engine.
+ * A PR #68 ainda executa exclusivamente a POC do Chile.
  */
 export function getExperiencePhases(
   mode: TravelExperienceMode = "single",

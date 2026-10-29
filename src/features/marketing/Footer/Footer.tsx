@@ -44,7 +44,7 @@ export const Footer: React.FC = () => {
       destinations: "Destinos Destacados",
       howItWorks: "Cómo Funciona",
       about: "La Agencia",
-      faq: "Preguntas Frequentes",
+      faq: "Preguntas Frecuentes",
       legalTitle: "Seguridad y Cumplimiento",
       rights: "Todos os direitos reservados.",
       whatsappBtn: "Contactar por WhatsApp",

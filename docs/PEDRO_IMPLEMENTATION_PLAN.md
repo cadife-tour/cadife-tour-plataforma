@@ -25,11 +25,13 @@ Este plano traduz as decisões da reunião de 15/09/2026, a visão inicial da CA
 
 Alinhar a arquitetura da Hero com `docs/ai/HERO_EXPERIENCE.md` e o ADR 0004.
 
-- [x] **Arquitetura modular orientada a configuração**:
+**Status na PR #68:** apenas infraestrutura de tipos, props e configurações. A jornada executada continua sendo a POC do Chile, com o mesmo vídeo, timeline e fallback. `mode` e `targetDestination` ainda não selecionam uma jornada diferente; `getExperiencePhases` não está integrado à engine. Multi-mode funcional e destinos dinâmicos ficam como follow-up, incluindo a Issue #51 para configuração por destino.
+
+- [ ] **Arquitetura modular orientada a configuração** (follow-up):
   - Desacoplar os dados dos destinos do componente visual.
   - Implementar suporte tipado a dois modos: `mode: 'full' | 'single'`.
   - Parâmetro opcional `targetDestination?: string` para carregar direto a cena do destino específico (ex: `chile`).
-- [x] **Estrutura de Manifests**:
+- [ ] **Estrutura de Manifests** (follow-up):
   - Manter `src/features/travel-experience/config/travelExperienceConfig.ts` como fonte única dos percentuais de scroll e fases (`AIRPLANE`, `WINDOW`, `CLOUDS`, `DESTINATION`).
   - Não duplicar lógica entre destinos.
 

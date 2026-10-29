@@ -84,7 +84,8 @@ export interface TravelExperienceProps {
  * TravelExperience:
  * POC híbrida: vídeo para a jornada inteira e nuvens em CSS para a transição.
  * Um frame do mesmo vídeo serve apenas como fallback estático. Conteúdo em HTML.
- * Suporta modo 'single' e 'full'.
+ * Props 'single'/'full' e targetDestination reservadas para integração futura.
+ * Nesta POC, vídeo, conteúdo e fallback permanecem restritos ao Chile.
  */
 export function TravelExperience({
   mode = "single",

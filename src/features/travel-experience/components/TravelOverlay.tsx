@@ -4,9 +4,7 @@ import React from "react";
 import { Container } from "@/shared/ui/Container/Container";
 import { Button } from "@/shared/ui/Button/Button";
 import { useLocale } from "@/core/i18n/LocaleContext";
-import { buildWhatsAppUrl } from "@/shared/utils/whatsapp";
-import { contactInfo } from "@/content/data";
-import { trackEvent } from "@/core/analytics";
+import { WhatsAppCta } from "@/shared/ui/WhatsAppCta";
 import { getPhaseFromProgress } from "../timeline/timelineUtils";
 import { getDestinationConfig, type TravelExperienceMode } from "../config/travelExperienceConfig";
 
@@ -102,23 +100,6 @@ export const TravelOverlay: React.FC<TravelOverlayProps> = ({
 
   const t = content[locale] || content.pt;
 
-  // URLs contextuais de WhatsApp
-  const introWhatsappUrl = buildWhatsAppUrl({
-    phoneNumber: contactInfo.whatsappNumber,
-    locale,
-    context: "quote",
-  });
-
-  const destinationWhatsappUrl = buildWhatsAppUrl({
-    phoneNumber: contactInfo.whatsappNumber,
-    locale,
-    context: "destination",
-    destinationTitle:
-      destinationConfig.id === "chile"
-        ? "Chile & Cordilheira dos Andes"
-        : destinationConfig.country,
-  });
-
   // Opacidade de cada camada do overlay
   // Airplane/Intro: forte de 0 a 0.2, fade out em 0.25
   const introOpacity = Math.max(0, Math.min(1, 1 - progress / 0.25));
@@ -127,21 +108,6 @@ export const TravelOverlay: React.FC<TravelOverlayProps> = ({
     progress >= 0.42 && progress <= 0.69 ? Math.sin(((progress - 0.42) / 0.27) * Math.PI) : 0;
   // Destino ativo: surge a partir de 0.69 e consolida até o fim.
   const destinationOpacity = Math.max(0, Math.min(1, (progress - 0.69) / 0.13));
-
-  const handleIntroCta = () => {
-    trackEvent("whatsapp_conversion", {
-      cta_location: "hero_airplane_intro",
-      locale,
-    });
-  };
-
-  const handleDestinationCta = () => {
-    trackEvent("whatsapp_conversion", {
-      cta_location: `hero_${destinationConfig.id}_destination`,
-      destination: destinationConfig.id,
-      locale,
-    });
-  };
 
   const destinationAriaLabel =
     destinationConfig.id === "chile"
@@ -179,17 +145,13 @@ export const TravelOverlay: React.FC<TravelOverlayProps> = ({
             </p>
 
             <div className="flex flex-wrap items-center gap-4 pt-2">
-              <Button size="lg" asChild>
-                <a
-                  href={introWhatsappUrl}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  onClick={handleIntroCta}
-                  aria-label={`${t.airplane.primaryCta} — WhatsApp (${t.newTab})`}
-                >
-                  {t.airplane.primaryCta}
-                </a>
-              </Button>
+              <WhatsAppCta
+                size="lg"
+                source="hero_airplane_intro"
+                aria-label={`${t.airplane.primaryCta} — WhatsApp (${t.newTab})`}
+              >
+                {t.airplane.primaryCta}
+              </WhatsAppCta>
               <Button variant="outline" size="lg" asChild>
                 <a href="#destinos">{t.airplane.secondaryCta}</a>
               </Button>
@@ -246,17 +208,14 @@ export const TravelOverlay: React.FC<TravelOverlayProps> = ({
             </p>
 
             <div className="flex flex-wrap items-center gap-4 pt-2">
-              <Button size="lg" asChild>
-                <a
-                  href={destinationWhatsappUrl}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  onClick={handleDestinationCta}
-                  aria-label={destinationAriaLabel}
-                >
-                  {destContent.primaryCta}
-                </a>
-              </Button>
+              <WhatsAppCta
+                size="lg"
+                source={`hero_${destinationConfig.id}_destination`}
+                destination={destinationConfig.whatsappContext}
+                aria-label={destinationAriaLabel}
+              >
+                {destContent.primaryCta}
+              </WhatsAppCta>
               <Button variant="outline" size="lg" asChild>
                 <a href="#destinos">{destContent.secondaryCta}</a>
               </Button>

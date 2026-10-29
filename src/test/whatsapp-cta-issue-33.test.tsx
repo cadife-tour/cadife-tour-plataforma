@@ -568,14 +568,14 @@ describe("Issue #33 — Componente Reutilizável de CTA para WhatsApp", () => {
       expect(banner).toBeInTheDocument();
       // Não deve prometer WhatsApp no subtítulo quando em fallback
       expect(banner?.textContent).not.toContain("no WhatsApp");
-      expect(banner?.textContent).toContain("contato@cadifetour.com.br");
+      expect(banner?.textContent).toContain("contato@cadifetour.com");
 
       // Deve oferecer canal validado por email (mailto)
       const emailLink = screen.getByRole("link", {
         name: /falar com consultor por e-mail/i,
       });
       expect(emailLink).toBeInTheDocument();
-      expect(emailLink.getAttribute("href")).toContain("mailto:contato@cadifetour.com.br");
+      expect(emailLink.getAttribute("href")).toContain("mailto:contato@cadifetour.com");
       // O botão não pode ter href="#contato" (não deve gerar loop circular para si mesmo)
       expect(emailLink.getAttribute("href")).not.toBe("#contato");
     });
