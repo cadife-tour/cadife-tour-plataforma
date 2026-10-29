@@ -11,12 +11,13 @@ import type {
  * Informações Institucionais e de Contato
  * (Campos ainda não homologados formalmente usam flags pendentes)
  */
-const configuredPhone = process.env.NEXT_PUBLIC_WHATSAPP_NUMBER?.trim();
+export const DEFAULT_CADIFE_WHATSAPP = "5547996714510";
+const configuredPhone = process.env.NEXT_PUBLIC_WHATSAPP_NUMBER?.trim() ?? DEFAULT_CADIFE_WHATSAPP;
 
 export const contactInfo: ContactInfo = {
   whatsappNumber: configuredPhone || undefined,
   isWhatsappNumberPending: !configuredPhone,
-  email: "contato@cadifetour.com.br",
+  email: "contato@cadifetour.com",
   address: "Atendimento Consultivo Online e Presencial (Sob agendamento)",
   cadasturNumber: undefined,
   isCadasturPending: true, // [Pendente de confirmação do registro oficial pela CADIFE]

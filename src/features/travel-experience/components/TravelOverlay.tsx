@@ -4,9 +4,7 @@ import React from "react";
 import { Container } from "@/shared/ui/Container/Container";
 import { Button } from "@/shared/ui/Button/Button";
 import { useLocale } from "@/core/i18n/LocaleContext";
-import { buildWhatsAppUrl } from "@/shared/utils/whatsapp";
-import { contactInfo } from "@/content/data";
-import { trackEvent } from "@/core/analytics";
+import { WhatsAppCta } from "@/shared/ui/WhatsAppCta";
 import { getPhaseFromProgress } from "../timeline/timelineUtils";
 import type { TravelExperienceMode } from "../config/travelExperienceConfig";
 
@@ -118,20 +116,6 @@ export const TravelOverlay: React.FC<TravelOverlayProps> = ({
 
   const t = content[locale] || content.pt;
 
-  // URLs contextuais de WhatsApp
-  const introWhatsappUrl = buildWhatsAppUrl({
-    phoneNumber: contactInfo.whatsappNumber,
-    locale,
-    context: "quote",
-  });
-
-  const chileWhatsappUrl = buildWhatsAppUrl({
-    phoneNumber: contactInfo.whatsappNumber,
-    locale,
-    context: "destination",
-    destinationTitle: "Chile & Cordilheira dos Andes",
-  });
-
   // Opacidade de cada camada do overlay
   // Airplane/Intro: forte de 0 a 0.2, fade out em 0.25
   const introOpacity = Math.max(0, Math.min(1, 1 - progress / 0.25));
@@ -140,20 +124,6 @@ export const TravelOverlay: React.FC<TravelOverlayProps> = ({
     progress >= 0.42 && progress <= 0.69 ? Math.sin(((progress - 0.42) / 0.27) * Math.PI) : 0;
   // Chile: aparece quando as montanhas entram no vídeo e permanece no frame final.
   const chileOpacity = Math.max(0, Math.min(1, (progress - 0.69) / 0.13));
-
-  const handleIntroCta = () => {
-    trackEvent("whatsapp_conversion", {
-      cta_location: "hero_airplane_intro",
-      locale,
-    });
-  };
-
-  const handleChileCta = () => {
-    trackEvent("whatsapp_conversion", {
-      cta_location: "hero_chile_destination",
-      locale,
-    });
-  };
 
   return (
     <div className="pointer-events-none absolute inset-0 z-10 flex flex-col justify-center">
@@ -186,17 +156,13 @@ export const TravelOverlay: React.FC<TravelOverlayProps> = ({
             </p>
 
             <div className="flex flex-wrap items-center gap-4 pt-2">
-              <Button size="lg" asChild>
-                <a
-                  href={introWhatsappUrl}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  onClick={handleIntroCta}
-                  aria-label={`${t.airplane.primaryCta} — WhatsApp (${t.newTab})`}
-                >
-                  {t.airplane.primaryCta}
-                </a>
-              </Button>
+              <WhatsAppCta
+                size="lg"
+                source="hero_airplane_intro"
+                aria-label={`${t.airplane.primaryCta} — WhatsApp (${t.newTab})`}
+              >
+                {t.airplane.primaryCta}
+              </WhatsAppCta>
               <Button variant="outline" size="lg" asChild>
                 <a href="#destinos">{t.airplane.secondaryCta}</a>
               </Button>
@@ -253,17 +219,14 @@ export const TravelOverlay: React.FC<TravelOverlayProps> = ({
             </p>
 
             <div className="flex flex-wrap items-center gap-4 pt-2">
-              <Button size="lg" asChild>
-                <a
-                  href={chileWhatsappUrl}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  onClick={handleChileCta}
-                  aria-label={`${t.chile.primaryCta}: Chile — WhatsApp (${t.newTab})`}
-                >
-                  {t.chile.primaryCta}
-                </a>
-              </Button>
+              <WhatsAppCta
+                size="lg"
+                source="hero_chile_destination"
+                destination="chile"
+                aria-label={`${t.chile.primaryCta}: Chile — WhatsApp (${t.newTab})`}
+              >
+                {t.chile.primaryCta}
+              </WhatsAppCta>
               <Button variant="outline" size="lg" asChild>
                 <a href="#destinos">{t.chile.secondaryCta}</a>
               </Button>

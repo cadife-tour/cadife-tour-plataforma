@@ -1,6 +1,8 @@
 import type { Locale } from "@/content/types";
 import { contactInfo } from "@/content/data";
 
+export { DEFAULT_CADIFE_WHATSAPP } from "@/content/data";
+
 export interface WhatsAppUrlOptions {
   phoneNumber?: string;
   locale?: Locale;
@@ -69,7 +71,7 @@ const destinationSpecificMessages: Record<Locale, Record<string, string>> = {
     franca:
       "¡Hola! Estaba conociendo Francia en el sitio web de CADIFE Tour y me gustaría conversar sobre este viaje.",
     italia:
-      "¡Hola! Estaba conociendo Italia en el sitio web de CADIFE Tour e me gustaría conversar sobre este viaje.",
+      "¡Hola! Estaba conociendo Italia en el sitio web de CADIFE Tour y me gustaría conversar sobre este viaje.",
     brasil:
       "¡Hola! Estaba conociendo los destinos de Brasil en el sitio web de CADIFE Tour y me gustaría conversar sobre este viaje.",
     resort:
@@ -246,12 +248,10 @@ export function buildWhatsAppUrl(options: WhatsAppUrlOptions): string {
   return `https://wa.me/${cleanPhone}?text=${encodeURIComponent(message)}`;
 }
 
-export const DEFAULT_CADIFE_WHATSAPP = "5547996714510";
-
 /**
  * Verifica se o atendimento via WhatsApp possui número homologado e válido.
  * Retorna false se o número for indefinido, nulo, vazio ou inválido (ex: sequência de zeros ou < 10 dígitos).
- * Em ambiente de teste (NODE_ENV === "test"), assume o número padrão a menos que explicitamente anulado.
+ * O número oficial é definido em contactInfo, com override opcional por ambiente.
  */
 export function isWhatsAppConfigured(phoneNumber?: string | null): boolean {
   if (phoneNumber === null || phoneNumber === "") {
@@ -262,8 +262,6 @@ export function isWhatsAppConfigured(phoneNumber?: string | null): boolean {
     phone = phoneNumber;
   } else if (contactInfo.whatsappNumber) {
     phone = contactInfo.whatsappNumber;
-  } else if (process.env.NODE_ENV === "test") {
-    phone = DEFAULT_CADIFE_WHATSAPP;
   } else {
     phone = undefined;
   }
@@ -291,17 +289,14 @@ export function createWhatsAppUrl(options: {
 }): string {
   // Resolução estrita do número:
   // 1. phoneNumber passado explicitamente (null ou string vazia anulam para forçar teste de fallback)
-  // 2. contactInfo.whatsappNumber (número homologado via NEXT_PUBLIC_WHATSAPP_NUMBER)
-  // 3. Fallback determinístico (DEFAULT_CADIFE_WHATSAPP) apenas em NODE_ENV === "test"
-  // 4. Em produção sem número homologado, phone é undefined e retorna "#contato" seguro
+  // 2. contactInfo.whatsappNumber (número oficial ou override por ambiente)
+  // 3. Número ausente/inválido retorna "#contato" seguro em qualquer ambiente
   let phone: string | undefined;
   if (isWhatsAppConfigured(options.phoneNumber)) {
     if (options.phoneNumber) {
       phone = options.phoneNumber;
     } else if (contactInfo.whatsappNumber) {
       phone = contactInfo.whatsappNumber;
-    } else {
-      phone = DEFAULT_CADIFE_WHATSAPP;
     }
   } else {
     phone = undefined;
