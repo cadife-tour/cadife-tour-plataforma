@@ -4,25 +4,31 @@ import React from "react";
 import { Container } from "@/shared/ui/Container/Container";
 import { Button } from "@/shared/ui/Button/Button";
 import { useLocale } from "@/core/i18n/LocaleContext";
-import { buildWhatsAppUrl } from "@/shared/utils/whatsapp";
-import { contactInfo } from "@/content/data";
-import { trackEvent } from "@/core/analytics";
+import { WhatsAppCta } from "@/shared/ui/WhatsAppCta";
 import { getPhaseFromProgress } from "../timeline/timelineUtils";
+import type { TravelExperienceMode } from "../config/travelExperienceConfig";
 
-interface TravelOverlayProps {
+export interface TravelOverlayProps {
   progress: number;
   staticFallback?: boolean;
+  isStaticFallback?: boolean;
+  mode?: TravelExperienceMode;
+  targetDestination?: string;
 }
 
 /**
  * TravelOverlay:
  * Renderiza textos, títulos e CTAs em HTML semântico e acessível,
- * reagindo com transição suave ao progresso do scroll do Hero (Avião -> Janela -> Nuvens -> Chile).
+ * reagindo com transição suave ao progresso do scroll do Hero (Avião -> Nuvens -> Chile).
  */
 export const TravelOverlay: React.FC<TravelOverlayProps> = ({
   progress,
   staticFallback = false,
+  isStaticFallback = false,
+  mode: _mode = "single",
+  targetDestination: _targetDestination = "chile",
 }) => {
+  const isFallback = staticFallback || isStaticFallback;
   const { locale } = useLocale();
   const _currentPhase = getPhaseFromProgress(progress);
 
@@ -110,20 +116,6 @@ export const TravelOverlay: React.FC<TravelOverlayProps> = ({
 
   const t = content[locale] || content.pt;
 
-  // URLs contextuais de WhatsApp
-  const introWhatsappUrl = buildWhatsAppUrl({
-    phoneNumber: contactInfo.whatsappNumber,
-    locale,
-    context: "quote",
-  });
-
-  const chileWhatsappUrl = buildWhatsAppUrl({
-    phoneNumber: contactInfo.whatsappNumber,
-    locale,
-    context: "destination",
-    destinationTitle: "Chile & Cordilheira dos Andes",
-  });
-
   // Opacidade de cada camada do overlay
   // Airplane/Intro: forte de 0 a 0.2, fade out em 0.25
   const introOpacity = Math.max(0, Math.min(1, 1 - progress / 0.25));
@@ -132,20 +124,6 @@ export const TravelOverlay: React.FC<TravelOverlayProps> = ({
     progress >= 0.42 && progress <= 0.69 ? Math.sin(((progress - 0.42) / 0.27) * Math.PI) : 0;
   // Chile: aparece quando as montanhas entram no vídeo e permanece no frame final.
   const chileOpacity = Math.max(0, Math.min(1, (progress - 0.69) / 0.13));
-
-  const handleIntroCta = () => {
-    trackEvent("whatsapp_conversion", {
-      cta_location: "hero_airplane_intro",
-      locale,
-    });
-  };
-
-  const handleChileCta = () => {
-    trackEvent("whatsapp_conversion", {
-      cta_location: "hero_chile_destination",
-      locale,
-    });
-  };
 
   return (
     <div className="pointer-events-none absolute inset-0 z-10 flex flex-col justify-center">
@@ -163,7 +141,7 @@ export const TravelOverlay: React.FC<TravelOverlayProps> = ({
           >
             <div className="bg-surface/80 inline-flex items-center gap-2.5 rounded-full border border-border px-4 py-1.5 text-xs font-semibold text-white shadow-sm backdrop-blur-md">
               <span
-                className={`h-2 w-2 rounded-full bg-brand-accent ${staticFallback ? "" : "animate-pulse"}`}
+                className={`h-2 w-2 rounded-full bg-brand-accent ${isFallback ? "" : "animate-pulse"}`}
                 aria-hidden="true"
               />
               <span>{t.airplane.badge}</span>
@@ -178,23 +156,19 @@ export const TravelOverlay: React.FC<TravelOverlayProps> = ({
             </p>
 
             <div className="flex flex-wrap items-center gap-4 pt-2">
-              <Button size="lg" asChild>
-                <a
-                  href={introWhatsappUrl}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  onClick={handleIntroCta}
-                  aria-label={`${t.airplane.primaryCta} — WhatsApp (${t.newTab})`}
-                >
-                  {t.airplane.primaryCta}
-                </a>
-              </Button>
+              <WhatsAppCta
+                size="lg"
+                source="hero_airplane_intro"
+                aria-label={`${t.airplane.primaryCta} — WhatsApp (${t.newTab})`}
+              >
+                {t.airplane.primaryCta}
+              </WhatsAppCta>
               <Button variant="outline" size="lg" asChild>
                 <a href="#destinos">{t.airplane.secondaryCta}</a>
               </Button>
             </div>
 
-            {!staticFallback && (
+            {!isFallback && (
               <div className="flex items-center gap-2 pt-4 text-xs font-medium text-white/90">
                 <span>↓</span>
                 <span>{t.airplane.scrollHint}</span>
@@ -245,17 +219,14 @@ export const TravelOverlay: React.FC<TravelOverlayProps> = ({
             </p>
 
             <div className="flex flex-wrap items-center gap-4 pt-2">
-              <Button size="lg" asChild>
-                <a
-                  href={chileWhatsappUrl}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  onClick={handleChileCta}
-                  aria-label={`${t.chile.primaryCta}: Chile — WhatsApp (${t.newTab})`}
-                >
-                  {t.chile.primaryCta}
-                </a>
-              </Button>
+              <WhatsAppCta
+                size="lg"
+                source="hero_chile_destination"
+                destination="chile"
+                aria-label={`${t.chile.primaryCta}: Chile — WhatsApp (${t.newTab})`}
+              >
+                {t.chile.primaryCta}
+              </WhatsAppCta>
               <Button variant="outline" size="lg" asChild>
                 <a href="#destinos">{t.chile.secondaryCta}</a>
               </Button>

@@ -25,6 +25,9 @@ A página principal (`/`) abre diretamente na jornada cinematográfica em vídeo
 
 A Foto Revelação permanece acessível em `/cursor-reveal-poc` como protótipo independente, fora da homepage.
 
+> 📖 **Acompanhamento de Mudanças:** Para ver em detalhes o que foi feito nesta branch, como e por que (incluindo ADRs atendidos, alinhamento de escopo e testes), consulte:  
+> 👉 [Plano de Implementação & Entrega — Pedro (Wildcard / Hero POC)](docs/PEDRO_IMPLEMENTATION_PLAN.md)
+
 ---
 
 ## 🗺️ 3. Rotas da Aplicação

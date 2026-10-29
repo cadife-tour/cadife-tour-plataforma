@@ -43,6 +43,8 @@ Thumbs.db
 .agents/
 .claude/
 agent/
+AGENTS.md
+CLAUDE.md
 prompt.md
 references.md
 skills-lock.json
@@ -57,6 +59,7 @@ base/
 docs/*
 !docs/HERO_STORYBOARD.md
 !docs/HERO_ARCHITECTURE_SPIKE.md
+!docs/PEDRO_IMPLEMENTATION_PLAN.md
 ARCHITECTURE.md
 CONTRIBUTING.md
 

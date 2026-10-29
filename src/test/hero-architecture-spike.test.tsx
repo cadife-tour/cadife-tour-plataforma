@@ -3,6 +3,7 @@ import { fireEvent, render, screen } from "@testing-library/react";
 import { LocaleProvider } from "@/core/i18n/LocaleContext";
 import { TravelExperience } from "@/features/travel-experience/TravelExperience";
 import { useGpuCapability } from "@/features/visual-journey/hooks/useGpuCapability";
+import { createWhatsAppUrl } from "@/shared/utils/whatsapp";
 
 vi.mock("@/features/visual-journey/hooks/useGpuCapability", () => ({
   useGpuCapability: vi.fn(),
@@ -49,7 +50,7 @@ describe("Hero architecture spike", () => {
     expect(screen.getByRole("heading", { name: /Chile:/i })).toBeInTheDocument();
     expect(screen.getByRole("link", { name: /Quero conhecer esta opção/i })).toHaveAttribute(
       "href",
-      "#contato"
+      createWhatsAppUrl({ destination: "chile" })
     );
     expect(document.querySelector("video")).not.toBeInTheDocument();
   });
@@ -87,6 +88,9 @@ describe("Hero architecture spike", () => {
     });
     renderJourney();
     expect(screen.getByRole("heading", { name: title })).toBeInTheDocument();
-    expect(screen.getByRole("link", { name: cta })).toHaveAttribute("href", "#contato");
+    expect(screen.getByRole("link", { name: cta })).toHaveAttribute(
+      "href",
+      createWhatsAppUrl({ destination: "chile", locale: locale === "en" ? "en" : "es" })
+    );
   });
 });

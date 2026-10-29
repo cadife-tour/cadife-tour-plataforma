@@ -27,8 +27,7 @@ export function useScrollProgress(): ScrollProgressState {
     const handleScroll = () => {
       if (!ticking) {
         window.requestAnimationFrame(() => {
-          const docHeight =
-            document.documentElement.scrollHeight - window.innerHeight;
+          const docHeight = document.documentElement.scrollHeight - window.innerHeight;
           const currentScroll = window.scrollY;
 
           const rawProgress =

@@ -55,7 +55,7 @@ export default function TravelCanvas({
   return (
     <WebGlErrorBoundary fallback={<StaticAtmosphere />}>
       <div
-        className="absolute inset-0 h-full w-full pointer-events-none overflow-hidden"
+        className="pointer-events-none absolute inset-0 h-full w-full overflow-hidden"
         aria-hidden="true"
         data-testid="travel-experience-canvas"
       >
