@@ -92,25 +92,25 @@ export const Header: React.FC = () => {
           {/* Navigation Links (Semantic HTML) */}
           <nav className="hidden items-center gap-6 lg:flex" aria-label="Navegação Principal">
             <a
-              href="#destinos"
+              href="/#destinos"
               className="rounded px-1 text-sm font-medium text-white/85 underline-offset-4 transition-colors hover:text-white hover:underline focus-visible:outline focus-visible:outline-2 focus-visible:outline-white"
             >
               {currentLabels.destinations}
             </a>
             <a
-              href="#como-funciona"
+              href="/#como-funciona"
               className="rounded px-1 text-sm font-medium text-white/85 underline-offset-4 transition-colors hover:text-white hover:underline focus-visible:outline focus-visible:outline-2 focus-visible:outline-white"
             >
               {currentLabels.howItWorks}
             </a>
             <a
-              href="#agencia"
+              href="/#agencia"
               className="rounded px-1 text-sm font-medium text-white/85 underline-offset-4 transition-colors hover:text-white hover:underline focus-visible:outline focus-visible:outline-2 focus-visible:outline-white"
             >
               {currentLabels.about}
             </a>
             <a
-              href="#faq"
+              href="/#faq"
               className="rounded px-1 text-sm font-medium text-white/85 underline-offset-4 transition-colors hover:text-white hover:underline focus-visible:outline focus-visible:outline-2 focus-visible:outline-white"
             >
               {currentLabels.faq}
