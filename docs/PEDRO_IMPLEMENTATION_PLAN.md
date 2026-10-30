@@ -27,6 +27,8 @@ Alinhar a arquitetura da Hero com `docs/ai/HERO_EXPERIENCE.md` e o ADR 0004.
 
 **Status na PR #68:** apenas infraestrutura de tipos, props e configurações. A jornada executada continua sendo a POC do Chile, com o mesmo vídeo, timeline e fallback. `mode` e `targetDestination` ainda não selecionam uma jornada diferente; `getExperiencePhases` não está integrado à engine. Multi-mode funcional e destinos dinâmicos ficam como follow-up, incluindo a Issue #51 para configuração por destino.
 
+**Atualização na branch da Issue #51 — 29/10/2026:** cinco destinos possuem vídeo próprio: Chile, Argentina/Buenos Aires, Peru/Machu Picchu, Cruzeiros e Portugal/Lisboa. A Hero seleciona vídeo, poster e still pela configuração do destino e carrega somente essa mídia. A homepage mantém o Chile; os demais podem ser conferidos em `/hero-preview/<destino>`, páginas de prévia sem indexação. Movimento reduzido, economia de dados, aparelho limitado ou erro de vídeo usam fallback estático do destino. Espanha, França, Itália, Brasil e Resorts continuam sem vídeo; nesses casos não é exibido o vídeo do Chile com texto de outro destino. A sequência completa (`full`) e as landings SEO permanecem pendentes.
+
 - [ ] **Arquitetura modular orientada a configuração** (follow-up):
   - Desacoplar os dados dos destinos do componente visual.
   - Implementar suporte tipado a dois modos: `mode: 'full' | 'single'`.

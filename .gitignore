@@ -68,3 +68,6 @@ CONTRIBUTING.md
 # (Mantém apenas o airplane-journey-scrub.mp4 usado na página inicial)
 # ==============================================================================
 public/assets/hero/airplane-journey.mp4
+
+# Fontes locais; versionar apenas os derivados otimizados usados pela Hero.
+/videos/

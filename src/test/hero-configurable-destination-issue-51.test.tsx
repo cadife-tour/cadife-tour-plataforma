@@ -135,15 +135,17 @@ describe("Issue #51 — Configuração Dinâmica da Hero por Destino", () => {
 
     it("aplica classes de altura de acordo com o modo 'full' vs 'single'", () => {
       const { unmount } = renderJourney({ mode: "full" });
-      const heroFull = screen.getByTestId("travel-experience-hero");
-      expect(heroFull.className).toContain("h-[500vh]");
-      expect(heroFull.className).toContain("lg:h-[700vh]");
+      expect(screen.getByTestId("full-journey")).toBeInTheDocument();
+      expect(
+        screen.getAllByTestId("travel-experience-fallback").length +
+          screen.getAllByTestId("travel-experience-hero").length
+      ).toBe(10);
       unmount();
 
       renderJourney({ mode: "single" });
       const heroSingle = screen.getByTestId("travel-experience-hero");
-      expect(heroSingle.className).toContain("h-[350svh]");
-      expect(heroSingle.className).toContain("md:h-[500vh]");
+      expect(heroSingle.style.getPropertyValue("--scene-mobile")).toBe("350svh");
+      expect(heroSingle.style.getPropertyValue("--scene-desktop")).toBe("500vh");
     });
   });
 
@@ -203,8 +205,10 @@ describe("Issue #51 — Configuração Dinâmica da Hero por Destino", () => {
       ).toBeInTheDocument();
 
       const images = Array.from(document.querySelectorAll("img"));
-      // Verifica que a imagem do still de Portugal (/assets/destinations/europa.webp) foi solicitada
-      const destinationImg = images.find((img) => img.getAttribute("src")?.includes("europa.webp"));
+      // Verifica que a imagem do still de Portugal (/assets/hero/destinations/portugal-still.webp) foi solicitada
+      const destinationImg = images.find((img) =>
+        img.getAttribute("src")?.includes("portugal-still.webp")
+      );
       expect(destinationImg).toBeDefined();
     });
 

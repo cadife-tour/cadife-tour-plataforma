@@ -1,9 +1,10 @@
 import type { Locale } from "@/content/types";
+import { ASSET_MANIFEST } from "../assets/assetManifest";
 
 export type JourneyPhaseName =
   "AIRPLANE" | "WINDOW" | "CLOUDS" | "CHILE" | "DESTINATION" | "RESORT";
 
-/** Infraestrutura para modos futuros; ainda não seleciona a jornada executada na PR #68. */
+/** Seleção de mídia por destino; jornada completa continua pendente. */
 export type TravelExperienceMode = "full" | "single";
 
 export interface PhaseConfig {
@@ -22,6 +23,7 @@ export interface DestinationLocalizedText {
 
 export interface DestinationMediaConfig {
   stillImage: string;
+  videoSrc?: string;
   posterImage?: string;
 }
 
@@ -48,10 +50,7 @@ export const DESTINATION_SCENES: Record<string, DestinationSceneConfig> = {
     ctaText: "Quero conhecer esta opção",
     whatsappContext: "chile",
     assetKey: "chile_andes",
-    media: {
-      stillImage: "/assets/hero/andes-still.webp",
-      posterImage: "/assets/hero/airplane-poster.webp",
-    },
+    media: ASSET_MANIFEST.destinations.chile,
     content: {
       pt: {
         badge: "Destino em Destaque — América do Sul",
@@ -85,10 +84,7 @@ export const DESTINATION_SCENES: Record<string, DestinationSceneConfig> = {
     ctaText: "Quero conhecer a Argentina",
     whatsappContext: "argentina",
     assetKey: "buenos_aires",
-    media: {
-      stillImage: "/assets/destinations/patagonia.webp",
-      posterImage: "/assets/hero/airplane-poster.webp",
-    },
+    media: ASSET_MANIFEST.destinations.argentina,
     content: {
       pt: {
         badge: "América do Sul",
@@ -122,10 +118,7 @@ export const DESTINATION_SCENES: Record<string, DestinationSceneConfig> = {
     ctaText: "Quero conhecer o Peru",
     whatsappContext: "peru",
     assetKey: "machu_picchu",
-    media: {
-      stillImage: "/assets/hero/andes-still.webp",
-      posterImage: "/assets/hero/airplane-poster.webp",
-    },
+    media: ASSET_MANIFEST.destinations.peru,
     content: {
       pt: {
         badge: "América do Sul",
@@ -159,10 +152,7 @@ export const DESTINATION_SCENES: Record<string, DestinationSceneConfig> = {
     ctaText: "Quero conhecer cruzeiros",
     whatsappContext: "cruzeiros",
     assetKey: "cruises",
-    media: {
-      stillImage: "/assets/destinations/cruzeiros.webp",
-      posterImage: "/assets/hero/airplane-poster.webp",
-    },
+    media: ASSET_MANIFEST.destinations.cruzeiros,
     content: {
       pt: {
         badge: "Experiência Marítima",
@@ -196,10 +186,7 @@ export const DESTINATION_SCENES: Record<string, DestinationSceneConfig> = {
     ctaText: "Quero conhecer Portugal",
     whatsappContext: "portugal",
     assetKey: "portugal_belem",
-    media: {
-      stillImage: "/assets/destinations/europa.webp",
-      posterImage: "/assets/hero/airplane-poster.webp",
-    },
+    media: ASSET_MANIFEST.destinations.portugal,
     content: {
       pt: {
         badge: "Europa",
@@ -233,10 +220,7 @@ export const DESTINATION_SCENES: Record<string, DestinationSceneConfig> = {
     ctaText: "Quero conhecer a Espanha",
     whatsappContext: "espanha",
     assetKey: "spain_culture",
-    media: {
-      stillImage: "/assets/destinations/europa.webp",
-      posterImage: "/assets/hero/airplane-poster.webp",
-    },
+    media: ASSET_MANIFEST.destinations.espanha,
     content: {
       pt: {
         badge: "Europa",
@@ -270,10 +254,7 @@ export const DESTINATION_SCENES: Record<string, DestinationSceneConfig> = {
     ctaText: "Quero conhecer a França",
     whatsappContext: "franca",
     assetKey: "france_paris",
-    media: {
-      stillImage: "/assets/destinations/europa.webp",
-      posterImage: "/assets/hero/airplane-poster.webp",
-    },
+    media: ASSET_MANIFEST.destinations.franca,
     content: {
       pt: {
         badge: "Europa",
@@ -307,10 +288,7 @@ export const DESTINATION_SCENES: Record<string, DestinationSceneConfig> = {
     ctaText: "Quero conhecer a Itália",
     whatsappContext: "italia",
     assetKey: "italy_colosseum",
-    media: {
-      stillImage: "/assets/destinations/europa.webp",
-      posterImage: "/assets/hero/airplane-poster.webp",
-    },
+    media: ASSET_MANIFEST.destinations.italia,
     content: {
       pt: {
         badge: "Europa",
@@ -344,10 +322,7 @@ export const DESTINATION_SCENES: Record<string, DestinationSceneConfig> = {
     ctaText: "Quero conhecer o Brasil",
     whatsappContext: "brasil",
     assetKey: "brazil_nature",
-    media: {
-      stillImage: "/assets/destinations/patagonia.webp",
-      posterImage: "/assets/hero/airplane-poster.webp",
-    },
+    media: ASSET_MANIFEST.destinations.brasil,
     content: {
       pt: {
         badge: "Brasil",
@@ -381,10 +356,7 @@ export const DESTINATION_SCENES: Record<string, DestinationSceneConfig> = {
     ctaText: "Quero conhecer resorts",
     whatsappContext: "resorts",
     assetKey: "resorts_luxury",
-    media: {
-      stillImage: "/assets/destinations/cruzeiros.webp",
-      posterImage: "/assets/hero/airplane-poster.webp",
-    },
+    media: ASSET_MANIFEST.destinations.resorts,
     content: {
       pt: {
         badge: "Experiência Exclusiva",
@@ -551,3 +523,6 @@ export function getExperiencePhases(
     },
   };
 }
+
+/** Destinos disponíveis para prévia com vídeo próprio. */
+export const AVAILABLE_VIDEO_DESTINATIONS = Object.keys(ASSET_MANIFEST.destinations);
