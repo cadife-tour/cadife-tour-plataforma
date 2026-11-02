@@ -10,15 +10,17 @@ import type { Locale } from "@/content/types";
 
 interface NavItem {
   key: "travel" | "testimonials" | "contact" | "about";
-  href: string;
+  sectionId: string;
 }
 
 const navigationItems: NavItem[] = [
-  { key: "travel", href: "#destinos" },
-  { key: "testimonials", href: "#depoimentos" },
-  { key: "contact", href: "#contato" },
-  { key: "about", href: "#agencia" },
+  { key: "travel", sectionId: "destinos" },
+  { key: "testimonials", sectionId: "depoimentos" },
+  { key: "contact", sectionId: "contato" },
+  { key: "about", sectionId: "agencia" },
 ];
+
+const hrefForSection = (sectionId: string) => `/#${sectionId}`;
 
 const labels: Record<
   Locale,
@@ -60,7 +62,7 @@ export const Header: React.FC = () => {
   const { locale } = useLocale();
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const [activeHref, setActiveHref] = useState<string | null>(null);
+  const [activeSectionId, setActiveSectionId] = useState<string | null>(null);
   const menuButtonRef = useRef<HTMLButtonElement>(null);
   const mobileMenuId = useId();
 
@@ -77,7 +79,7 @@ export const Header: React.FC = () => {
     if (typeof window === "undefined" || !("IntersectionObserver" in window)) return;
 
     const sections = navigationItems
-      .map((item) => document.getElementById(item.href.slice(1)))
+      .map((item) => document.getElementById(item.sectionId))
       .filter((el): el is HTMLElement => el !== null);
 
     if (sections.length === 0) return;
@@ -89,7 +91,7 @@ export const Header: React.FC = () => {
           .sort((a, b) => b.intersectionRatio - a.intersectionRatio)[0];
 
         if (visible) {
-          setActiveHref(`#${visible.target.id}`);
+          setActiveSectionId(visible.target.id);
         }
       },
       { rootMargin: "-40% 0px -50% 0px", threshold: 0.1 }
@@ -118,6 +120,18 @@ export const Header: React.FC = () => {
     };
   }, [isMenuOpen]);
 
+  useEffect(() => {
+    if (typeof window === "undefined" || !isMenuOpen) return;
+
+    const desktopQuery = window.matchMedia("(min-width: 1024px)");
+    const handleChange = (event: MediaQueryListEvent) => {
+      if (event.matches) setIsMenuOpen(false);
+    };
+
+    desktopQuery.addEventListener("change", handleChange);
+    return () => desktopQuery.removeEventListener("change", handleChange);
+  }, [isMenuOpen]);
+
   const closeMenu = () => setIsMenuOpen(false);
 
   return (
@@ -129,7 +143,7 @@ export const Header: React.FC = () => {
       }`}
     >
       <Container>
-        <div className="grid h-16 grid-cols-[1fr_auto_1fr] items-center gap-4 sm:h-20">
+        <div className="grid h-16 grid-cols-[1fr_auto] items-center gap-4 sm:h-20 lg:grid-cols-[1fr_auto_1fr]">
           {/* Logo */}
           <div className="flex items-center justify-self-start">
             <a
@@ -143,7 +157,7 @@ export const Header: React.FC = () => {
                 width={160}
                 height={40}
                 priority
-                className="h-8 w-auto object-contain transition-transform duration-300 group-hover:scale-105 sm:h-9"
+                className="h-8 w-auto object-contain transition-transform duration-300 group-hover:scale-105 motion-reduce:transform-none motion-reduce:transition-none sm:h-9"
               />
             </a>
           </div>
@@ -154,11 +168,11 @@ export const Header: React.FC = () => {
             aria-label="Navegação Principal"
           >
             {navigationItems.map((item) => {
-              const isActive = activeHref === item.href;
+              const isActive = activeSectionId === item.sectionId;
               return (
                 <a
                   key={item.key}
-                  href={item.href}
+                  href={hrefForSection(item.sectionId)}
                   aria-current={isActive ? "location" : undefined}
                   className={`rounded px-1 text-sm font-medium underline-offset-4 transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-white ${
                     isActive
@@ -194,7 +208,7 @@ export const Header: React.FC = () => {
               aria-expanded={isMenuOpen}
               aria-controls={mobileMenuId}
               aria-label={isMenuOpen ? t.menuClose : t.menuOpen}
-              className="flex h-10 w-10 items-center justify-center rounded-lg border border-white/20 bg-black/40 text-white transition-colors hover:bg-black/60 focus-visible:outline focus-visible:outline-2 focus-visible:outline-brand-accent lg:hidden"
+              className="flex h-10 w-10 items-center justify-center rounded-lg border border-white/20 bg-black/40 text-white transition-colors hover:bg-black/60 focus-visible:outline focus-visible:outline-2 focus-visible:outline-brand-accent motion-reduce:transition-none lg:hidden"
             >
               <svg
                 viewBox="0 0 24 24"
@@ -223,39 +237,41 @@ export const Header: React.FC = () => {
           isMenuOpen ? "max-h-[calc(100vh-4rem)]" : "max-h-0"
         }`}
       >
-        <nav
-          aria-label="Navegação Principal (móvel)"
-          className="bg-brand-dark/98 flex flex-col gap-1 border-t border-white/10 px-4 py-4 backdrop-blur-md"
-        >
-          {navigationItems.map((item) => {
-            const isActive = activeHref === item.href;
-            return (
-              <a
-                key={item.key}
-                href={item.href}
-                onClick={closeMenu}
-                aria-current={isActive ? "location" : undefined}
-                className={`rounded-lg px-3 py-3 text-base font-medium transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-white ${
-                  isActive
-                    ? "bg-white/10 text-brand-accent"
-                    : "text-white/85 hover:bg-white/5 hover:text-white"
-                }`}
-              >
-                {t[item.key]}
-              </a>
-            );
-          })}
-          <WhatsAppCta
-            source="header_nav"
-            size="md"
-            variant="primary"
-            onClick={closeMenu}
-            className="mt-3 w-full"
-            aria-label={t.ctaAria}
+        {isMenuOpen && (
+          <nav
+            aria-label="Navegação Principal (móvel)"
+            className="bg-brand-dark/98 flex flex-col gap-1 border-t border-white/10 px-4 py-4 backdrop-blur-md"
           >
-            {t.cta}
-          </WhatsAppCta>
-        </nav>
+            {navigationItems.map((item) => {
+              const isActive = activeSectionId === item.sectionId;
+              return (
+                <a
+                  key={item.key}
+                  href={hrefForSection(item.sectionId)}
+                  onClick={closeMenu}
+                  aria-current={isActive ? "location" : undefined}
+                  className={`rounded-lg px-3 py-3 text-base font-medium transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-white ${
+                    isActive
+                      ? "bg-white/10 text-brand-accent"
+                      : "text-white/85 hover:bg-white/5 hover:text-white"
+                  }`}
+                >
+                  {t[item.key]}
+                </a>
+              );
+            })}
+            <WhatsAppCta
+              source="header_nav"
+              size="md"
+              variant="primary"
+              onClick={closeMenu}
+              className="mt-3 w-full"
+              aria-label={t.ctaAria}
+            >
+              {t.cta}
+            </WhatsAppCta>
+          </nav>
+        )}
       </div>
     </header>
   );
