@@ -9,7 +9,6 @@ export interface SceneTiming {
   cloudsEnd: number;
   revealStart: number;
   revealEnd: number;
-  exitStart: number;
 }
 
 const defaults: SceneTiming = {
@@ -22,7 +21,6 @@ const defaults: SceneTiming = {
   cloudsEnd: 0.69,
   revealStart: 0.69,
   revealEnd: 0.82,
-  exitStart: 0.94,
 };
 
 export const JOURNEY_SCENES = [
@@ -35,7 +33,7 @@ export const JOURNEY_SCENES = [
   { destination: "franca", timing: { ...defaults } },
   { destination: "italia", timing: { ...defaults } },
   { destination: "brasil", timing: { ...defaults } },
-  { destination: "resorts", timing: { ...defaults, exitStart: 1 } },
+  { destination: "resorts", timing: { ...defaults } },
 ];
 
 export function getSceneTiming(destination: string): SceneTiming {

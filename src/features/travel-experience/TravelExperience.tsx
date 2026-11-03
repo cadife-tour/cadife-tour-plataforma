@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState, type CSSProperties } from "react";
 import Image from "next/image";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
@@ -97,27 +97,35 @@ function DestinationExperience({
   mode = "single",
   targetDestination = "chile",
   continuation = false,
-}: TravelExperienceProps & { continuation?: boolean } = {}) {
+  active = true,
+  track,
+  sharedFrame = false,
+  hydrated,
+  staticDevice,
+}: TravelExperienceProps & {
+  continuation?: boolean;
+  active?: boolean;
+  track?: HTMLElement;
+  sharedFrame?: boolean;
+  hydrated: boolean;
+  staticDevice: boolean;
+}) {
   const destination = getDestinationConfig(targetDestination);
   const timing = getSceneTiming(destination.id);
   const [nearby, setNearby] = useState(!continuation);
   const containerRef = useRef<HTMLElement>(null);
   const videoRef = useRef<HTMLVideoElement>(null);
   const [progress, setProgress] = useState(0);
-  const [isHydrated, setIsHydrated] = useState(false);
   const [mediaFailed, setMediaFailed] = useState(false);
-  const { isReducedMotion, isSaveData, isConstrainedDevice } = useGpuCapability();
-  const useStaticFallback =
-    !destination.media.videoSrc ||
-    (isHydrated && (isReducedMotion || isSaveData || isConstrainedDevice || mediaFailed));
+  const useStaticFallback = !destination.media.videoSrc || staticDevice || mediaFailed;
 
   useEffect(() => {
-    setIsHydrated(true);
-  }, []);
-
-  useEffect(() => {
-    const element = containerRef.current;
+    const element = sharedFrame ? track : containerRef.current;
     if (nearby || !element || useStaticFallback) return;
+    if (active) {
+      setNearby(true);
+      return;
+    }
     if (typeof IntersectionObserver === "undefined") {
       setMediaFailed(true);
       return;
@@ -129,16 +137,16 @@ function DestinationExperience({
           observer.disconnect();
         }
       },
-      { rootMargin: "100% 0px" }
+      { rootMargin: `${document.documentElement.clientHeight}px 0px` }
     );
     observer.observe(element);
     return () => observer.disconnect();
-  }, [nearby, useStaticFallback]);
+  }, [active, nearby, sharedFrame, track, useStaticFallback]);
 
   useEffect(() => {
-    const container = containerRef.current;
+    const container = sharedFrame ? track : containerRef.current;
     const video = videoRef.current;
-    if (!nearby || !isHydrated || useStaticFallback || !container || !video) return;
+    if (!nearby || !hydrated || useStaticFallback || !container || !video) return;
 
     gsap.registerPlugin(ScrollTrigger);
 
@@ -154,7 +162,7 @@ function DestinationExperience({
         scrollTrigger: {
           trigger: container,
           start: "top top",
-          end: "bottom bottom",
+          end: sharedFrame ? "bottom top" : "bottom bottom",
           scrub: 0.15,
           onUpdate: (trigger) => setProgress(trigger.progress),
         },
@@ -183,9 +191,18 @@ function DestinationExperience({
       timeline?.scrollTrigger?.kill();
       timeline?.kill();
     };
-  }, [isHydrated, useStaticFallback, destination.media.videoSrc, nearby, continuation, timing]);
+  }, [
+    hydrated,
+    useStaticFallback,
+    destination.media.videoSrc,
+    nearby,
+    continuation,
+    timing,
+    track,
+    sharedFrame,
+  ]);
 
-  if (useStaticFallback)
+  if (useStaticFallback && !sharedFrame)
     return (
       <StaticJourney
         mode={mode}
@@ -200,34 +217,48 @@ function DestinationExperience({
   const cloudArrival = clamp((progress - 0.4) / 0.12);
   const cloudDeparture = clamp((0.72 - progress) / 0.12);
   const cloudOpacity = Math.min(cloudArrival, cloudDeparture) * 0.35;
-  const heightClass = "h-[var(--scene-mobile)] md:h-[var(--scene-desktop)]";
-
   return (
     <section
       ref={containerRef}
       data-destination={destination.id}
-      style={
-        {
-          "--scene-mobile": `${continuation ? timing.mobileScrollVh * 0.65 : timing.mobileScrollVh}svh`,
-          "--scene-desktop": `${continuation ? timing.desktopScrollVh * 0.6 : timing.desktopScrollVh}vh`,
-        } as React.CSSProperties
+      hidden={!active}
+      className={
+        sharedFrame
+          ? "absolute inset-0"
+          : "relative h-[var(--scene-mobile)] w-full border-b border-border md:h-[var(--scene-desktop)]"
       }
-      className={`relative ${heightClass} w-full border-b border-border`}
+      style={sharedFrame ? undefined : sceneHeight(destination.id, false, false)}
       aria-label="Experiência de Viagem CADIFE Tour — Trilha Interativa"
       data-testid="travel-experience-hero"
     >
-      <div className="sticky top-0 h-svh w-full overflow-hidden bg-[#141312] md:h-screen">
-        <video
-          ref={videoRef}
-          src={isHydrated && nearby ? destination.media.videoSrc : undefined}
-          poster={nearby ? destination.media.posterImage : undefined}
-          playsInline
-          muted
-          preload={nearby ? "auto" : "none"}
-          aria-hidden="true"
-          onError={() => setMediaFailed(true)}
-          className="h-full w-full object-cover object-center"
-        />
+      <div
+        className={
+          sharedFrame
+            ? "relative h-full"
+            : "sticky top-0 h-svh w-full overflow-hidden bg-[#141312] md:h-screen"
+        }
+      >
+        {useStaticFallback ? (
+          <Image
+            src={destination.media.stillImage || ASSET_MANIFEST.images.chileAndes}
+            alt=""
+            fill
+            sizes="100vw"
+            className="object-cover"
+          />
+        ) : (
+          <video
+            ref={videoRef}
+            src={hydrated && nearby ? destination.media.videoSrc : undefined}
+            poster={active || nearby ? destination.media.posterImage : undefined}
+            playsInline
+            muted
+            preload={nearby ? "auto" : "none"}
+            aria-hidden="true"
+            onError={() => setMediaFailed(true)}
+            className="h-full w-full object-cover object-center"
+          />
+        )}
 
         <div
           className="pointer-events-none absolute inset-0"
@@ -243,41 +274,121 @@ function DestinationExperience({
         <div className="pointer-events-none absolute inset-0 bg-gradient-to-r from-black/85 via-black/40 to-transparent" />
         <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-black/20" />
         <TravelOverlay
-          progress={overlayProgress}
+          progress={useStaticFallback ? 1 : overlayProgress}
+          staticFallback={useStaticFallback}
           showIntro={!continuation}
           mode={mode}
           targetDestination={targetDestination}
         />
-        {mode === "full" && timing.exitStart < 1 && (
-          <div
-            aria-hidden="true"
-            className="pointer-events-none absolute inset-0 bg-white"
-            style={{ opacity: clamp((progress - timing.exitStart) / (1 - timing.exitStart)) }}
-          />
-        )}
       </div>
     </section>
   );
 }
 
-/** Uma engine, uma abertura e a sequência editorial completa. */
+function sceneHeight(destination: string, continuation: boolean, track: boolean): CSSProperties {
+  const timing = getSceneTiming(destination);
+  return {
+    "--scene-mobile": `${timing.mobileScrollVh * (continuation ? 0.65 : 1) - (track ? 100 : 0)}svh`,
+    "--scene-desktop": `${timing.desktopScrollVh * (continuation ? 0.6 : 1) - (track ? 100 : 0)}vh`,
+  } as CSSProperties;
+}
+
+function FullJourney({ hydrated }: { hydrated: boolean }) {
+  const journeyRef = useRef<HTMLDivElement>(null);
+  const [activeIndex, setActiveIndex] = useState(0);
+  const [tracks, setTracks] = useState<HTMLElement[]>([]);
+
+  useEffect(() => {
+    const journey = journeyRef.current;
+    if (!hydrated || !journey) return;
+
+    const markers = Array.from(journey.querySelectorAll<HTMLElement>("[data-journey-track]"));
+    setTracks(markers);
+    const selectScene = () => {
+      const index =
+        journey.getBoundingClientRect().top >= 0
+          ? 0
+          : markers.findIndex((marker) => marker.getBoundingClientRect().bottom > 0);
+      setActiveIndex(index === -1 ? markers.length - 1 : index);
+    };
+
+    selectScene();
+    window.addEventListener("scroll", selectScene, { passive: true });
+    window.addEventListener("resize", selectScene);
+    return () => {
+      window.removeEventListener("scroll", selectScene);
+      window.removeEventListener("resize", selectScene);
+    };
+  }, [hydrated]);
+
+  return (
+    <div ref={journeyRef} className="grid" data-testid="full-journey">
+      <div className="sticky top-0 z-10 col-start-1 row-start-1 h-svh self-start overflow-hidden bg-[#141312] md:h-screen">
+        {JOURNEY_SCENES.map(({ destination }, index) => (
+          <DestinationExperience
+            key={destination}
+            mode="full"
+            targetDestination={destination}
+            continuation={index > 0}
+            active={index === activeIndex}
+            track={tracks[index]}
+            hydrated={hydrated}
+            staticDevice={false}
+            sharedFrame
+          />
+        ))}
+      </div>
+      <div className="col-start-1 row-start-1" aria-hidden="true">
+        {JOURNEY_SCENES.map(({ destination }, index) => (
+          <div
+            key={destination}
+            data-journey-track={destination}
+            className="h-[var(--scene-mobile)] md:h-[var(--scene-desktop)]"
+            style={sceneHeight(destination, index > 0, true)}
+          />
+        ))}
+        <div className="h-svh md:h-screen" />
+      </div>
+    </div>
+  );
+}
+
 export function TravelExperience({
   mode = "single",
   targetDestination = "chile",
 }: TravelExperienceProps = {}) {
-  if (mode === "full")
-    return (
+  const [hydrated, setHydrated] = useState(false);
+  const { isReducedMotion, isSaveData, isConstrainedDevice } = useGpuCapability();
+  const staticDevice = hydrated && (isReducedMotion || isSaveData || isConstrainedDevice);
+
+  useEffect(() => {
+    setHydrated(true);
+  }, []);
+
+  if (mode === "full") {
+    return staticDevice ? (
       <div data-testid="full-journey">
-        {JOURNEY_SCENES.map((scene, index) => (
-          <DestinationExperience
-            key={scene.destination}
+        {JOURNEY_SCENES.map(({ destination }, index) => (
+          <StaticJourney
+            key={destination}
             mode="full"
-            targetDestination={scene.destination}
+            targetDestination={destination}
             continuation={index > 0}
           />
         ))}
       </div>
+    ) : (
+      <FullJourney hydrated={hydrated} />
     );
+  }
+
   const destination = getDestinationConfig(targetDestination);
-  return <DestinationExperience key={destination.id} targetDestination={destination.id} />;
+  return (
+    <DestinationExperience
+      key={destination.id}
+      targetDestination={destination.id}
+      hydrated={hydrated}
+      staticDevice={staticDevice}
+    />
+  );
 }

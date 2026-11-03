@@ -137,8 +137,8 @@ describe("Issue #51 — Configuração Dinâmica da Hero por Destino", () => {
       const { unmount } = renderJourney({ mode: "full" });
       expect(screen.getByTestId("full-journey")).toBeInTheDocument();
       expect(
-        screen.getAllByTestId("travel-experience-fallback").length +
-          screen.getAllByTestId("travel-experience-hero").length
+        screen.queryAllByTestId("travel-experience-fallback").length +
+          screen.queryAllByTestId("travel-experience-hero").length
       ).toBe(10);
       unmount();
 

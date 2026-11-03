@@ -40,14 +40,36 @@ describe("Jornada completa", () => {
     );
     expect(document.querySelectorAll("h1")).toHaveLength(1);
     expect(document.querySelectorAll("video[src]")).toHaveLength(1);
+    const tracks = Array.from(document.querySelectorAll("[data-journey-track]"));
     const next = scenes[1];
-    if (!next) throw new Error("Cena ausente");
-    act(() => callbacks.get(next)?.([{ isIntersecting: true }]));
+    const nextTrack = tracks[1];
+    if (!next || !nextTrack) throw new Error("Cena ausente");
+    act(() => callbacks.get(nextTrack)?.([{ isIntersecting: true }]));
     expect(next.querySelector("video")).toHaveAttribute(
       "src",
       "/assets/hero/destinations/argentina-scrub.mp4"
     );
     expect(document.querySelectorAll("video[src]")).toHaveLength(2);
+
+    const journey = screen.getByTestId("full-journey");
+    let scroll = 0;
+    vi.spyOn(journey, "getBoundingClientRect").mockImplementation(() => new DOMRect(0, -scroll));
+    tracks.forEach((track, index) => {
+      vi.spyOn(track, "getBoundingClientRect").mockImplementation(
+        () => new DOMRect(0, index * 100 - scroll, 0, 100)
+      );
+    });
+    for (const [position, expected] of [
+      [100, 1],
+      [900, 9],
+      [899, 8],
+      [99, 0],
+    ] as const) {
+      scroll = position;
+      act(() => window.dispatchEvent(new Event("scroll")));
+      expect(journey.querySelector("[data-destination]:not([hidden])")).toBe(scenes[expected]);
+      expect(scenes[expected]?.parentElement).toBe(scenes[0]?.parentElement);
+    }
   });
 
   it("preserva os dez destinos sem vídeo e sem repetir abertura em reduced motion", () => {
