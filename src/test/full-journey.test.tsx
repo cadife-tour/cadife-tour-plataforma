@@ -1,5 +1,6 @@
 import { afterEach, describe, expect, it, vi } from "vitest";
 import { act, render, screen } from "@testing-library/react";
+import { HeroSection } from "@/features/marketing/HeroSection/HeroSection";
 import { TravelExperience } from "@/features/travel-experience/TravelExperience";
 import { JOURNEY_SCENES } from "@/features/travel-experience/config/journeyScenes";
 import { useGpuCapability } from "@/features/visual-journey/hooks/useGpuCapability";
@@ -17,6 +18,14 @@ const base = {
 afterEach(() => {
   vi.unstubAllGlobals();
   vi.restoreAllMocks();
+});
+
+it("exibe somente a Hero de abertura na home", () => {
+  capability.mockReturnValue(base);
+  render(<HeroSection />);
+  expect(screen.queryByTestId("full-journey")).not.toBeInTheDocument();
+  expect(screen.getByTestId("travel-experience-hero")).toHaveAttribute("data-destination", "chile");
+  expect(document.querySelectorAll("video")).toHaveLength(1);
 });
 
 describe("Jornada completa", () => {

@@ -20,22 +20,24 @@ A porta pode mudar se a padrão estiver ocupada. Use a URL informada pelo termin
 
 ## Páginas disponíveis
 
-Homepage /: jornada completa, na ordem Chile → Argentina → Peru → Cruzeiros → Portugal → Espanha → França → Itália → Brasil → Resorts. Uma única abertura de avião; os demais clipes entram pela travessia de nuvens. Role para avançar e volte para retornar.
+A landing do Rio (issue #62) usa a rota `/destinos/rio-de-janeiro`, com o vídeo do Rio e as mesmas seções da homepage.
+
+A homepage (/) usa a Hero de abertura com o vídeo do Chile. Cada destino tem sua própria Hero na página pública abaixo.
 
 | Destino | Página individual |
 | --- | --- |
-| Chile / Andes | /hero-preview/chile |
-| Argentina / Buenos Aires | /hero-preview/argentina |
-| Peru / Machu Picchu | /hero-preview/peru |
-| Cruzeiros | /hero-preview/cruzeiros |
-| Portugal / Lisboa | /hero-preview/portugal |
-| Espanha | /hero-preview/espanha |
-| França / Paris | /hero-preview/franca |
-| Itália / Roma | /hero-preview/italia |
-| Brasil / Rio de Janeiro | /hero-preview/brasil |
-| Resorts / Praia | /hero-preview/resorts |
+| Chile / Andes | /destinos/chile |
+| Argentina / Buenos Aires | /destinos/argentina |
+| Peru / Machu Picchu | /destinos/peru |
+| Cruzeiros | /destinos/cruzeiros |
+| Portugal / Lisboa | /destinos/portugal |
+| Espanha | /destinos/espanha |
+| França / Paris | /destinos/franca |
+| Itália / Roma | /destinos/italia |
+| Brasil / Rio de Janeiro | /destinos/rio-de-janeiro |
+| Resorts / Praia | /destinos/resorts |
 
-As páginas individuais são prévias sem indexação (noindex, nofollow), fora do sitemap. Não substituem o conteúdo editorial e SEO das landings finais, previsto nas issues #50 e #52–#64.
+As dez páginas individuais estão no sitemap.
 
 ## Usar em uma página
 
@@ -44,7 +46,7 @@ As páginas individuais são prévias sem indexação (noindex, nofollow), fora 
 <TravelExperience mode="full" />
 ```
 
-Componente: src/features/travel-experience/TravelExperience.tsx. O modo single monta somente o vídeo do destino. O modo full usa a ordem de journeyScenes.ts, carrega os seguintes por proximidade e mantém uma única abertura/h1. Slug desconhecido no componente retorna Chile; uma URL de prévia desconhecida retorna 404.
+Componente: src/features/travel-experience/TravelExperience.tsx. O modo single monta somente o vídeo do destino. O modo full usa a ordem de journeyScenes.ts, carrega os seguintes por proximidade e mantém uma única abertura/h1. Slug desconhecido no componente retorna Chile; uma URL de destino desconhecida retorna 404.
 
 ## Configuração e mídias versionadas
 
@@ -60,7 +62,7 @@ Os nove novos MP4, nove posters e nove stills estão em public/assets/hero/desti
 | Critério | Implementação |
 | --- | --- |
 | Manifesto por destino | Dez destinos com mídia e conteúdo próprios |
-| Full e single | Homepage completa e dez prévias isoladas |
+| Full e single | Homepage em modo single, dez páginas individuais e modo full disponível no componente |
 | Abertura compartilhada | Mesmo componente, abertura única no full |
 | Carregar somente o necessário | Single isolado; full carrega cenas próximas |
 | Headline/CTA/duração/saída | Conteúdo localizado e manifesto de tempos |
@@ -70,13 +72,13 @@ Os nove novos MP4, nove posters e nove stills estão em public/assets/hero/desti
 
 ## Como testar
 
-1. Abrir a homepage; confirmar avião, nuvens e os dez destinos na ordem acima.
+1. Abrir a homepage; confirmar a abertura com o vídeo do Chile.
 2. Rolar lentamente e rapidamente, inverter o scroll e retornar ao topo.
 3. Abrir cada página individual: somente seu vídeo deve ser solicitado, com título e WhatsApp corretos.
 4. Trocar PT/EN/ES e confirmar rótulos e mensagens de WhatsApp.
 5. Ativar prefers-reduced-motion no navegador e recarregar: painéis estáticos preservam conteúdo e CTAs sem vídeo. Save-data, aparelho limitado ou erro de mídia também usam fallback.
-6. Conferir mobile/portrait/landscape, foco por teclado e a saída do Resort para o conteúdo da homepage.
-7. Na aba Network, conferir carregamento por proximidade e ausência de arquivos 404.
+6. Conferir mobile/portrait/landscape, foco por teclado e a passagem da Hero para o conteúdo da página.
+7. Na aba Network, conferir um vídeo por página e ausência de arquivos 404.
 
 ## Validações e limites
 

@@ -2,6 +2,7 @@
 
 import { getSceneTiming } from "../config/journeyScenes";
 import React from "react";
+import type { Locale } from "@/content/types";
 import { Container } from "@/shared/ui/Container/Container";
 import { Button } from "@/shared/ui/Button/Button";
 import { useLocale } from "@/core/i18n/LocaleContext";
@@ -16,6 +17,7 @@ export interface TravelOverlayProps {
   isStaticFallback?: boolean;
   mode?: TravelExperienceMode;
   targetDestination?: string;
+  introTitle?: Record<Locale, string>;
 }
 
 /**
@@ -31,6 +33,7 @@ export const TravelOverlay: React.FC<TravelOverlayProps> = ({
   isStaticFallback = false,
   mode: _mode = "single",
   targetDestination = "chile",
+  introTitle,
 }) => {
   const isFallback = staticFallback || isStaticFallback;
   const { locale } = useLocale();
@@ -149,7 +152,7 @@ export const TravelOverlay: React.FC<TravelOverlayProps> = ({
               </div>
 
               <h1 className="text-4xl font-extrabold leading-[1.1] tracking-tight text-white [text-shadow:_0_2px_12px_rgba(0,0,0,0.8)] sm:text-5xl lg:text-6xl">
-                {t.airplane.title}
+                {introTitle?.[locale] ?? t.airplane.title}
               </h1>
 
               <p className="max-w-2xl text-lg leading-relaxed text-white/90 [text-shadow:_0_2px_8px_rgba(0,0,0,0.8)] sm:text-xl">

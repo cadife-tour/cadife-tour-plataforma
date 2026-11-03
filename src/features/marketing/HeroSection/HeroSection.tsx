@@ -1,5 +1,5 @@
 import { TravelExperience } from "@/features/travel-experience/TravelExperience";
 
 export function HeroSection() {
-  return <TravelExperience mode="full" />;
+  return <TravelExperience mode="single" targetDestination="chile" />;
 }

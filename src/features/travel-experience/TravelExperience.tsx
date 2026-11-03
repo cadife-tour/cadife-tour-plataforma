@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState, type CSSProperties } from "react";
 import Image from "next/image";
+import type { Locale } from "@/content/types";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { useGpuCapability } from "@/features/visual-journey/hooks/useGpuCapability";
@@ -17,9 +18,15 @@ interface StaticJourneyProps {
   continuation?: boolean;
   mode?: TravelExperienceMode;
   targetDestination?: string;
+  introTitle?: Record<Locale, string>;
 }
 
-function StaticJourney({ mode, targetDestination, continuation = false }: StaticJourneyProps) {
+function StaticJourney({
+  mode,
+  targetDestination,
+  introTitle,
+  continuation = false,
+}: StaticJourneyProps) {
   const destination = getDestinationConfig(targetDestination);
   const destinationStill = destination.media.stillImage || ASSET_MANIFEST.images.chileAndes;
 
@@ -46,6 +53,7 @@ function StaticJourney({ mode, targetDestination, continuation = false }: Static
               staticFallback
               mode={mode}
               targetDestination={targetDestination}
+              introTitle={introTitle}
             />
           </div>
           <div className="relative min-h-screen overflow-hidden bg-slate-300">
@@ -62,6 +70,7 @@ function StaticJourney({ mode, targetDestination, continuation = false }: Static
               staticFallback
               mode={mode}
               targetDestination={targetDestination}
+              introTitle={introTitle}
             />
           </div>
         </>
@@ -75,6 +84,7 @@ function StaticJourney({ mode, targetDestination, continuation = false }: Static
           staticFallback
           mode={mode}
           targetDestination={targetDestination}
+          introTitle={introTitle}
         />
       </div>
     </section>
@@ -84,6 +94,7 @@ function StaticJourney({ mode, targetDestination, continuation = false }: Static
 export interface TravelExperienceProps {
   mode?: TravelExperienceMode;
   targetDestination?: string;
+  introTitle?: Record<Locale, string>;
 }
 
 /**
@@ -96,6 +107,7 @@ export interface TravelExperienceProps {
 function DestinationExperience({
   mode = "single",
   targetDestination = "chile",
+  introTitle,
   continuation = false,
   active = true,
   track,
@@ -207,6 +219,7 @@ function DestinationExperience({
       <StaticJourney
         mode={mode}
         targetDestination={targetDestination}
+        introTitle={introTitle}
         continuation={continuation}
       />
     );
@@ -279,6 +292,7 @@ function DestinationExperience({
           showIntro={!continuation}
           mode={mode}
           targetDestination={targetDestination}
+          introTitle={introTitle}
         />
       </div>
     </section>
@@ -356,6 +370,7 @@ function FullJourney({ hydrated }: { hydrated: boolean }) {
 export function TravelExperience({
   mode = "single",
   targetDestination = "chile",
+  introTitle,
 }: TravelExperienceProps = {}) {
   const [hydrated, setHydrated] = useState(false);
   const { isReducedMotion, isSaveData, isConstrainedDevice } = useGpuCapability();
@@ -387,6 +402,7 @@ export function TravelExperience({
     <DestinationExperience
       key={destination.id}
       targetDestination={destination.id}
+      introTitle={introTitle}
       hydrated={hydrated}
       staticDevice={staticDevice}
     />

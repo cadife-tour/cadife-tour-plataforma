@@ -6,10 +6,7 @@ import { LocaleProvider } from "@/core/i18n/LocaleContext";
 import { TravelExperience } from "@/features/travel-experience/TravelExperience";
 import { useGpuCapability } from "@/features/visual-journey/hooks/useGpuCapability";
 import { ASSET_MANIFEST } from "@/features/travel-experience/assets/assetManifest";
-import HeroPreviewPage, {
-  generateMetadata,
-  generateStaticParams,
-} from "@/app/hero-preview/[destination]/page";
+import { generateMetadata, generateStaticParams } from "@/app/destinos/[destination]/page";
 
 vi.mock("@/features/visual-journey/hooks/useGpuCapability", () => ({ useGpuCapability: vi.fn() }));
 const capability = vi.mocked(useGpuCapability);
@@ -123,13 +120,11 @@ describe("Vídeo próprio por destino", () => {
     );
   });
 
-  it("gera somente as dez prévias disponíveis e impede indexação", async () => {
-    expect(generateStaticParams().map((item) => item.destination)).toEqual(ids);
+  it("gera dez rotas públicas", async () => {
+    expect(generateStaticParams().map((item) => item.destination)).toEqual(
+      ids.map((id) => (id === "brasil" ? "rio-de-janeiro" : id))
+    );
     const params = Promise.resolve({ destination: "portugal" });
-    expect((await generateMetadata({ params })).robots).toEqual({ index: false, follow: false });
-    expect((await generateMetadata({ params })).alternates?.canonical).toBeNull();
-    await expect(
-      HeroPreviewPage({ params: Promise.resolve({ destination: "desconhecido" }) })
-    ).rejects.toThrow();
+    expect((await generateMetadata({ params })).alternates?.canonical).toBe("/destinos/portugal");
   });
 });
