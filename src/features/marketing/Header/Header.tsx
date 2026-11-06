@@ -138,8 +138,8 @@ export const Header: React.FC = () => {
     <header
       className={`fixed left-0 right-0 top-0 z-50 w-full transition-all duration-300 ease-in-out motion-reduce:transition-none ${
         isScrolled
-          ? "bg-brand-dark/95 border-b border-white/10 shadow-md backdrop-blur-md"
-          : "bg-brand-dark/40 border-b border-transparent backdrop-blur-sm"
+          ? "bg-brand-dark/95 shadow-md backdrop-blur-md"
+          : "bg-brand-dark/40 backdrop-blur-sm"
       }`}
     >
       <Container>
@@ -174,10 +174,8 @@ export const Header: React.FC = () => {
                   key={item.key}
                   href={hrefForSection(item.sectionId)}
                   aria-current={isActive ? "location" : undefined}
-                  className={`rounded px-1 text-sm font-medium underline-offset-4 transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-white ${
-                    isActive
-                      ? "text-brand-accent underline"
-                      : "text-white/85 hover:text-white hover:underline"
+                  className={`rounded px-1 text-sm font-medium transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-white ${
+                    isActive ? "text-brand-accent" : "text-white/85 hover:text-white"
                   }`}
                 >
                   {t[item.key]}
@@ -240,7 +238,7 @@ export const Header: React.FC = () => {
         {isMenuOpen && (
           <nav
             aria-label="Navegação Principal (móvel)"
-            className="bg-brand-dark/98 flex flex-col gap-1 border-t border-white/10 px-4 py-4 backdrop-blur-md"
+            className="bg-brand-dark/98 flex flex-col gap-1 px-4 py-4 backdrop-blur-md"
           >
             {navigationItems.map((item) => {
               const isActive = activeSectionId === item.sectionId;
