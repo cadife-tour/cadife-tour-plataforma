@@ -113,6 +113,12 @@ npm run build
 
 ---
 
+## 🌱 8. Estratégia de Branches e Pull Requests
+
+O fluxo oficial de desenvolvimento é `feature/* → developer → main`. Branches de trabalho (`feature/*`, `fix/*`, `chore/*`) partem da `developer` e PRs de desenvolvimento devem usar `base: developer`; `main` representa a linha estável e recebe código apenas via PR vindo da `developer`. Detalhes completos, convenção de nomes e recomendações de proteção de branch estão em [docs/DEVELOPMENT_WORKFLOW.md](docs/DEVELOPMENT_WORKFLOW.md).
+
+---
+
 ## 📄 Licença
 
 Este projeto é de propriedade da **CADIFE Tour**. Todos os direitos reservados.
