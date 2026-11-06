@@ -137,9 +137,7 @@ export const Header: React.FC = () => {
   return (
     <header
       className={`fixed left-0 right-0 top-0 z-50 w-full transition-all duration-300 ease-in-out motion-reduce:transition-none ${
-        isScrolled
-          ? "bg-brand-dark/95 shadow-md backdrop-blur-md"
-          : "bg-brand-dark/40 backdrop-blur-sm"
+        isScrolled ? "bg-brand-dark/95 backdrop-blur-md" : "bg-brand-dark/40 backdrop-blur-sm"
       }`}
     >
       <Container>
