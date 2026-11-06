@@ -121,12 +121,12 @@ describe("Issue #33 — Componente Reutilizável de CTA para WhatsApp", () => {
           <Header />
         </LocaleProvider>
       );
-      const headerCtaEn = screen.getByRole("link", {
-        name: /talk to an advisor on whatsapp \(opens in new tab\)/i,
-      });
+      const headerCtaEn = screen.getAllByRole("link", {
+        name: /plan your trip on whatsapp \(opens in new tab\)/i,
+      })[0];
       expect(headerCtaEn).toBeInTheDocument();
-      expect(headerCtaEn.getAttribute("aria-label")).not.toContain("abre em nova aba");
-      expect(headerCtaEn.getAttribute("aria-label")).not.toContain("no WhatsApp");
+      expect(headerCtaEn!.getAttribute("aria-label")).not.toContain("abre em nova aba");
+      expect(headerCtaEn!.getAttribute("aria-label")).not.toContain("no WhatsApp");
       unmountHeaderEn();
 
       // 2. Header em ES
@@ -135,12 +135,12 @@ describe("Issue #33 — Componente Reutilizável de CTA para WhatsApp", () => {
           <Header />
         </LocaleProvider>
       );
-      const headerCtaEs = screen.getByRole("link", {
-        name: /hablar con un asesor en whatsapp \(abre en nueva pestaña\)/i,
-      });
+      const headerCtaEs = screen.getAllByRole("link", {
+        name: /planifica tu viaje en whatsapp \(abre en nueva pestaña\)/i,
+      })[0];
       expect(headerCtaEs).toBeInTheDocument();
-      expect(headerCtaEs.getAttribute("aria-label")).not.toContain("abre em nova aba");
-      expect(headerCtaEs.getAttribute("aria-label")).not.toContain("no WhatsApp");
+      expect(headerCtaEs!.getAttribute("aria-label")).not.toContain("abre em nova aba");
+      expect(headerCtaEs!.getAttribute("aria-label")).not.toContain("no WhatsApp");
       unmountHeaderEs();
 
       // 3. Footer em EN
@@ -499,9 +499,9 @@ describe("Issue #33 — Componente Reutilizável de CTA para WhatsApp", () => {
         </LocaleProvider>
       );
 
-      const headerCta = screen.getByRole("link", {
-        name: /falar com consultor no whatsapp/i,
-      });
+      const headerCta = screen.getAllByRole("link", {
+        name: /planeje sua viagem no whatsapp/i,
+      })[0]!;
       expect(headerCta).toBeInTheDocument();
       fireEvent.click(headerCta);
 

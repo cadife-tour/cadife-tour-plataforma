@@ -48,7 +48,7 @@ export const AboutAndTrustSection: React.FC = () => {
   };
 
   return (
-    <section id="agencia" className="border-b border-border py-20 lg:py-28">
+    <section id="agencia" className="scroll-mt-24 border-b border-border py-20 lg:py-28">
       <Container>
         {/* 1. Diferenciais Institucionais */}
         <div className="mb-16 max-w-3xl">
@@ -82,7 +82,7 @@ export const AboutAndTrustSection: React.FC = () => {
         </div>
 
         {/* 2. Prova Social & Avaliações */}
-        <div className="border-border/60 mt-20 border-t pt-16">
+        <div id="depoimentos" className="border-border/60 mt-20 scroll-mt-24 border-t pt-16">
           <div className="mb-10 flex flex-col justify-between gap-4 sm:flex-row sm:items-center">
             <h3 className="text-2xl font-bold text-foreground">{t.testimonialsTitle}</h3>
             {contactInfo.googleReviewsUrl && (

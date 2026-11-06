@@ -46,7 +46,9 @@ describe("Fase 2 — Core Semântico, i18n e WhatsApp Deep Links", () => {
     expect(screen.getByRole("heading", { level: 1 })).toBeInTheDocument();
 
     // 2. Links de navegação e seções presentes
-    expect(screen.getByRole("navigation", { name: /navegação principal/i })).toBeInTheDocument();
+    expect(
+      screen.getAllByRole("navigation", { name: /navegação principal/i })[0]
+    ).toBeInTheDocument();
     expect(
       screen.getByRole("heading", { name: /roteiros e destinos planejados/i })
     ).toBeInTheDocument();
