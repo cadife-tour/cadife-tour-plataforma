@@ -28,10 +28,15 @@ export function ContinuousJourneyHero() {
 
   useEffect(() => {
     const motion = window.matchMedia("(prefers-reduced-motion: reduce)");
-    const connection = (navigator as Navigator & { connection?: { saveData?: boolean } })
-      .connection;
+    const device = navigator as Navigator & {
+      connection?: { saveData?: boolean };
+      deviceMemory?: number;
+    };
+    const constrainedDevice =
+      (typeof device.deviceMemory === "number" && device.deviceMemory <= 2) ||
+      (typeof device.hardwareConcurrency === "number" && device.hardwareConcurrency <= 2);
     const update = () => {
-      const useStatic = motion.matches || Boolean(connection?.saveData);
+      const useStatic = motion.matches || Boolean(device.connection?.saveData) || constrainedDevice;
       setAllowVideo(!useStatic);
       setStaticLayout(useStatic);
     };

@@ -1,4 +1,6 @@
-import { afterEach, describe, expect, it, vi } from "vitest";
+import { afterAll, afterEach, describe, expect, it, vi } from "vitest";
+import gsap from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { fireEvent, render, screen } from "@testing-library/react";
 import { existsSync } from "node:fs";
 import { resolve } from "node:path";
@@ -9,9 +11,38 @@ import { HomePageSwitcher } from "@/features/marketing/HomePageSwitcher";
 import { continuousJourneySegments } from "@/features/travel-experience/config/continuousJourneyTiming";
 import { renderToString } from "react-dom/server";
 
-afterEach(() => vi.restoreAllMocks());
+afterEach(() => {
+  vi.restoreAllMocks();
+  vi.unstubAllGlobals();
+});
+
+// ScrollTrigger owns global timers beyond a component timeline's lifetime.
+// Stop them before this jsdom environment removes requestAnimationFrame.
+afterAll(() => {
+  ScrollTrigger.disable();
+  gsap.ticker.sleep();
+});
 
 describe("Continuous journey alternative homepage", () => {
+  it.each(["low-memory", "low-cpu", "save-data"])(
+    "preserves a lightweight static layout with %s",
+    (profile) => {
+      vi.stubGlobal("navigator", {
+        deviceMemory: profile === "low-memory" ? 2 : 8,
+        hardwareConcurrency: profile === "low-cpu" ? 2 : 8,
+        connection: { saveData: profile === "save-data" },
+      });
+      render(<ContinuousJourneyHero />);
+      expect(document.querySelector("video")).toBeNull();
+      expect(screen.getByRole("heading", { level: 1 })).toBeVisible();
+      const section = screen.getByRole("region", { name: "Jornada CADIFE Tour" });
+      expect(section.style.getPropertyValue("--journey-mobile")).toBe("");
+      expect(screen.getByRole("link", { name: "Explorar destinos" })).toHaveAttribute(
+        "href",
+        "#destinos"
+      );
+    }
+  );
   it("reserves the full scroll height in server HTML before hydration", () => {
     const html = renderToString(<ContinuousJourneyHero />);
     expect(html).toContain("--journey-mobile:");

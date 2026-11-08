@@ -4,7 +4,7 @@ import { ASSET_MANIFEST } from "../assets/assetManifest";
 export type JourneyPhaseName =
   "AIRPLANE" | "WINDOW" | "CLOUDS" | "CHILE" | "DESTINATION" | "RESORT";
 
-/** Seleção de mídia por destino; jornada completa continua pendente. */
+/** Modos atendidos pela engine compartilhada: jornada completa e destino individual. */
 export type TravelExperienceMode = "full" | "single";
 
 export interface PhaseConfig {
@@ -490,9 +490,9 @@ export const TRAVEL_EXPERIENCE_CONFIG: TravelExperienceConfig = {
 };
 
 /**
- * Prepara configurações para Full Journey e Single Destination.
- * Follow-up: integrar à timeline, seleção de mídia, overlay e fallback da engine.
- * A PR #68 ainda executa exclusivamente a POC do Chile.
+ * Descreve os intervalos conceituais de Full Journey e Single Destination.
+ * A timeline de reprodução usa journeyScenes.ts; estes intervalos não são
+ * o controlador da playlist nem da montagem experimental de /home-2.
  */
 export function getExperiencePhases(
   mode: TravelExperienceMode = "single",
