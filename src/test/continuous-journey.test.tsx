@@ -1,6 +1,4 @@
-import { afterAll, afterEach, describe, expect, it, vi } from "vitest";
-import gsap from "gsap";
-import { ScrollTrigger } from "gsap/ScrollTrigger";
+import { afterEach, describe, expect, it, vi } from "vitest";
 import { fireEvent, render, screen } from "@testing-library/react";
 import { existsSync } from "node:fs";
 import { resolve } from "node:path";
@@ -14,13 +12,6 @@ import { renderToString } from "react-dom/server";
 afterEach(() => {
   vi.restoreAllMocks();
   vi.unstubAllGlobals();
-});
-
-// ScrollTrigger owns global timers beyond a component timeline's lifetime.
-// Stop them before this jsdom environment removes requestAnimationFrame.
-afterAll(() => {
-  ScrollTrigger.disable();
-  gsap.ticker.sleep();
 });
 
 describe("Continuous journey alternative homepage", () => {

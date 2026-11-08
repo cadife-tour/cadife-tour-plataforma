@@ -1,4 +1,14 @@
 import "@testing-library/jest-dom/vitest";
+import { afterAll } from "vitest";
+
+afterAll(async () => {
+  // GSAP owns process timers beyond a component's lifetime. Release them before
+  // Vitest removes this file's window and requestAnimationFrame implementation.
+  const { ScrollTrigger } = await import("gsap/ScrollTrigger");
+  if (typeof ScrollTrigger.isTouch === "number") ScrollTrigger.disable(true, true);
+  const { default: gsap } = await import("gsap");
+  gsap.ticker?.sleep();
+});
 
 // Mock padrão seguro de matchMedia para ambiente jsdom de testes
 if (typeof window !== "undefined") {
