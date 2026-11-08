@@ -28,6 +28,57 @@ it("exibe somente a Hero de abertura na home", () => {
   expect(document.querySelectorAll("video")).toHaveLength(1);
 });
 
+it("avança sequencialmente para o próximo destino quando o vídeo termina até percorrer todos os destinos", () => {
+  capability.mockReturnValue(base);
+  render(<HeroSection />);
+  expect(screen.getByTestId("travel-experience-hero")).toHaveAttribute("data-destination", "chile");
+
+  const expectedDestinations = [
+    "argentina",
+    "peru",
+    "cruzeiros",
+    "portugal",
+    "espanha",
+    "franca",
+    "italia",
+    "brasil",
+    "resorts",
+    "chile",
+  ];
+
+  for (const nextDest of expectedDestinations) {
+    const video = document.querySelector("video");
+    expect(video).toBeInTheDocument();
+    act(() => {
+      video?.dispatchEvent(new Event("ended"));
+    });
+    expect(screen.getByTestId("travel-experience-hero")).toHaveAttribute(
+      "data-destination",
+      nextDest
+    );
+  }
+});
+
+it("permite navegar diretamente para um destino através do indicador de vídeos", () => {
+  capability.mockReturnValue(base);
+  render(<HeroSection />);
+  expect(screen.getByTestId("travel-experience-hero")).toHaveAttribute("data-destination", "chile");
+
+  const francaBtn = screen.getByRole("button", { name: /Ver vídeo de França/i });
+  act(() => {
+    francaBtn.click();
+  });
+  expect(screen.getByTestId("travel-experience-hero")).toHaveAttribute(
+    "data-destination",
+    "franca"
+  );
+  expect(document.querySelector("video")).toHaveAttribute(
+    "src",
+    "/assets/hero/destinations/franca-scrub.mp4"
+  );
+  expect(screen.getByRole("heading", { name: /França: Elegância/i })).toBeInTheDocument();
+});
+
 describe("Jornada completa", () => {
   it("preserva ordem, um único h1 e carrega a cena seguinte por proximidade", () => {
     capability.mockReturnValue(base);

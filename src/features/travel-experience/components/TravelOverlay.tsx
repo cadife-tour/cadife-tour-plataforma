@@ -110,18 +110,20 @@ export const TravelOverlay: React.FC<TravelOverlayProps> = ({
   // Airplane/Intro: forte de 0 a 0.2, fade out em 0.25
   const timing = getSceneTiming(destinationConfig.id);
   const introOpacity = Math.max(0, Math.min(1, 1 - progress / timing.introEnd));
-  // Clouds text: acompanha a travessia no clipe de oito segundos.
+  // Continuação mantém o destino visível; nuvens não podem ocupar a mesma camada textual.
   const cloudsOpacity =
-    progress >= timing.cloudsStart && progress <= timing.cloudsEnd
+    showIntro && progress >= timing.cloudsStart && progress <= timing.cloudsEnd
       ? Math.sin(
           ((progress - timing.cloudsStart) / (timing.cloudsEnd - timing.cloudsStart)) * Math.PI
         )
       : 0;
-  // Destino ativo: surge a partir de 0.69 e consolida até o fim.
-  const destinationOpacity = Math.max(
-    0,
-    Math.min(1, (progress - timing.revealStart) / (timing.revealEnd - timing.revealStart))
-  );
+  // Destino ativo: surge a partir de 0.69 quando há intro; sem intro (continuação/playlist), consolida diretamente.
+  const destinationOpacity = !showIntro
+    ? 1
+    : Math.max(
+        0,
+        Math.min(1, (progress - timing.revealStart) / (timing.revealEnd - timing.revealStart))
+      );
 
   const destinationAriaLabel =
     destinationConfig.id === "chile"
@@ -216,9 +218,15 @@ export const TravelOverlay: React.FC<TravelOverlayProps> = ({
                 <span>{destContent.badge}</span>
               </div>
 
-              <h2 className="text-4xl font-extrabold leading-[1.1] tracking-tight text-white [text-shadow:_0_2px_12px_rgba(0,0,0,0.8)] sm:text-5xl lg:text-6xl">
-                {destContent.title}
-              </h2>
+              {showIntro || _mode === "full" ? (
+                <h2 className="text-4xl font-extrabold leading-[1.1] tracking-tight text-white [text-shadow:_0_2px_12px_rgba(0,0,0,0.8)] sm:text-5xl lg:text-6xl">
+                  {destContent.title}
+                </h2>
+              ) : (
+                <h1 className="text-4xl font-extrabold leading-[1.1] tracking-tight text-white [text-shadow:_0_2px_12px_rgba(0,0,0,0.8)] sm:text-5xl lg:text-6xl">
+                  {destContent.title}
+                </h1>
+              )}
 
               <p className="max-w-2xl text-lg leading-relaxed text-white/95 [text-shadow:_0_2px_8px_rgba(0,0,0,0.8)] sm:text-xl">
                 {destContent.subtitle}

@@ -36,6 +36,10 @@ export const JOURNEY_SCENES = [
   { destination: "resorts", timing: { ...defaults } },
 ];
 
+export const PLAYLIST_DESTINATIONS: readonly string[] = JOURNEY_SCENES.map(
+  (scene) => scene.destination
+);
+
 export function getSceneTiming(destination: string): SceneTiming {
   return JOURNEY_SCENES.find((scene) => scene.destination === destination)?.timing ?? defaults;
 }
