@@ -300,44 +300,195 @@ describe("Issue #2 — Header & Navigation", () => {
     window.matchMedia = originalMatchMedia;
   });
 
-  it("active state: marca aria-current apenas na seção visível, sem depender do href", () => {
-    const observedCallbacks: Array<(entries: Partial<IntersectionObserverEntry>[]) => void> = [];
-    class MockIntersectionObserver {
-      constructor(callback: (entries: Partial<IntersectionObserverEntry>[]) => void) {
-        observedCallbacks.push(callback);
+  describe("active state via IntersectionObserver (scroll)", () => {
+    type MockEntry = Partial<IntersectionObserverEntry>;
+    type MockCallback = (entries: MockEntry[]) => void;
+
+    const SECTION_IDS = ["destinos", "depoimentos", "contato", "agencia"] as const;
+    const LABELS: Record<(typeof SECTION_IDS)[number], string> = {
+      destinos: "Viagens",
+      depoimentos: "Depoimentos",
+      contato: "Contato",
+      agencia: "Sobre nós",
+    };
+
+    let observerOptions: IntersectionObserverInit | undefined;
+    let observedCallbacks: MockCallback[];
+    let originalIO: typeof window.IntersectionObserver;
+    let sections: Record<string, HTMLElement>;
+
+    const setup = () => {
+      observerOptions = undefined;
+      observedCallbacks = [];
+      class MockIntersectionObserver {
+        constructor(callback: MockCallback, options?: IntersectionObserverInit) {
+          observedCallbacks.push(callback);
+          observerOptions = options;
+        }
+        observe() {}
+        disconnect() {}
+        unobserve() {}
       }
-      observe() {}
-      disconnect() {}
-      unobserve() {}
-    }
-    const originalIO = window.IntersectionObserver;
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    window.IntersectionObserver = MockIntersectionObserver as any;
+      originalIO = window.IntersectionObserver;
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      window.IntersectionObserver = MockIntersectionObserver as any;
 
-    const destinos = document.createElement("div");
-    destinos.id = "destinos";
-    document.body.appendChild(destinos);
+      sections = {};
+      SECTION_IDS.forEach((id) => {
+        const el = document.createElement("div");
+        el.id = id;
+        document.body.appendChild(el);
+        sections[id] = el;
+      });
+    };
 
-    render(
-      <LocaleProvider>
-        <Header />
-      </LocaleProvider>
-    );
+    const teardown = () => {
+      SECTION_IDS.forEach((id) => document.body.removeChild(sections[id]!));
+      window.IntersectionObserver = originalIO;
+    };
 
-    expect(screen.getAllByRole("link", { name: "Viagens" })[0]).not.toHaveAttribute("aria-current");
-
-    act(() => {
-      observedCallbacks[0]?.([{ target: destinos, isIntersecting: true, intersectionRatio: 1 }]);
+    afterEach(() => {
+      teardown();
     });
 
-    expect(screen.getAllByRole("link", { name: "Viagens" })[0]).toHaveAttribute(
-      "aria-current",
-      "location"
-    );
-    expect(screen.getAllByRole("link", { name: "Contato" })[0]).not.toHaveAttribute("aria-current");
+    const intersect = (sectionId: string, isIntersecting: boolean, intersectionRatio = 1) => {
+      act(() => {
+        observedCallbacks[0]?.([
+          { target: sections[sectionId], isIntersecting, intersectionRatio },
+        ]);
+      });
+    };
 
-    document.body.removeChild(destinos);
-    window.IntersectionObserver = originalIO;
+    const expectOnlyActive = (activeId: string | null, getLink: (name: string) => HTMLElement) => {
+      SECTION_IDS.forEach((id) => {
+        const link = getLink(LABELS[id]);
+        if (id === activeId) {
+          expect(link).toHaveAttribute("aria-current", "location");
+        } else {
+          expect(link).not.toHaveAttribute("aria-current");
+        }
+      });
+    };
+
+    it("usa rootMargin estreito com threshold 0 (faixa curta incompatível com threshold proporcional alto)", () => {
+      setup();
+      render(
+        <LocaleProvider>
+          <Header />
+        </LocaleProvider>
+      );
+
+      expect(observerOptions).toMatchObject({
+        rootMargin: "-40% 0px -50% 0px",
+        threshold: 0,
+      });
+    });
+
+    it("ativa cada um dos quatro itens (desktop) quando sua seção entra na faixa", () => {
+      setup();
+      render(
+        <LocaleProvider>
+          <Header />
+        </LocaleProvider>
+      );
+      const getLink = (name: string) => screen.getAllByRole("link", { name })[0]!;
+
+      SECTION_IDS.forEach((id) => {
+        intersect(id, true);
+        expectOnlyActive(id, getLink);
+      });
+    });
+
+    it("isIntersecting: false não atualiza o estado ativo (nenhuma ativação indevida)", () => {
+      setup();
+      render(
+        <LocaleProvider>
+          <Header />
+        </LocaleProvider>
+      );
+      const getLink = (name: string) => screen.getAllByRole("link", { name })[0]!;
+
+      intersect("destinos", true);
+      expectOnlyActive("destinos", getLink);
+
+      intersect("depoimentos", false);
+      expectOnlyActive("destinos", getLink);
+    });
+
+    it("transição sequencial ao rolar para baixo: Viagens → Depoimentos → Contato → Sobre nós, sem estado preso", () => {
+      setup();
+      render(
+        <LocaleProvider>
+          <Header />
+        </LocaleProvider>
+      );
+      const getLink = (name: string) => screen.getAllByRole("link", { name })[0]!;
+
+      for (const id of SECTION_IDS) {
+        intersect(id, true);
+        expectOnlyActive(id, getLink);
+      }
+    });
+
+    it("transição sequencial ao rolar para cima: Sobre nós → Contato → Depoimentos → Viagens", () => {
+      setup();
+      render(
+        <LocaleProvider>
+          <Header />
+        </LocaleProvider>
+      );
+      const getLink = (name: string) => screen.getAllByRole("link", { name })[0]!;
+
+      for (const id of [...SECTION_IDS].reverse()) {
+        intersect(id, true);
+        expectOnlyActive(id, getLink);
+      }
+    });
+
+    it("Contato ativo → #agencia entra na faixa → Sobre nós fica ativo e Contato perde aria-current", () => {
+      setup();
+      render(
+        <LocaleProvider>
+          <Header />
+        </LocaleProvider>
+      );
+      const getLink = (name: string) => screen.getAllByRole("link", { name })[0]!;
+
+      intersect("contato", true);
+      expect(getLink("Contato")).toHaveAttribute("aria-current", "location");
+
+      intersect("agencia", true);
+      expect(getLink("Contato")).not.toHaveAttribute("aria-current");
+      expect(getLink("Sobre nós")).toHaveAttribute("aria-current", "location");
+    });
+
+    it("reflete o mesmo activeSectionId no menu mobile (Viagens, Contato, Sobre nós)", () => {
+      setup();
+      render(
+        <LocaleProvider>
+          <Header />
+        </LocaleProvider>
+      );
+
+      const menuButton = screen.getByRole("button", { name: /abrir menu de navegação/i });
+      fireEvent.click(menuButton);
+
+      const getMobileLink = (name: string) => {
+        const links = screen.getAllByRole("link", { name });
+        return links[links.length - 1]!;
+      };
+
+      intersect("destinos", true);
+      expect(getMobileLink("Viagens")).toHaveAttribute("aria-current", "location");
+
+      intersect("contato", true);
+      expect(getMobileLink("Viagens")).not.toHaveAttribute("aria-current");
+      expect(getMobileLink("Contato")).toHaveAttribute("aria-current", "location");
+
+      intersect("agencia", true);
+      expect(getMobileLink("Contato")).not.toHaveAttribute("aria-current");
+      expect(getMobileLink("Sobre nós")).toHaveAttribute("aria-current", "location");
+    });
   });
 
   it("fora da homepage (sem seções no DOM), nenhum item fica ativo e não gera erro", () => {

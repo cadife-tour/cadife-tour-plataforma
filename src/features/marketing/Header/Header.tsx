@@ -94,7 +94,7 @@ export const Header: React.FC = () => {
           setActiveSectionId(visible.target.id);
         }
       },
-      { rootMargin: "-40% 0px -50% 0px", threshold: 0.1 }
+      { rootMargin: "-40% 0px -50% 0px", threshold: 0 }
     );
 
     sections.forEach((section) => observer.observe(section));
