@@ -83,7 +83,7 @@ export const Footer: React.FC = () => {
             <ul className="space-y-2 text-xs">
               <li>
                 <a
-                  href="#destinos"
+                  href="/#destinos"
                   className="rounded py-0.5 transition-colors hover:text-foreground focus-visible:outline focus-visible:outline-2 focus-visible:outline-brand-accent"
                 >
                   {t.destinations}
@@ -91,7 +91,7 @@ export const Footer: React.FC = () => {
               </li>
               <li>
                 <a
-                  href="#como-funciona"
+                  href="/#como-funciona"
                   className="rounded py-0.5 transition-colors hover:text-foreground focus-visible:outline focus-visible:outline-2 focus-visible:outline-brand-accent"
                 >
                   {t.howItWorks}
@@ -99,7 +99,7 @@ export const Footer: React.FC = () => {
               </li>
               <li>
                 <a
-                  href="#agencia"
+                  href="/#agencia"
                   className="rounded py-0.5 transition-colors hover:text-foreground focus-visible:outline focus-visible:outline-2 focus-visible:outline-brand-accent"
                 >
                   {t.about}
@@ -107,7 +107,7 @@ export const Footer: React.FC = () => {
               </li>
               <li>
                 <a
-                  href="#faq"
+                  href="/#faq"
                   className="rounded py-0.5 transition-colors hover:text-foreground focus-visible:outline focus-visible:outline-2 focus-visible:outline-brand-accent"
                 >
                   {t.faq}

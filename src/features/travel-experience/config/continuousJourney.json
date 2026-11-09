@@ -1,0 +1,144 @@
+{
+  "src": "/assets/hero/continuous-journey.mp4",
+  "poster": "/assets/hero/destinations/franca-poster.webp",
+  "duration": 89.333333,
+  "cloudDissolve": 0.5,
+  "cloudBridges": [
+    {
+      "start": 12.4167,
+      "clearStart": 12.9167,
+      "clearEnd": 14.9167,
+      "end": 15.4167
+    },
+    {
+      "start": 18.4167,
+      "clearStart": 18.9167,
+      "clearEnd": 20.9167,
+      "end": 21.4167
+    },
+    {
+      "start": 26.4167,
+      "clearStart": 26.9167,
+      "clearEnd": 28.9167,
+      "end": 29.4167
+    },
+    {
+      "start": 32.3333,
+      "clearStart": 32.8333,
+      "clearEnd": 34.8333,
+      "end": 35.3333
+    },
+    {
+      "start": 41.25,
+      "clearStart": 41.75,
+      "clearEnd": 43.75,
+      "end": 44.25
+    },
+    {
+      "start": 49.1667,
+      "clearStart": 49.6667,
+      "clearEnd": 51.6667,
+      "end": 52.1667
+    },
+    {
+      "start": 57.0833,
+      "clearStart": 57.5833,
+      "clearEnd": 59.5833,
+      "end": 60.0833
+    },
+    {
+      "start": 66.0,
+      "clearStart": 66.5,
+      "clearEnd": 68.5,
+      "end": 69.0
+    },
+    {
+      "start": 75.9167,
+      "clearStart": 76.4167,
+      "clearEnd": 78.4167,
+      "end": 78.9167
+    }
+  ],
+  "chapters": [
+    {
+      "destination": "franca",
+      "start": 0.0,
+      "reveal": 8.5,
+      "returnStart": 9.9583,
+      "end": 12.9167,
+      "sourceCloudStart": 7.0
+    },
+    {
+      "destination": "chile",
+      "start": 14.9167,
+      "reveal": 15.9167,
+      "returnStart": 16.9167,
+      "end": 18.9167,
+      "sourceCloudStart": 6.0
+    },
+    {
+      "destination": "argentina",
+      "start": 20.9167,
+      "reveal": 21.9167,
+      "returnStart": 23.9167,
+      "end": 26.9167,
+      "sourceCloudStart": 7.0
+    },
+    {
+      "destination": "peru",
+      "start": 28.9167,
+      "reveal": 29.9167,
+      "returnStart": 30.875,
+      "end": 32.8333,
+      "sourceCloudStart": 4.0
+    },
+    {
+      "destination": "cruzeiros",
+      "start": 34.8333,
+      "reveal": 36.3333,
+      "returnStart": 38.2917,
+      "end": 41.75,
+      "sourceCloudStart": 6.5
+    },
+    {
+      "destination": "portugal",
+      "start": 43.75,
+      "reveal": 44.75,
+      "returnStart": 46.7083,
+      "end": 49.6667,
+      "sourceCloudStart": 7.0
+    },
+    {
+      "destination": "espanha",
+      "start": 51.6667,
+      "reveal": 52.6667,
+      "returnStart": 54.625,
+      "end": 57.5833,
+      "sourceCloudStart": 7.0
+    },
+    {
+      "destination": "italia",
+      "start": 59.5833,
+      "reveal": 61.0833,
+      "returnStart": 63.0417,
+      "end": 66.5,
+      "sourceCloudStart": 6.5
+    },
+    {
+      "destination": "brasil",
+      "start": 68.5,
+      "reveal": 70.0,
+      "returnStart": 72.4583,
+      "end": 76.4167,
+      "sourceCloudStart": 6.0
+    },
+    {
+      "destination": "resorts",
+      "start": 78.4167,
+      "reveal": 79.9167,
+      "returnStart": 83.875,
+      "end": 89.3333,
+      "sourceCloudStart": 4.5
+    }
+  ]
+}
