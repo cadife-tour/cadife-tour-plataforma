@@ -230,13 +230,14 @@ export const Header: React.FC = () => {
       <div
         id={mobileMenuId}
         className={`overflow-hidden transition-[max-height] duration-300 ease-in-out motion-reduce:transition-none lg:hidden ${
-          isMenuOpen ? "max-h-[calc(100vh-4rem)]" : "max-h-0"
+          isMenuOpen ? "max-h-[calc(100dvh-4rem)] sm:max-h-[calc(100dvh-5rem)]" : "max-h-0"
         }`}
       >
         {isMenuOpen && (
           <nav
             aria-label="Navegação Principal (móvel)"
-            className="bg-brand-dark/98 flex flex-col gap-1 px-4 py-4 backdrop-blur-md"
+            className="bg-brand-dark/98 flex max-h-[calc(100dvh-4rem)] flex-col gap-1 overflow-y-auto overscroll-contain px-4 py-4 backdrop-blur-md sm:max-h-[calc(100dvh-5rem)]"
+            style={{ paddingBottom: "max(1rem, env(safe-area-inset-bottom))" }}
           >
             {navigationItems.map((item) => {
               const isActive = activeSectionId === item.sectionId;

@@ -505,6 +505,72 @@ describe("Issue #2 — Header & Navigation", () => {
     });
   });
 
+  describe("menu mobile em viewports de baixa altura", () => {
+    it("painel interno do menu possui scroll vertical próprio (overflow-y-auto)", () => {
+      render(
+        <LocaleProvider>
+          <Header />
+        </LocaleProvider>
+      );
+
+      const menuButton = screen.getByRole("button", { name: /abrir menu de navegação/i });
+      fireEvent.click(menuButton);
+
+      const mobileNav = screen.getByRole("navigation", { name: "Navegação Principal (móvel)" });
+      expect(mobileNav.className).toMatch(/overflow-y-auto/);
+      expect(mobileNav.className).toMatch(/overscroll-contain/);
+    });
+
+    it("usa unidade dvh e diferencia o limite de altura entre mobile (h-16) e sm (h-20)", () => {
+      render(
+        <LocaleProvider>
+          <Header />
+        </LocaleProvider>
+      );
+
+      const menuButton = screen.getByRole("button", { name: /abrir menu de navegação/i });
+      fireEvent.click(menuButton);
+
+      const panel = document.getElementById(menuButton.getAttribute("aria-controls")!);
+      const mobileNav = screen.getByRole("navigation", { name: "Navegação Principal (móvel)" });
+
+      [panel, mobileNav].forEach((el) => {
+        expect(el?.className).toMatch(/max-h-\[calc\(100dvh-4rem\)\]/);
+        expect(el?.className).toMatch(/sm:max-h-\[calc\(100dvh-5rem\)\]/);
+      });
+    });
+
+    it("CTA permanece presente e acessível com o menu aberto, mesmo com scroll interno", () => {
+      render(
+        <LocaleProvider>
+          <Header />
+        </LocaleProvider>
+      );
+
+      const menuButton = screen.getByRole("button", { name: /abrir menu de navegação/i });
+      fireEvent.click(menuButton);
+
+      const ctas = screen.getAllByRole("link", { name: /planeje sua viagem no whatsapp/i });
+      expect(ctas.length).toBe(2);
+      ctas.forEach((cta) => expect(cta).toBeVisible());
+    });
+
+    it("body continua recebendo overflow: hidden com o menu aberto em qualquer altura de viewport", () => {
+      render(
+        <LocaleProvider>
+          <Header />
+        </LocaleProvider>
+      );
+
+      const menuButton = screen.getByRole("button", { name: /abrir menu de navegação/i });
+      fireEvent.click(menuButton);
+      expect(document.body.style.overflow).toBe("hidden");
+
+      fireEvent.click(menuButton);
+      expect(document.body.style.overflow).toBe("");
+    });
+  });
+
   it("logo e botão de menu tratam prefers-reduced-motion sem perder funcionalidade", () => {
     render(
       <LocaleProvider>
