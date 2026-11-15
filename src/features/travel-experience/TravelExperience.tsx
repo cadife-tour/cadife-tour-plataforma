@@ -429,7 +429,7 @@ function DestinationExperience({
                     onClick={() => onSelectDestination?.(idx)}
                     aria-label={`Ver vídeo de ${destConf.country}`}
                     aria-current={isActive ? "true" : undefined}
-                    className={`rounded-full transition-all duration-300 ${
+                    className={`rounded-full transition-all duration-reveal ease-standard motion-reduce:transition-none ${
                       isActive
                         ? "h-2 w-7 bg-brand-accent shadow-[0_0_8px_rgba(221,11,14,0.6)]"
                         : "h-2 w-2 bg-white/40 hover:bg-white/80"

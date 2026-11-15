@@ -13,12 +13,12 @@ interface LoadingScreenProps {
 export const LoadingScreen: React.FC<LoadingScreenProps> = ({ isReady = false }) => {
   return (
     <div
-      className={`border-border/60 bg-surface/80 pointer-events-none absolute bottom-8 right-8 z-20 flex items-center gap-3 rounded-full border px-4 py-2 text-xs font-medium text-foreground-muted backdrop-blur-md transition-opacity duration-500 ${
+      className={`border-border/60 bg-surface/80 pointer-events-none absolute bottom-8 right-8 z-20 flex items-center gap-3 rounded-full border px-4 py-2 text-xs font-medium text-foreground-muted backdrop-blur-md transition-opacity duration-editorial ease-standard motion-reduce:transition-none ${
         isReady ? "opacity-0" : "opacity-100"
       }`}
       aria-live="polite"
     >
-      <div className="h-2 w-2 animate-ping rounded-full bg-brand-accent" />
+      <div className="h-2 w-2 animate-ping rounded-full bg-brand-accent motion-reduce:animate-none" />
       <span>{isReady ? "Role para começar" : "Preparando sua viagem..."}</span>
     </div>
   );

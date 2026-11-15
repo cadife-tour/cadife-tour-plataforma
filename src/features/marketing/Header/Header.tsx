@@ -136,7 +136,7 @@ export const Header: React.FC = () => {
 
   return (
     <header
-      className={`fixed left-0 right-0 top-0 z-50 w-full transition-all duration-300 ease-in-out motion-reduce:transition-none ${
+      className={`fixed left-0 right-0 top-0 z-50 w-full transition-all duration-reveal ease-standard motion-reduce:transition-none ${
         isScrolled ? "bg-brand-dark/95 backdrop-blur-md" : "bg-brand-dark/40 backdrop-blur-sm"
       }`}
     >
@@ -155,7 +155,7 @@ export const Header: React.FC = () => {
                 width={160}
                 height={40}
                 priority
-                className="h-8 w-auto object-contain transition-transform duration-300 group-hover:scale-105 motion-reduce:transform-none motion-reduce:transition-none sm:h-9"
+                className="h-8 w-auto object-contain transition-transform duration-reveal ease-standard group-hover:scale-105 motion-reduce:transform-none motion-reduce:transition-none sm:h-9"
               />
             </a>
           </div>
@@ -229,7 +229,7 @@ export const Header: React.FC = () => {
       {/* Mobile Navigation Panel */}
       <div
         id={mobileMenuId}
-        className={`overflow-hidden transition-[max-height] duration-300 ease-in-out motion-reduce:transition-none lg:hidden ${
+        className={`overflow-hidden transition-[max-height] duration-reveal ease-standard motion-reduce:transition-none lg:hidden ${
           isMenuOpen ? "max-h-[calc(100dvh-4rem)] sm:max-h-[calc(100dvh-5rem)]" : "max-h-0"
         }`}
       >

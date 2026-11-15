@@ -128,14 +128,14 @@ export const LanguageSelector: React.FC<{ className?: string }> = ({ className =
         aria-haspopup="listbox"
         aria-expanded={isOpen}
         aria-label={`Idioma selecionado: ${currentLanguage.name}. Clique para alterar.`}
-        className="flex items-center gap-2 rounded-full border border-white/20 bg-black/40 px-3 py-1.5 text-xs font-semibold text-white shadow-sm backdrop-blur-md transition-all hover:border-white/40 hover:bg-black/60 focus-visible:outline focus-visible:outline-2 focus-visible:outline-brand-primary"
+        className="flex items-center gap-2 rounded-full border border-white/20 bg-black/40 px-3 py-1.5 text-xs font-semibold text-white shadow-sm backdrop-blur-md transition-all duration-micro ease-standard hover:border-white/40 hover:bg-black/60 focus-visible:outline focus-visible:outline-2 focus-visible:outline-brand-primary motion-reduce:transition-none"
       >
         <span className="shadow-xs rounded-xs flex items-center overflow-hidden">
           {currentLanguage.flag}
         </span>
         <span className="font-bold tracking-wide">{currentLanguage.shortLabel}</span>
         <svg
-          className={`h-3.5 w-3.5 text-white/80 transition-transform duration-200 ${
+          className={`h-3.5 w-3.5 text-white/80 transition-transform duration-micro ease-standard motion-reduce:transition-none ${
             isOpen ? "rotate-180" : ""
           }`}
           fill="none"
@@ -153,7 +153,7 @@ export const LanguageSelector: React.FC<{ className?: string }> = ({ className =
         <div
           role="listbox"
           aria-label="Opções de idioma"
-          className="animate-in fade-in zoom-in-95 absolute right-0 z-50 mt-2 w-44 origin-top-right rounded-xl border border-white/15 bg-[#282523]/95 p-1.5 shadow-2xl backdrop-blur-xl duration-150"
+          className="animate-in fade-in zoom-in-95 absolute right-0 z-50 mt-2 w-44 origin-top-right rounded-xl border border-white/15 bg-[#282523]/95 p-1.5 shadow-2xl backdrop-blur-xl duration-micro motion-reduce:animate-none"
         >
           {languages.map((lang) => {
             const isSelected = lang.code === locale;
@@ -164,7 +164,7 @@ export const LanguageSelector: React.FC<{ className?: string }> = ({ className =
                 role="option"
                 aria-selected={isSelected}
                 onClick={() => handleSelect(lang.code)}
-                className={`flex w-full items-center justify-between rounded-lg px-3 py-2 text-xs font-medium transition-all ${
+                className={`flex w-full items-center justify-between rounded-lg px-3 py-2 text-xs font-medium transition-all duration-micro ease-standard motion-reduce:transition-none ${
                   isSelected
                     ? "shadow-xs bg-brand-primary font-semibold text-white"
                     : "text-white/90 hover:bg-white/10 hover:text-white"

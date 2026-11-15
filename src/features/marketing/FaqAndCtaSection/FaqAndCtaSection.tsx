@@ -7,6 +7,7 @@ import { faqData, contactInfo } from "@/content/data";
 import { useLocale } from "@/core/i18n/LocaleContext";
 import { trackEvent } from "@/core/analytics";
 import { isWhatsAppConfigured } from "@/shared/utils/whatsapp";
+import { Reveal } from "@/shared/motion";
 
 const MailIcon: React.FC<{ className?: string }> = ({ className = "w-4 h-4 shrink-0" }) => (
   <svg
@@ -94,10 +95,10 @@ export const FaqAndCtaSection: React.FC<FaqAndCtaSectionProps> = ({ phoneNumber 
   };
 
   return (
-    <section id="faq" className="border-b border-border py-20 lg:py-28">
+    <section id="faq" className="scroll-mt-24 border-b border-border py-20 lg:py-28">
       <Container>
         {/* 1. FAQ Accordion / Semântico */}
-        <div className="mx-auto mb-16 max-w-2xl text-center">
+        <Reveal variant="editorial" className="mx-auto mb-16 max-w-2xl text-center">
           <span className="text-xs font-bold uppercase tracking-wider text-brand-accent">
             {t.badge}
           </span>
@@ -105,7 +106,7 @@ export const FaqAndCtaSection: React.FC<FaqAndCtaSectionProps> = ({ phoneNumber 
             {t.title}
           </h2>
           <p className="mt-4 text-base text-foreground-muted sm:text-lg">{t.subtitle}</p>
-        </div>
+        </Reveal>
 
         <div className="mx-auto max-w-3xl space-y-4">
           {faqData.map((item, idx) => {
@@ -116,11 +117,11 @@ export const FaqAndCtaSection: React.FC<FaqAndCtaSectionProps> = ({ phoneNumber 
               <details
                 key={idx}
                 onToggle={(e) => handleToggleFaq(idx, e)}
-                className="group rounded-xl border border-border bg-surface p-5 transition-colors open:bg-surface-elevated"
+                className="group rounded-xl border border-border bg-surface p-5 transition-colors duration-micro ease-standard open:bg-surface-elevated motion-reduce:transition-none"
               >
                 <summary className="flex cursor-pointer list-none items-center justify-between rounded p-1 text-base font-semibold text-foreground focus-visible:outline focus-visible:outline-2 focus-visible:outline-brand-accent">
                   <span>{question}</span>
-                  <span className="ml-4 flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-surface-muted text-xs font-bold text-brand-accent transition-transform group-open:rotate-180">
+                  <span className="ml-4 flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-surface-muted text-xs font-bold text-brand-accent transition-transform duration-micro ease-standard group-open:rotate-180 motion-reduce:transition-none">
                     ▼
                   </span>
                 </summary>
@@ -161,7 +162,7 @@ export const FaqAndCtaSection: React.FC<FaqAndCtaSectionProps> = ({ phoneNumber 
                 <div className="flex justify-center">
                   <a
                     href={`mailto:${contactInfo.email}?subject=${encodeURIComponent(t.emailSubject)}`}
-                    className="shadow-brand-primary/20 inline-flex h-12 min-h-[48px] items-center justify-center gap-2.5 rounded-lg bg-brand-primary px-7 font-heading text-base font-semibold text-white shadow-sm transition-all duration-200 ease-standard hover:-translate-y-0.5 hover:bg-brand-secondary hover:shadow-md focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-accent motion-reduce:transform-none motion-reduce:transition-none"
+                    className="shadow-brand-primary/20 inline-flex h-12 min-h-[48px] items-center justify-center gap-2.5 rounded-lg bg-brand-primary px-7 font-heading text-base font-semibold text-white shadow-sm transition-all duration-micro ease-standard hover:-translate-y-0.5 hover:bg-brand-secondary hover:shadow-md focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-accent motion-reduce:transform-none motion-reduce:transition-none"
                     aria-label={t.emailAriaLabel}
                   >
                     <MailIcon className="h-4 w-4 shrink-0" />
