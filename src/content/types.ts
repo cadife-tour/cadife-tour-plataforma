@@ -41,12 +41,70 @@ export interface FaqItem {
   answer: Record<Locale, string>;
 }
 
+export type SocialNetworkId = "instagram" | "facebook" | "tiktok" | "youtube";
+
+export interface SocialLink {
+  id: SocialNetworkId;
+  name: string;
+  url: string;
+  handle: string;
+}
+
+export interface FiscalAddress {
+  street: string;
+  number: string;
+  neighborhood: string;
+  city: string;
+  state: string;
+  postalCode: string;
+  country: string;
+  formattedLine1: string;
+  formattedLine2: string;
+  formattedFull: string;
+}
+
+export interface CadasturRegistration {
+  number: string;
+  providerName: string;
+  activity: Record<Locale, string>;
+  validFrom: string;
+  validUntil: string;
+  issuedAt: string;
+  verificationUrl: string;
+  isPending: boolean;
+}
+
+export interface LegalLinks {
+  privacyPolicyUrl: string;
+  cookiePreferencesUrl: string;
+}
+
+export interface InstitutionalInfo {
+  brandName: string;
+  foundedYear: number;
+  cnpj: string;
+  municipalRegistration: string;
+  cadastur: CadasturRegistration;
+  fiscalAddress: FiscalAddress;
+  whatsapp: {
+    raw: string;
+    formatted: string;
+  };
+  email: string;
+  socialLinks: SocialLink[];
+  legalLinks: LegalLinks;
+}
+
 export interface ContactInfo {
   whatsappNumber?: string;
+  whatsappDisplay?: string;
   isWhatsappNumberPending?: boolean;
   email: string;
   address?: string;
+  cnpj?: string;
+  municipalRegistration?: string;
   cadasturNumber?: string;
+  cadasturVerificationUrl?: string;
   isCadasturPending?: boolean;
   googleReviewsUrl?: string;
 }

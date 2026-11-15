@@ -12,6 +12,12 @@ export default function sitemap(): MetadataRoute.Sitemap {
       changeFrequency: "weekly",
       priority: 1.0,
     },
+    {
+      url: new URL("/preferencias-de-cookies", baseUrl).href,
+      lastModified,
+      changeFrequency: "monthly",
+      priority: 0.3,
+    },
     ...destinationPages.map(({ slug }) => ({ url: new URL(`/destinos/${slug}`, baseUrl).href })),
   ];
 }
