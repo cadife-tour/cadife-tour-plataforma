@@ -147,7 +147,7 @@ export const TravelOverlay: React.FC<TravelOverlayProps> = ({
             >
               <div className="bg-surface/80 inline-flex items-center gap-2.5 rounded-full border border-border px-4 py-1.5 text-xs font-semibold text-white shadow-sm backdrop-blur-md">
                 <span
-                  className={`h-2 w-2 rounded-full bg-brand-accent ${isFallback ? "" : "animate-pulse"}`}
+                  className={`h-2 w-2 rounded-full bg-brand-accent ${isFallback ? "" : "animate-pulse motion-reduce:animate-none"}`}
                   aria-hidden="true"
                 />
                 <span>{t.airplane.badge}</span>
