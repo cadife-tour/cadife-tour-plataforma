@@ -5,22 +5,99 @@ import type {
   TestimonialItem,
   FaqItem,
   ContactInfo,
+  InstitutionalInfo,
 } from "./types";
 
 /**
- * Informações Institucionais e de Contato
- * (Campos ainda não homologados formalmente usam flags pendentes)
+ * Dados Institucionais, Fiscais e Legais Oficiais da CADIFE Tour
+ * Fontes: Certificado/Selo CADASTUR (docs/) e validação oficial do responsável.
  */
 export const DEFAULT_CADIFE_WHATSAPP = "5547996714510";
 const configuredPhone = process.env.NEXT_PUBLIC_WHATSAPP_NUMBER?.trim() ?? DEFAULT_CADIFE_WHATSAPP;
 
+export const institutionalInfo: InstitutionalInfo = {
+  brandName: "CADIFE Tour",
+  // Ano de fundação e inscrição municipal informados pelo responsável; não constam no
+  // Certificado Cadastur versionado em docs/ (ignorado pelo Git).
+  foundedYear: 2020,
+  cnpj: "40.357.012/0001-92",
+  municipalRegistration: "221478",
+  cadastur: {
+    number: "40.357.012/0001-92",
+    providerName: "40.357.012 DIEGO GIL",
+    activity: {
+      pt: "Agência de Turismo",
+      en: "Travel Agency",
+      es: "Agencia de Turismo",
+    },
+    validFrom: "2025-01-30",
+    validUntil: "2027-01-30",
+    issuedAt: "2025-01-30T16:12:47-03:00",
+    /** Portal público do Cadastur (o host com `www` deixou de resolver). */
+    verificationUrl: "https://cadastur.turismo.gov.br/hotsite/",
+    isPending: false,
+  },
+  // Endereço fiscal informado pelo responsável; não consta no Certificado Cadastur.
+  fiscalAddress: {
+    street: "Rua Gardênias",
+    number: "242",
+    neighborhood: "Fátima",
+    city: "Joinville",
+    state: "SC",
+    postalCode: "89229-050",
+    country: "Brasil",
+    formattedLine1: "Rua Gardênias, 242 — Fátima",
+    formattedLine2: "Joinville/SC — CEP 89229-050",
+    formattedFull: "Rua Gardênias, 242 — Fátima, Joinville/SC — CEP 89229-050",
+  },
+  whatsapp: {
+    raw: DEFAULT_CADIFE_WHATSAPP,
+    formatted: "+55 47 99671-4510",
+  },
+  email: "contato@cadifetour.com",
+  socialLinks: [
+    {
+      id: "instagram",
+      name: "Instagram",
+      url: "https://www.instagram.com/cadifetour/",
+      handle: "@cadifetour",
+    },
+    {
+      id: "facebook",
+      name: "Facebook",
+      url: "https://www.facebook.com/cadifetour?locale=pt_BR",
+      handle: "CADIFE Tour",
+    },
+    {
+      id: "tiktok",
+      name: "TikTok",
+      url: "https://www.tiktok.com/@cadifetour",
+      handle: "@cadifetour",
+    },
+    {
+      id: "youtube",
+      name: "YouTube",
+      url: "https://www.youtube.com/@CadifeTour",
+      handle: "@CadifeTour",
+    },
+  ],
+  legalLinks: {
+    privacyPolicyUrl: "https://cadifetour.com/politicas/",
+    cookiePreferencesUrl: "/preferencias-de-cookies",
+  },
+};
+
 export const contactInfo: ContactInfo = {
   whatsappNumber: configuredPhone || undefined,
+  whatsappDisplay: institutionalInfo.whatsapp.formatted,
   isWhatsappNumberPending: !configuredPhone,
-  email: "contato@cadifetour.com",
-  address: "Atendimento Consultivo Online e Presencial (Sob agendamento)",
-  cadasturNumber: undefined,
-  isCadasturPending: true, // [Pendente de confirmação do registro oficial pela CADIFE]
+  email: institutionalInfo.email,
+  address: institutionalInfo.fiscalAddress.formattedFull,
+  cnpj: institutionalInfo.cnpj,
+  municipalRegistration: institutionalInfo.municipalRegistration,
+  cadasturNumber: institutionalInfo.cadastur.number,
+  cadasturVerificationUrl: institutionalInfo.cadastur.verificationUrl,
+  isCadasturPending: institutionalInfo.cadastur.isPending,
   googleReviewsUrl: "https://maps.google.com",
 };
 
