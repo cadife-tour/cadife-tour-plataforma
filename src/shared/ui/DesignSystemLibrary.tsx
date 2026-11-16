@@ -23,6 +23,11 @@ const colors = [
   ["Success", "--color-success"],
   ["Warning", "--color-warning"],
   ["Error", "--color-error"],
+  ["Paper", "--color-paper"],
+  ["Ink red", "--color-ink-red"],
+  ["Ink blue", "--color-ink-blue"],
+  ["Ink green", "--color-ink-green"],
+  ["Ink gold", "--color-ink-gold"],
 ] as const;
 
 const alphaColors = [
@@ -69,7 +74,15 @@ const brandRibbon = [
 
 const typeScale = ["xs", "sm", "base", "lg", "xl", "2xl", "3xl", "4xl", "5xl", "6xl"] as const;
 const radii = ["sm", "md", "lg", "xl", "full"] as const;
-const shadows = ["sm", "md", "lg", "xl"] as const;
+const shadows = ["sm", "md", "lg", "xl", "glow"] as const;
+const redScale = [50, 100, 200, 300, 400, 500, 600, 700, 800, 900] as const;
+const goldScale = [100, 300, 500, 700] as const;
+const surfaces = [
+  ["Pôr do sol", "--gradient-sunset", "bg-sunset"],
+  ["Anoitecer", "--gradient-dusk", "bg-dusk"],
+  ["Sobreposição lateral", "--overlay-scrim-strong", "bg-scrim-strong"],
+  ["Sobreposição inferior", "--overlay-scrim-bottom", "bg-scrim-bottom"],
+] as const;
 const spacingScale = [
   ["space-1", "0.25rem", "w-1"],
   ["space-2", "0.5rem", "w-2"],
@@ -129,6 +142,7 @@ export function DesignSystemLibrary() {
       <nav className={styles.navigation} aria-label="Navegação da biblioteca">
         <a href="#tokens">Tokens</a>
         <a href="#components">Componentes</a>
+        <a href="/design-system/antes-e-depois">Antes e depois</a>
       </nav>
 
       <section id="tokens" className={styles.section} aria-labelledby="tokens-title">
@@ -203,7 +217,14 @@ export function DesignSystemLibrary() {
             <div className={styles.specimen} aria-hidden="true">
               <span className={styles.specimenGlyph}>Aa</span>
               <span className={styles.specimenMeta}>
-                <strong>Sans da interface</strong>
+                <strong>Fraunces · títulos</strong>
+                <span>Serifada editorial, com eixo óptico e toque suave.</span>
+              </span>
+            </div>
+            <div className={styles.specimen} aria-hidden="true">
+              <span className={`${styles.specimenGlyph} ${styles.specimenSans}`}>Aa</span>
+              <span className={styles.specimenMeta}>
+                <strong>Manrope · interface e textos</strong>
                 <span>ABCDEFGHIJKLM · abcdefghijklm · 0123456789</span>
               </span>
             </div>
@@ -242,6 +263,71 @@ export function DesignSystemLibrary() {
                 </div>
               ))}
             </div>
+          </div>
+        </div>
+
+        <div className={styles.tokenGroup}>
+          <h3>Escalas da marca</h3>
+          <p className={styles.tokenHint}>
+            Tons derivados para fundos, bordas e hovers. No Tailwind: <code>bg-cadife-100</code> a{" "}
+            <code>bg-cadife-900</code>.
+          </p>
+          <div className={styles.scaleRow}>
+            {redScale.map((step) => (
+              <button
+                type="button"
+                key={step}
+                className={styles.scaleChip}
+                style={{ backgroundColor: `var(--color-red-${step})` }}
+                onClick={() => copy(`var(--color-red-${step})`)}
+                aria-label={`Copiar --color-red-${step}`}
+                data-dark={step >= 400 || undefined}
+              >
+                {step}
+              </button>
+            ))}
+          </div>
+          <div className={styles.scaleRow}>
+            {goldScale.map((step) => (
+              <button
+                type="button"
+                key={step}
+                className={styles.scaleChip}
+                style={{ backgroundColor: `var(--color-gold-${step})` }}
+                onClick={() => copy(`var(--color-gold-${step})`)}
+                aria-label={`Copiar --color-gold-${step}`}
+              >
+                {step}
+              </button>
+            ))}
+          </div>
+        </div>
+
+        <div className={styles.tokenGroup}>
+          <h3>Gradientes e sobreposições</h3>
+          <p className={styles.tokenHint}>
+            Sobreposições oficiais para texto sobre foto e vídeo — use-as em vez de inventar camadas
+            escuras.
+          </p>
+          <div className={styles.surfaceGrid}>
+            {surfaces.map(([name, token, utility]) => (
+              <button
+                type="button"
+                key={token}
+                className={styles.surfaceToken}
+                onClick={() => copy(utility)}
+                aria-label={`Copiar ${utility}`}
+              >
+                <span
+                  className={styles.surfacePreview}
+                  data-photo={token.startsWith("--overlay") || undefined}
+                >
+                  <span style={{ backgroundImage: `var(${token})` }} />
+                </span>
+                <strong>{name}</strong>
+                <code>{utility}</code>
+              </button>
+            ))}
           </div>
         </div>
 

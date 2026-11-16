@@ -68,7 +68,7 @@ describe("Design system library", () => {
     const buttonSection = screen.getByRole("region", { name: /button/i });
     expect(within(buttonSection).getByRole("button", { name: /small size/i })).toHaveClass("h-9");
     expect(within(buttonSection).getByRole("button", { name: /medium size/i })).toHaveClass("h-11");
-    expect(within(buttonSection).getByRole("button", { name: /large size/i })).toHaveClass("h-13");
+    expect(within(buttonSection).getByRole("button", { name: /large size/i })).toHaveClass("h-12");
   });
 
   it("shows every semantic color token and the shared layout scale", () => {

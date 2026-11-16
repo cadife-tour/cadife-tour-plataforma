@@ -1,5 +1,11 @@
 import "@testing-library/jest-dom/vitest";
-import { afterAll } from "vitest";
+import { afterAll, vi } from "vitest";
+
+// next/font só funciona dentro do compilador do Next; nos testes basta expor as variáveis.
+vi.mock("next/font/google", () => ({
+  Fraunces: () => ({ variable: "font-fraunces", className: "font-fraunces" }),
+  Manrope: () => ({ variable: "font-manrope", className: "font-manrope" }),
+}));
 
 afterAll(async () => {
   // GSAP owns process timers beyond a component's lifetime. Release them before
