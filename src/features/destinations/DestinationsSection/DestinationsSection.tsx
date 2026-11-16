@@ -79,7 +79,7 @@ export const DestinationsSection: React.FC = () => {
   }, [locale]);
 
   return (
-    <section id="destinos" className="border-b border-border py-20 lg:py-28">
+    <section id="destinos" className="scroll-mt-24 border-b border-border py-20 lg:py-28">
       <Container>
         <div className="mb-16 max-w-2xl">
           <span className="text-xs font-bold uppercase tracking-wider text-brand-accent">

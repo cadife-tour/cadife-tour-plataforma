@@ -79,6 +79,7 @@ export const LanguageSelector: React.FC<{
   const { locale, setLocale } = useLocale();
   const [isOpen, setIsOpen] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
+  const triggerRef = useRef<HTMLButtonElement>(null);
 
   const currentLanguage = languages.find((lang) => lang.code === locale) ?? languages[0]!;
 
@@ -93,6 +94,7 @@ export const LanguageSelector: React.FC<{
       setLocale(newLocale);
     }
     setIsOpen(false);
+    triggerRef.current?.focus();
   };
 
   // Fecha o dropdown ao clicar fora ou pressionar ESC
@@ -106,6 +108,7 @@ export const LanguageSelector: React.FC<{
     const handleKeyDown = (event: KeyboardEvent) => {
       if (event.key === "Escape") {
         setIsOpen(false);
+        triggerRef.current?.focus();
       }
     };
 
@@ -124,6 +127,7 @@ export const LanguageSelector: React.FC<{
     <div ref={containerRef} className={`relative inline-block text-left ${className}`}>
       {/* Botão Gatilho do Dropdown */}
       <button
+        ref={triggerRef}
         type="button"
         onClick={() => setIsOpen((prev) => !prev)}
         aria-haspopup="listbox"
