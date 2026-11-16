@@ -1,5 +1,12 @@
 import type { Config } from "tailwindcss";
 
+/**
+ * Converte um token CSS em cor do Tailwind que aceita modificador de opacidade
+ * (ex.: `bg-brand-dark/95`). Sem modificador, o resultado é a cor sólida original.
+ */
+const withAlpha = (token: string) =>
+  `color-mix(in srgb, var(${token}) calc(<alpha-value> * 100%), transparent)`;
+
 const config: Config = {
   content: [
     "./src/pages/**/*.{js,ts,jsx,tsx,mdx}",
@@ -11,26 +18,26 @@ const config: Config = {
   theme: {
     extend: {
       colors: {
-        background: "var(--color-bg)",
+        background: withAlpha("--color-bg"),
         surface: {
-          DEFAULT: "var(--color-surface)",
-          elevated: "var(--color-surface-elevated)",
-          muted: "var(--color-surface-muted)",
+          DEFAULT: withAlpha("--color-surface"),
+          elevated: withAlpha("--color-surface-elevated"),
+          muted: withAlpha("--color-surface-muted"),
         },
         foreground: {
-          DEFAULT: "var(--color-text)",
-          muted: "var(--color-text-muted)",
-          subtle: "var(--color-text-subtle)",
+          DEFAULT: withAlpha("--color-text"),
+          muted: withAlpha("--color-text-muted"),
+          subtle: withAlpha("--color-text-subtle"),
         },
         brand: {
-          primary: "var(--color-brand-primary)",
-          secondary: "var(--color-brand-secondary)",
-          accent: "var(--color-brand-accent)",
-          dark: "var(--color-brand-dark)",
-          gold: "var(--color-brand-gold)",
+          primary: withAlpha("--color-brand-primary"),
+          secondary: withAlpha("--color-brand-secondary"),
+          accent: withAlpha("--color-brand-accent"),
+          dark: withAlpha("--color-brand-dark"),
+          gold: withAlpha("--color-brand-gold"),
         },
-        border: "var(--color-border)",
-        focus: "var(--color-focus)",
+        border: withAlpha("--color-border"),
+        focus: withAlpha("--color-focus"),
       },
       fontFamily: {
         sans: ["var(--font-sans)", "system-ui", "-apple-system", "sans-serif"],

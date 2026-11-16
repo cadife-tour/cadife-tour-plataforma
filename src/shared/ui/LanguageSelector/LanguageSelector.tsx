@@ -72,7 +72,10 @@ const languages: LanguageOption[] = [
   { code: "es", shortLabel: "ES", name: "Español", flag: <SpainFlag /> },
 ];
 
-export const LanguageSelector: React.FC<{ className?: string }> = ({ className = "" }) => {
+export const LanguageSelector: React.FC<{
+  className?: string;
+  trackChanges?: boolean;
+}> = ({ className = "", trackChanges = true }) => {
   const { locale, setLocale } = useLocale();
   const [isOpen, setIsOpen] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
@@ -82,10 +85,12 @@ export const LanguageSelector: React.FC<{ className?: string }> = ({ className =
 
   const handleSelect = (newLocale: Locale) => {
     if (newLocale !== locale) {
-      trackEvent("language_change", {
-        from_locale: locale,
-        to_locale: newLocale,
-      });
+      if (trackChanges) {
+        trackEvent("language_change", {
+          from_locale: locale,
+          to_locale: newLocale,
+        });
+      }
       setLocale(newLocale);
     }
     setIsOpen(false);

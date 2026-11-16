@@ -113,6 +113,20 @@ npm run build
 
 ---
 
+### Biblioteca de componentes
+
+Execute a aplicação e abra `/design-system` para consultar os tokens visuais e exemplos
+interativos dos componentes compartilhados. A rota não aparece na navegação comercial e não é
+indexada por mecanismos de busca.
+
+Ao criar um componente reutilizável em `src/shared/ui/`, exporte-o e registre-o em
+`sharedUiComponents` em `src/shared/ui/index.ts`. Adicione também ao catálogo em
+`src/shared/ui/catalog.tsx` uma descrição, o caminho do arquivo e uma demonstração dos estados que
+o componente realmente oferece. O teste `design-system.test.tsx` verifica se o inventário e o
+catálogo permanecem alinhados.
+
+---
+
 ## 🌱 8. Estratégia de Branches e Pull Requests
 
 O fluxo oficial de desenvolvimento é `feature/* → developer → main`. Branches de trabalho (`feature/*`, `fix/*`, `chore/*`) partem da `developer` e PRs de desenvolvimento devem usar `base: developer`; `main` representa a linha estável e recebe código apenas via PR vindo da `developer`. Detalhes completos, convenção de nomes e recomendações de proteção de branch estão em [docs/DEVELOPMENT_WORKFLOW.md](docs/DEVELOPMENT_WORKFLOW.md).
