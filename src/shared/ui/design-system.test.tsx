@@ -122,6 +122,26 @@ describe("Design system library", () => {
     expect(document.documentElement.lang).toBe(originalLanguage);
   });
 
+  it("previews WhatsAppCta variants without navigating or sending analytics", () => {
+    const gtag = vi.fn();
+    Object.defineProperty(window, "gtag", { configurable: true, value: gtag });
+
+    render(<DesignSystemLibrary />);
+
+    const ctaSection = screen.getByRole("region", { name: /whatsappcta/i });
+    const preview = within(ctaSection).getByTestId("whatsapp-cta-preview");
+    const links = within(preview).getAllByRole("link");
+    expect(links.length).toBeGreaterThanOrEqual(6);
+
+    for (const link of links) {
+      const click = new MouseEvent("click", { bubbles: true, cancelable: true });
+      link.dispatchEvent(click);
+      expect(click.defaultPrevented).toBe(true);
+    }
+
+    expect(gtag).not.toHaveBeenCalled();
+  });
+
   it("aligns the language selector preview to keep its dropdown within the card", () => {
     render(<DesignSystemLibrary />);
 
@@ -151,6 +171,21 @@ describe("Design system library", () => {
       from_locale: "pt",
       to_locale: "en",
     });
+  });
+
+  it("copies tokens and opacity utilities with an accessible confirmation", async () => {
+    const writeText = vi.fn().mockResolvedValue(undefined);
+    vi.stubGlobal("navigator", { ...navigator, clipboard: { writeText } });
+
+    render(<DesignSystemLibrary />);
+
+    fireEvent.click(screen.getByRole("button", { name: /brand dark.*--color-brand-dark/i }));
+    expect(writeText).toHaveBeenCalledWith("var(--color-brand-dark)");
+    expect(await screen.findByRole("status")).toHaveTextContent("Copiado var(--color-brand-dark)");
+
+    fireEvent.click(screen.getByRole("button", { name: "Copiar bg-brand-dark/40" }));
+    expect(writeText).toHaveBeenCalledWith("bg-brand-dark/40");
+    expect(await screen.findByRole("status")).toHaveTextContent("Copiado bg-brand-dark/40");
   });
 
   it("keeps the reference page out of search indexing", () => {

@@ -157,7 +157,7 @@ export const Footer: React.FC = () => {
           </div>
         </div>
 
-        <div className="border-border/50 mt-14 flex flex-col items-center justify-between gap-4 border-t pt-8 text-xs text-foreground-subtle sm:flex-row">
+        <div className="mt-14 flex flex-col items-center justify-between gap-4 border-t border-border/50 pt-8 text-xs text-foreground-subtle sm:flex-row">
           <p>
             © {new Date().getFullYear()} CADIFE Tour. {t.rights}
           </p>

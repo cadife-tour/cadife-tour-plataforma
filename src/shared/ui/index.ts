@@ -2,8 +2,9 @@ import { Button } from "@/shared/ui/Button/Button";
 import { Container } from "@/shared/ui/Container/Container";
 import { LanguageSelector } from "@/shared/ui/LanguageSelector/LanguageSelector";
 import { SkipToContent } from "@/shared/ui/SkipToContent/SkipToContent";
+import { WhatsAppCta } from "@/shared/ui/WhatsAppCta/WhatsAppCta";
 
-export { Button, Container, LanguageSelector, SkipToContent };
+export { Button, Container, LanguageSelector, SkipToContent, WhatsAppCta };
 
 /**
  * Public shared UI surface. Additions here must also have a library entry in
@@ -14,4 +15,5 @@ export const sharedUiComponents = {
   Container,
   LanguageSelector,
   SkipToContent,
+  WhatsAppCta,
 } as const;

@@ -104,7 +104,7 @@ export const DestinationsSection: React.FC = () => {
               <article
                 key={item.id}
                 data-destination-id={item.id}
-                className="hover:border-brand-accent/40 flex flex-col justify-between overflow-hidden rounded-xl border border-border bg-surface p-6 shadow-sm transition-all duration-200 hover:bg-surface-elevated"
+                className="flex flex-col justify-between overflow-hidden rounded-xl border border-border bg-surface p-6 shadow-sm transition-all duration-200 hover:border-brand-accent/40 hover:bg-surface-elevated"
               >
                 <div className="space-y-4">
                   {/* Thumbnail Responsivo com next/image (CLS Zero) */}
@@ -145,7 +145,7 @@ export const DestinationsSection: React.FC = () => {
                   </div>
                 </div>
 
-                <div className="border-border/60 mt-8 border-t pt-5">
+                <div className="mt-8 border-t border-border/60 pt-5">
                   <WhatsAppCta
                     destination={item.slug}
                     destinationTitle={title}

@@ -1,7 +1,7 @@
 "use client";
 
-import type { ReactNode } from "react";
-import { Button, Container, LanguageSelector, SkipToContent } from "@/shared/ui";
+import type { MouseEvent, ReactNode } from "react";
+import { Button, Container, LanguageSelector, SkipToContent, WhatsAppCta } from "@/shared/ui";
 import type { sharedUiComponents } from "@/shared/ui";
 import { LocaleProvider } from "@/core/i18n/LocaleContext";
 
@@ -12,6 +12,15 @@ export interface SharedUiCatalogEntry {
   source: `src/shared/ui/${string}`;
   preview: ReactNode;
 }
+
+/**
+ * Intercepta cliques na fase de captura para que os exemplos não abram o WhatsApp
+ * nem registrem conversões de analytics.
+ */
+const blockPreviewNavigation = (event: MouseEvent) => {
+  event.preventDefault();
+  event.stopPropagation();
+};
 
 export const sharedUiCatalog: SharedUiCatalogEntry[] = [
   {
@@ -82,6 +91,54 @@ export const sharedUiCatalog: SharedUiCatalogEntry[] = [
         </p>
         <SkipToContent />
       </div>
+    ),
+  },
+  {
+    key: "WhatsAppCta",
+    name: "WhatsAppCta",
+    description:
+      "CTA oficial de conversão: monta a mensagem por destino e idioma, com variantes e telemetria centralizadas.",
+    source: "src/shared/ui/WhatsAppCta/WhatsAppCta.tsx",
+    preview: (
+      <LocaleProvider persistPreference={false} syncDocumentLanguage={false}>
+        <div
+          className="grid gap-4"
+          data-testid="whatsapp-cta-preview"
+          onClickCapture={blockPreviewNavigation}
+        >
+          <div className="flex flex-wrap items-center gap-3">
+            <WhatsAppCta source="design_system">Primary</WhatsAppCta>
+            <WhatsAppCta source="design_system" variant="secondary">
+              Secondary
+            </WhatsAppCta>
+            <WhatsAppCta source="design_system" variant="outline">
+              Outline
+            </WhatsAppCta>
+            <WhatsAppCta source="design_system" variant="link">
+              Link
+            </WhatsAppCta>
+            <WhatsAppCta source="design_system" disabled>
+              Disabled
+            </WhatsAppCta>
+          </div>
+          <div className="flex flex-wrap items-center gap-3 rounded-lg bg-gradient-to-br from-brand-primary/70 via-brand-dark to-background p-5">
+            <WhatsAppCta source="design_system" variant="glass">
+              Glass sobre imagem
+            </WhatsAppCta>
+            <WhatsAppCta
+              source="design_system"
+
+              destination="chile"
+              destinationTitle="Chile"
+              context="destination"
+              size="sm"
+            />
+          </div>
+          <p className="text-sm text-foreground-muted">
+            Nesta biblioteca os cliques ficam bloqueados: nada abre o WhatsApp nem gera evento.
+          </p>
+        </div>
+      </LocaleProvider>
     ),
   },
 ];

@@ -1,5 +1,6 @@
 "use client";
 
+import { useEffect, useRef, useState } from "react";
 import { sharedUiCatalog } from "@/shared/ui/catalog";
 import styles from "@/shared/ui/design-system.module.css";
 
@@ -24,6 +25,48 @@ const colors = [
   ["Error", "--color-error"],
 ] as const;
 
+const alphaColors = [
+  ["Brand primary", "brand-primary", "--color-brand-primary"],
+  ["Brand dark", "brand-dark", "--color-brand-dark"],
+  ["Brand gold", "brand-gold", "--color-brand-gold"],
+  ["Surface", "surface", "--color-surface"],
+] as const;
+const alphaSteps = [100, 80, 60, 40, 20, 10] as const;
+
+/** Copia um valor para a área de transferência e expõe uma confirmação temporária. */
+function useCopyFeedback() {
+  const [copied, setCopied] = useState<string | null>(null);
+  const timer = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  useEffect(
+    () => () => {
+      if (timer.current) clearTimeout(timer.current);
+    },
+    []
+  );
+
+  const copy = async (value: string) => {
+    try {
+      await navigator.clipboard?.writeText(value);
+    } catch {
+      // Sem permissão de clipboard: a confirmação ainda mostra o valor para cópia manual.
+    }
+    setCopied(value);
+    if (timer.current) clearTimeout(timer.current);
+    timer.current = setTimeout(() => setCopied(null), 1800);
+  };
+
+  return { copied, copy };
+}
+
+const brandRibbon = [
+  "--color-brand-primary",
+  "--color-brand-secondary",
+  "--color-brand-accent",
+  "--color-brand-dark",
+  "--color-brand-gold",
+] as const;
+
 const typeScale = ["xs", "sm", "base", "lg", "xl", "2xl", "3xl", "4xl", "5xl", "6xl"] as const;
 const radii = ["sm", "md", "lg", "xl", "full"] as const;
 const shadows = ["sm", "md", "lg", "xl"] as const;
@@ -44,15 +87,43 @@ const breakpoints = [
 ] as const;
 
 export function DesignSystemLibrary() {
+  const { copied, copy } = useCopyFeedback();
+
   return (
     <div className={styles.page}>
       <header className={styles.header}>
+        <div className={styles.glow} aria-hidden="true" />
         <p className={styles.eyebrow}>CADIFE TOUR / REFERÊNCIA DE INTERFACE</p>
-        <h1>Design system</h1>
+        <h1>
+          Design <span className={styles.titleAccent}>system</span>
+        </h1>
         <p className={styles.lede}>
           Tokens e componentes compartilhados, apresentados com seus estados reais e caminhos de
           origem.
         </p>
+        <div className={styles.brandRibbon} aria-hidden="true">
+          {brandRibbon.map((token) => (
+            <span key={token} style={{ backgroundColor: `var(${token})` }} />
+          ))}
+        </div>
+        <dl className={styles.stats}>
+          <div>
+            <dt>Cores</dt>
+            <dd>{colors.length}</dd>
+          </div>
+          <div>
+            <dt>Componentes</dt>
+            <dd>{sharedUiCatalog.length}</dd>
+          </div>
+          <div>
+            <dt>Idiomas</dt>
+            <dd>3</dd>
+          </div>
+          <div>
+            <dt>Breakpoints</dt>
+            <dd>{breakpoints.length}</dd>
+          </div>
+        </dl>
       </header>
 
       <nav className={styles.navigation} aria-label="Navegação da biblioteca">
@@ -73,10 +144,54 @@ export function DesignSystemLibrary() {
           <h3>Cores</h3>
           <div className={styles.colorGrid}>
             {colors.map(([name, token]) => (
-              <div className={styles.colorToken} key={token}>
+              <button
+                type="button"
+                className={styles.colorToken}
+                key={token}
+                onClick={() => copy(`var(${token})`)}
+                title={`Copiar var(${token})`}
+                data-copied={copied === `var(${token})` || undefined}
+              >
                 <span className={styles.swatch} style={{ backgroundColor: `var(${token})` }} />
                 <span>{name}</span>
                 <code>{`var(${token})`}</code>
+              </button>
+            ))}
+          </div>
+          <p className={styles.tokenHint}>Clique em um token para copiar.</p>
+        </div>
+
+        <div className={styles.tokenGroup}>
+          <h3>Transparências</h3>
+          <p className={styles.tokenHint}>
+            Cores do tema aceitam opacidade no Tailwind, como <code>bg-brand-dark/40</code>. Use
+            sobre imagens e vídeos para manter a legibilidade sem esconder a cena.
+          </p>
+          <div className={styles.alphaStage}>
+            {alphaColors.map(([name, utility, token]) => (
+              <div className={styles.alphaRow} key={utility}>
+                <span className={styles.alphaName}>{name}</span>
+                <div className={styles.alphaSteps}>
+                  {alphaSteps.map((step) => {
+                    const className = step === 100 ? `bg-${utility}` : `bg-${utility}/${step}`;
+                    return (
+                      <button
+                        type="button"
+                        key={step}
+                        className={styles.alphaChip}
+                        style={{
+                          backgroundColor: `color-mix(in srgb, var(${token}) ${step}%, transparent)`,
+                        }}
+                        onClick={() => copy(className)}
+                        title={`Copiar ${className}`}
+                        aria-label={`Copiar ${className}`}
+                        data-copied={copied === className || undefined}
+                      >
+                        <span>{step}%</span>
+                      </button>
+                    );
+                  })}
+                </div>
               </div>
             ))}
           </div>
@@ -85,6 +200,13 @@ export function DesignSystemLibrary() {
         <div className={styles.tokenColumns}>
           <div className={styles.tokenGroup}>
             <h3>Tipografia</h3>
+            <div className={styles.specimen} aria-hidden="true">
+              <span className={styles.specimenGlyph}>Aa</span>
+              <span className={styles.specimenMeta}>
+                <strong>Sans da interface</strong>
+                <span>ABCDEFGHIJKLM · abcdefghijklm · 0123456789</span>
+              </span>
+            </div>
             <p className={styles.tokenHint}>
               Interface: <code>var(--font-sans)</code> · Títulos: <code>var(--font-heading)</code>
             </p>
@@ -212,6 +334,19 @@ export function DesignSystemLibrary() {
           ))}
         </div>
       </section>
+
+      <p
+        className={styles.toast}
+        role="status"
+        aria-live="polite"
+        data-visible={!!copied || undefined}
+      >
+        {copied ? (
+          <>
+            Copiado <code>{copied}</code>
+          </>
+        ) : null}
+      </p>
 
       <footer className={styles.footer}>
         Referência para desenvolvimento · Tokens definidos em <code>src/core/theme/tokens.css</code>
