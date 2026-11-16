@@ -47,9 +47,17 @@ describe("Fase 2 — Core Semântico, i18n e WhatsApp Deep Links", () => {
 
     // 2. Links de navegação e seções presentes
     expect(screen.getByRole("navigation", { name: /navegação principal/i })).toBeInTheDocument();
-    expect(screen.getByRole("heading", { name: /roteiros e destinos planejados/i })).toBeInTheDocument();
-    expect(screen.getByRole("heading", { name: /como funciona a assessoria cadife tour/i })).toBeInTheDocument();
-    expect(screen.getByRole("heading", { name: /por que planejar sua viagem com a cadife tour/i })).toBeInTheDocument();
-    expect(screen.getByRole("heading", { name: /dúvidas comuns sobre nossos serviços/i })).toBeInTheDocument();
+    expect(
+      screen.getByRole("heading", { name: /roteiros e destinos planejados/i })
+    ).toBeInTheDocument();
+    expect(
+      screen.getByRole("heading", { name: /como funciona a assessoria cadife tour/i })
+    ).toBeInTheDocument();
+    expect(
+      screen.getByRole("heading", { name: /por que planejar sua viagem com a cadife tour/i })
+    ).toBeInTheDocument();
+    expect(
+      screen.getByRole("heading", { name: /dúvidas comuns sobre nossos serviços/i })
+    ).toBeInTheDocument();
   });
 });

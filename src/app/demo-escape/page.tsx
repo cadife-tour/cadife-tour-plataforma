@@ -54,23 +54,23 @@ export default function LandoStyleHeroPage() {
       {/* ========================================================================= */}
       {/* 1. TOP NAVBAR EXATA DO SITE DO LANDO NORRIS */}
       {/* ========================================================================= */}
-      <header className="fixed top-0 left-0 right-0 z-50 flex items-center justify-between px-6 py-4 md:px-10">
+      <header className="fixed left-0 right-0 top-0 z-50 flex items-center justify-between px-6 py-4 md:px-10">
         {/* Brand Link no canto superior esquerdo */}
-        <Link href="/" className="flex flex-col tracking-tighter leading-none group">
-          <span className="font-black text-2xl tracking-tight text-[#111112] transition-colors group-hover:text-[#b2c73a]">
+        <Link href="/" className="group flex flex-col leading-none tracking-tighter">
+          <span className="text-2xl font-black tracking-tight text-[#111112] transition-colors group-hover:text-[#b2c73a]">
             CADIFE
           </span>
-          <span className="font-black text-2xl tracking-tight text-[#535450] -mt-1 transition-colors group-hover:text-[#111112]">
+          <span className="-mt-1 text-2xl font-black tracking-tight text-[#535450] transition-colors group-hover:text-[#111112]">
             TOUR
           </span>
         </Link>
 
         {/* Emblema Central (estilo LN4 Monogram) */}
-        <div className="hidden md:flex flex-col items-center">
-          <div className="flex h-10 w-10 items-center justify-center font-black tracking-widest text-lg border border-black/10 rounded-xl bg-black/5">
+        <div className="hidden flex-col items-center md:flex">
+          <div className="flex h-10 w-10 items-center justify-center rounded-xl border border-black/10 bg-black/5 text-lg font-black tracking-widest">
             CD
           </div>
-          <span className="text-[9px] font-mono tracking-widest text-black/50 uppercase mt-0.5">
+          <span className="mt-0.5 font-mono text-[9px] uppercase tracking-widest text-black/50">
             ESCAPE EXPERIENCE
           </span>
         </div>
@@ -78,28 +78,28 @@ export default function LandoStyleHeroPage() {
         {/* Botão Direito Neon Lime (#d2ff00) e Menu Hamburguer */}
         <div className="flex items-center gap-2">
           {/* Seletor de tamanho da lente */}
-          <div className="hidden lg:flex items-center gap-1 rounded-full border border-black/10 bg-white/70 px-3 py-1 font-mono text-[10px] uppercase shadow-sm">
+          <div className="hidden items-center gap-1 rounded-full border border-black/10 bg-white/70 px-3 py-1 font-mono text-[10px] uppercase shadow-sm lg:flex">
             <span className="text-black/50">LENTE:</span>
             <button
               onClick={() => setLensRadius(100)}
-              className={`px-2 py-0.5 rounded-full ${
-                lensRadius === 100 ? "bg-black text-[#d2ff00] font-bold" : "text-black/70"
+              className={`rounded-full px-2 py-0.5 ${
+                lensRadius === 100 ? "bg-black font-bold text-[#d2ff00]" : "text-black/70"
               }`}
             >
               100px
             </button>
             <button
               onClick={() => setLensRadius(160)}
-              className={`px-2 py-0.5 rounded-full ${
-                lensRadius === 160 ? "bg-black text-[#d2ff00] font-bold" : "text-black/70"
+              className={`rounded-full px-2 py-0.5 ${
+                lensRadius === 160 ? "bg-black font-bold text-[#d2ff00]" : "text-black/70"
               }`}
             >
               160px
             </button>
             <button
               onClick={() => setLensRadius(240)}
-              className={`px-2 py-0.5 rounded-full ${
-                lensRadius === 240 ? "bg-black text-[#d2ff00] font-bold" : "text-black/70"
+              className={`rounded-full px-2 py-0.5 ${
+                lensRadius === 240 ? "bg-black font-bold text-[#d2ff00]" : "text-black/70"
               }`}
             >
               240px
@@ -109,7 +109,7 @@ export default function LandoStyleHeroPage() {
           <Link
             href="https://wa.me/5511999999999"
             target="_blank"
-            className="flex items-center gap-2 rounded-xl bg-[#d2ff00] px-5 py-2.5 font-mono text-xs font-black uppercase tracking-wider text-[#111112] shadow-sm hover:scale-105 active:scale-95 transition"
+            className="flex items-center gap-2 rounded-xl bg-[#d2ff00] px-5 py-2.5 font-mono text-xs font-black uppercase tracking-wider text-[#111112] shadow-sm transition hover:scale-105 active:scale-95"
           >
             <svg width="14" height="14" viewBox="0 0 17 18" fill="none">
               <path
@@ -123,7 +123,7 @@ export default function LandoStyleHeroPage() {
 
           <button
             aria-label="Abrir Menu"
-            className="flex h-10 w-10 items-center justify-center rounded-xl border border-black/15 bg-black/5 hover:bg-black/10 transition"
+            className="flex h-10 w-10 items-center justify-center rounded-xl border border-black/15 bg-black/5 transition hover:bg-black/10"
           >
             <div className="space-y-1">
               <div className="h-0.5 w-4 bg-black" />
@@ -147,11 +147,11 @@ export default function LandoStyleHeroPage() {
         />
 
         {/* WIDGET LATERAL ESQUERDO: CONTORNO VETORIAL OFICIAL DO REPOSITÓRIO (NEXT RACE) */}
-        <div className="absolute left-6 bottom-10 z-30 hidden lg:block">
-          <div className="relative w-[120px] h-[245px] text-[#535450] hover:text-black transition-colors duration-300">
+        <div className="absolute bottom-10 left-6 z-30 hidden lg:block">
+          <div className="relative h-[245px] w-[120px] text-[#535450] transition-colors duration-300 hover:text-black">
             {/* SVG original de outline retirado do index.html do repositório */}
             <svg
-              className="absolute inset-0 w-full h-full"
+              className="absolute inset-0 h-full w-full"
               viewBox="0 0 119 244"
               fill="none"
               xmlns="http://www.w3.org/2000/svg"
@@ -163,15 +163,15 @@ export default function LandoStyleHeroPage() {
               />
             </svg>
 
-            <div className="relative z-10 flex flex-col items-center h-full p-3 justify-between text-center">
+            <div className="relative z-10 flex h-full flex-col items-center justify-between p-3 text-center">
               <div>
-                <span className="text-[9px] font-mono font-bold tracking-widest text-[#282c20] uppercase bg-[#d2ff00] px-1.5 py-0.5 rounded">
+                <span className="rounded bg-[#d2ff00] px-1.5 py-0.5 font-mono text-[9px] font-bold uppercase tracking-widest text-[#282c20]">
                   NEXT ESCAPE
                 </span>
-                <p className="text-xs font-black uppercase text-[#111112] mt-2 leading-tight">
+                <p className="mt-2 text-xs font-black uppercase leading-tight text-[#111112]">
                   PUNTA CANA
                 </p>
-                <p className="text-[9px] font-mono text-[#535450]">CARIBE 2026</p>
+                <p className="font-mono text-[9px] text-[#535450]">CARIBE 2026</p>
               </div>
 
               {/* Traço divisor interno */}
@@ -180,12 +180,10 @@ export default function LandoStyleHeroPage() {
               {/* Ícone tropical */}
               <div className="my-auto flex flex-col items-center gap-1">
                 <span className="text-2xl">🍹</span>
-                <span className="text-[8px] font-mono text-black/60 uppercase">
-                  REWARD MODE
-                </span>
+                <span className="font-mono text-[8px] uppercase text-black/60">REWARD MODE</span>
               </div>
 
-              <div className="text-[8px] font-mono uppercase text-[#535450] tracking-tight border-t border-black/10 pt-1 w-full">
+              <div className="w-full border-t border-black/10 pt-1 font-mono text-[8px] uppercase tracking-tight text-[#535450]">
                 CADIFE TOUR
                 <br />
                 SINCE 2019
@@ -197,8 +195,8 @@ export default function LandoStyleHeroPage() {
         {/* CONTAINER DO ELEMENTO CENTRAL: FOTO BASE COM MÁSCARA DINÂMICA REVELADORA */}
         <div className="relative z-20 flex flex-col items-center">
           {/* Domo wireframe decorativo acima da cabeça (idêntico ao wireframe do Lando) */}
-          <div className="relative -mb-10 z-30 flex flex-col items-center opacity-70 pointer-events-none">
-            <div className="h-6 w-6 rounded-full border border-black/40 flex items-center justify-center font-mono font-black text-[10px] bg-white/80 backdrop-blur">
+          <div className="pointer-events-none relative z-30 -mb-10 flex flex-col items-center opacity-70">
+            <div className="flex h-6 w-6 items-center justify-center rounded-full border border-black/40 bg-white/80 font-mono text-[10px] font-black backdrop-blur">
               CD
             </div>
             <svg width="180" height="70" viewBox="0 0 180 70" fill="none">
@@ -217,7 +215,7 @@ export default function LandoStyleHeroPage() {
             ref={containerRef}
             onMouseMove={handleMouseMove}
             onMouseLeave={handleMouseLeave}
-            className="group relative h-[520px] w-[340px] sm:h-[620px] sm:w-[480px] md:h-[700px] md:w-[560px] cursor-crosshair overflow-hidden rounded-[2rem] shadow-2xl bg-[#ebeee0]"
+            className="group relative h-[520px] w-[340px] cursor-crosshair overflow-hidden rounded-[2rem] bg-[#ebeee0] shadow-2xl sm:h-[620px] sm:w-[480px] md:h-[700px] md:w-[560px]"
           >
             {/* 1. CAMADA BASE: A FOTO DO ESCRITÓRIO (ROUTINE / WORK) */}
             <div className="absolute inset-0 h-full w-full">
@@ -267,20 +265,20 @@ export default function LandoStyleHeroPage() {
               }}
             >
               {/* Cruz de mira técnica */}
-              <div className="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-[#d2ff00] px-1 font-mono text-[8px] font-black text-black uppercase">
+              <div className="absolute left-1/2 top-0 -translate-x-1/2 -translate-y-1/2 bg-[#d2ff00] px-1 font-mono text-[8px] font-black uppercase text-black">
                 REVEAL: PARADISE
               </div>
-              <div className="absolute bottom-0 left-1/2 -translate-x-1/2 translate-y-1/2 bg-black px-1.5 py-0.5 rounded text-[7px] font-mono text-[#d2ff00] uppercase">
+              <div className="absolute bottom-0 left-1/2 -translate-x-1/2 translate-y-1/2 rounded bg-black px-1.5 py-0.5 font-mono text-[7px] uppercase text-[#d2ff00]">
                 CADIFE ESCAPE
               </div>
             </div>
 
             {/* Indicador inferior dentro do card */}
-            <div className="pointer-events-none absolute bottom-4 left-4 right-4 z-20 flex items-center justify-between rounded-xl bg-black/40 px-4 py-2 backdrop-blur-md text-white">
-              <span className="text-[10px] font-mono tracking-widest uppercase text-[#d2ff00]">
+            <div className="pointer-events-none absolute bottom-4 left-4 right-4 z-20 flex items-center justify-between rounded-xl bg-black/40 px-4 py-2 text-white backdrop-blur-md">
+              <span className="font-mono text-[10px] uppercase tracking-widest text-[#d2ff00]">
                 {isHovered ? "● REVELANDO PARAÍSO SOB O CURSOR" : "● PASSE O MOUSE SOBRE O ROSTO"}
               </span>
-              <span className="text-[10px] font-mono text-white/70">
+              <span className="font-mono text-[10px] text-white/70">
                 [X: {Math.round(mousePos.x)} | Y: {Math.round(mousePos.y)}]
               </span>
             </div>
@@ -288,7 +286,7 @@ export default function LandoStyleHeroPage() {
 
           {/* Dica de interação abaixo do sujeito */}
           <div className="mt-4 flex items-center gap-3">
-            <span className="h-1.5 w-1.5 rounded-full bg-[#b2c73a] animate-ping" />
+            <span className="h-1.5 w-1.5 animate-ping rounded-full bg-[#b2c73a]" />
             <p className="font-mono text-xs uppercase tracking-widest text-[#535450]">
               Passe o cursor sobre a pessoa para revelar a vida na praia no mesmo ponto
             </p>
@@ -296,15 +294,15 @@ export default function LandoStyleHeroPage() {
         </div>
 
         {/* Botão de alternância / switch rápido no canto inferior direito */}
-        <div className="absolute right-6 bottom-10 z-30 hidden lg:flex flex-col items-end gap-2">
+        <div className="absolute bottom-10 right-6 z-30 hidden flex-col items-end gap-2 lg:flex">
           <button
             onClick={() => setLensRadius((prev) => (prev >= 240 ? 100 : prev + 60))}
-            className="flex h-12 w-12 items-center justify-center rounded-xl border border-black/15 bg-white/80 shadow-md hover:border-black transition"
+            className="flex h-12 w-12 items-center justify-center rounded-xl border border-black/15 bg-white/80 shadow-md transition hover:border-black"
             title="Aumentar raio da lente"
           >
             <span className="font-mono text-xs font-bold text-black">{lensRadius}px</span>
           </button>
-          <span className="text-[9px] font-mono uppercase tracking-widest text-[#535450]">
+          <span className="font-mono text-[9px] uppercase tracking-widest text-[#535450]">
             LENS SIZE
           </span>
         </div>
@@ -313,26 +311,27 @@ export default function LandoStyleHeroPage() {
       {/* ========================================================================= */}
       {/* 3. SEÇÃO DO SCROLL (TRANSIÇÃO PARA FUNDO ESCURO COM ASSINATURA EM VERDE NEON) */}
       {/* ========================================================================= */}
-      <section className="relative min-h-screen w-full flex flex-col justify-center items-center px-6 py-24 overflow-hidden">
+      <section className="relative flex min-h-screen w-full flex-col items-center justify-center overflow-hidden px-6 py-24">
         {/* Letreiro Marquee Ticker em Movimento Contínuo (HOME WE DID IT... estilo Lando) */}
-        <div className="w-full overflow-hidden whitespace-nowrap border-y border-white/10 py-6 mb-12">
-          <div className="inline-block animate-marquee font-black uppercase text-4xl sm:text-6xl md:text-8xl tracking-tighter text-[#b2c73a]/40">
-            OFF TRACK ESCAPE • FROM THE DESK TO THE OCEAN • CADIFE TOUR • PUNTA CANA 2026 • REWARD YOURSELF •{" "}
+        <div className="mb-12 w-full overflow-hidden whitespace-nowrap border-y border-white/10 py-6">
+          <div className="animate-marquee inline-block text-4xl font-black uppercase tracking-tighter text-[#b2c73a]/40 sm:text-6xl md:text-8xl">
+            OFF TRACK ESCAPE • FROM THE DESK TO THE OCEAN • CADIFE TOUR • PUNTA CANA 2026 • REWARD
+            YOURSELF •{" "}
           </div>
         </div>
 
         {/* Bloco Central com Foto PB e a Assinatura Neon por Cima (como no screenshot 3) */}
-        <div className="relative flex flex-col items-center justify-center max-w-xl text-center">
-          <div className="relative w-[320px] sm:w-[420px] aspect-[4/3] rounded-2xl overflow-hidden shadow-2xl border border-white/20">
+        <div className="relative flex max-w-xl flex-col items-center justify-center text-center">
+          <div className="relative aspect-[4/3] w-[320px] overflow-hidden rounded-2xl border border-white/20 shadow-2xl sm:w-[420px]">
             <Image
               src="/demo-ln4/paradise-original.png"
               alt="Lando Style Paradise Celebration"
               fill
-              className="object-cover filter contrast-125 saturate-50 brightness-90"
+              className="object-cover brightness-90 contrast-125 saturate-50 filter"
             />
             {/* SVG da Assinatura Gigante em Verde Neon (#d2ff00) cruzando a foto */}
             <svg
-              className="absolute inset-0 w-full h-full text-[#d2ff00] p-4 drop-shadow-[0_0_15px_rgba(210,255,0,0.8)]"
+              className="absolute inset-0 h-full w-full p-4 text-[#d2ff00] drop-shadow-[0_0_15px_rgba(210,255,0,0.8)]"
               viewBox="0 0 300 200"
               fill="none"
               xmlns="http://www.w3.org/2000/svg"
@@ -351,17 +350,18 @@ export default function LandoStyleHeroPage() {
             <span className="font-mono text-xs uppercase tracking-widest text-[#d2ff00]">
               CADIFE TOUR // MANIFESTO
             </span>
-            <h3 className="text-3xl sm:text-5xl font-black uppercase tracking-tight text-[#f4f4ed]">
+            <h3 className="text-3xl font-black uppercase tracking-tight text-[#f4f4ed] sm:text-5xl">
               REDEFINING <span className="text-[#d2ff00]">YOUR BREAK</span>.
             </h3>
-            <p className="text-sm sm:text-base text-[#b4b8a5] max-w-lg leading-relaxed">
-              O trabalho intenso constrói os seus resultados. A CADIFE Tour entrega a recompensa que você merece.
+            <p className="max-w-lg text-sm leading-relaxed text-[#b4b8a5] sm:text-base">
+              O trabalho intenso constrói os seus resultados. A CADIFE Tour entrega a recompensa que
+              você merece.
             </p>
             <div className="pt-4">
               <Link
                 href="https://wa.me/5511999999999"
                 target="_blank"
-                className="inline-flex items-center gap-3 rounded-xl bg-[#d2ff00] px-8 py-3.5 font-mono text-xs font-black uppercase tracking-widest text-[#282c20] hover:scale-105 transition shadow-[0_0_30px_rgba(210,255,0,0.5)]"
+                className="inline-flex items-center gap-3 rounded-xl bg-[#d2ff00] px-8 py-3.5 font-mono text-xs font-black uppercase tracking-widest text-[#282c20] shadow-[0_0_30px_rgba(210,255,0,0.5)] transition hover:scale-105"
               >
                 <span>Falar com o Consultor</span>
                 <span>→</span>

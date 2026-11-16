@@ -7,13 +7,10 @@ import { useScrollProgress } from "./hooks/useScrollProgress";
 import { StaticAtmosphere } from "./fallback/StaticAtmosphere";
 
 // Carregamento assíncrono estrito com fallback estático instantâneo (Zero blocking no LCP/Core)
-const DynamicSceneContainer = dynamic(
-  () => import("./SceneContainer"),
-  {
-    ssr: false,
-    loading: () => <StaticAtmosphere />,
-  }
-);
+const DynamicSceneContainer = dynamic(() => import("./SceneContainer"), {
+  ssr: false,
+  loading: () => <StaticAtmosphere />,
+});
 
 /**
  * VisualJourney — Client Boundary Principal da Camada Visual

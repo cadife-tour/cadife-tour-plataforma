@@ -10,6 +10,7 @@ interface LocaleContextValue {
 
 interface LocaleProviderProps {
   children: React.ReactNode;
+  initialLocale?: Locale;
   persistPreference?: boolean;
   syncDocumentLanguage?: boolean;
 }
@@ -21,20 +22,21 @@ const LocaleContext = createContext<LocaleContextValue>({
 
 export const LocaleProvider: React.FC<LocaleProviderProps> = ({
   children,
+  initialLocale,
   persistPreference = true,
   syncDocumentLanguage = true,
 }) => {
-  const [locale, setLocaleState] = useState<Locale>("pt");
+  const [locale, setLocaleState] = useState<Locale>(initialLocale || "pt");
 
   useEffect(() => {
-    if (!persistPreference) return;
+    // Tenta recuperar preferência salva no browser sem redirecionamento forçado se initialLocale não for fixo
+    if (!persistPreference || initialLocale) return;
 
-    // Tenta recuperar preferência salva no browser sem redirecionamento forçado
     const saved = localStorage.getItem("cadife_locale") as Locale | null;
     if (saved && (saved === "pt" || saved === "en" || saved === "es")) {
       setLocaleState(saved);
     }
-  }, [persistPreference]);
+  }, [initialLocale, persistPreference]);
 
   useEffect(() => {
     if (!syncDocumentLanguage) return;

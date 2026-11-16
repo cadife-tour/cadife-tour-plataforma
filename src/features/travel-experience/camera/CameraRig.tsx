@@ -17,10 +17,7 @@ interface CameraRigProps {
  * da câmera 3D de forma contínua com interpolação suave (lerp).
  * Evita saltos ou descontinuidades visuais durante a rolagem.
  */
-export const CameraRig: React.FC<CameraRigProps> = ({
-  progress,
-  isMobile = false,
-}) => {
+export const CameraRig: React.FC<CameraRigProps> = ({ progress, isMobile = false }) => {
   const { camera } = useThree();
   const currentLookAt = useRef(new THREE.Vector3(0, 0, -5));
 

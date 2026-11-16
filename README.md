@@ -20,10 +20,13 @@ O projeto da **CADIFE Tour** foi desenvolvido com foco em estética premium, flu
 A página principal (`/`) abre diretamente na jornada cinematográfica em vídeo. A implementação atual apresenta a abertura Avião → Nuvens → Andes/Chile. O [storyboard da jornada completa](docs/HERO_STORYBOARD.md) define a sequência editorial, as dez paradas e a saída para **Sua viagem em movimento**; os assets e a integração das demais cenas são trabalhos posteriores.
 
 - **Scrollytelling:** a posição de rolagem controla o vídeo com GSAP ScrollTrigger.
-- **Mídia atual:** `airplane-journey-scrub.mp4`, arquivo de 5,1 MB preparado para busca de quadros. A qualidade visual da fonte ainda precisa de revisão na etapa de produção de assets.
+- **Mídia atual:** `airplane-journey-scrub.mp4`, clipe de 8 s e ~3,9 MB preparado para busca de quadros. O vídeo cobre Avião → Nuvens → Andes; poster e imagem estática atendem ao fallback. A fonte gerada pelo Google Flow é 720p e essa limitação visual permanece.
 - **Conversão:** CTAs contextuais para atendimento humano no WhatsApp.
 
 A Foto Revelação permanece acessível em `/cursor-reveal-poc` como protótipo independente, fora da homepage.
+
+> 📖 **Acompanhamento de Mudanças:** Para ver em detalhes o que foi feito nesta branch, como e por que (incluindo ADRs atendidos, alinhamento de escopo e testes), consulte:  
+> 👉 [Plano de Implementação & Entrega — Pedro (Wildcard / Hero POC)](docs/PEDRO_IMPLEMENTATION_PLAN.md)
 
 ---
 
@@ -57,7 +60,7 @@ Para garantir que o repositório no GitHub permaneça leve e rápido de clonar, 
 
 - **`public/assets/brand/`**: Logotipo oficial vetorial, ícone original e variações para favicons.
 - **`public/assets/destinations/`**: Imagens WebP comprimidas de alta resolução para os cards de destinos (Cruzeiros, Europa, Patagônia).
-- **`public/assets/hero/airplane-journey-scrub.mp4`**: Único arquivo de vídeo ativo mantido no controle de versão (5.1 MB otimizado). Versões brutas ou não utilizadas ficam isoladas no `.gitignore`.
+- **`public/assets/hero/airplane-journey-scrub.mp4`**: Único arquivo de vídeo ativo mantido no controle de versão (~3,9 MB otimizado). O poster e o still dos Andes são arquivos WebP para fallback. Versões brutas ou não utilizadas ficam isoladas no `.gitignore`.
 - **`public/demo-ln4/`**: Apenas as matrizes originais sem filtro (`office-original.png` e `paradise-original.png`). Cópias redundantes e variações de teste foram eliminadas.
 - **Arquivos temporários (`scratch/`, `scripts/`, logs)**: Explicitamente ignorados no Git e no ESLint.
 
@@ -121,6 +124,14 @@ Ao criar um componente reutilizável em `src/shared/ui/`, exporte-o e registre-o
 `src/shared/ui/catalog.tsx` uma descrição, o caminho do arquivo e uma demonstração dos estados que
 o componente realmente oferece. O teste `design-system.test.tsx` verifica se o inventário e o
 catálogo permanecem alinhados.
+
+---
+
+## 🌱 8. Estratégia de Branches e Pull Requests
+
+O fluxo oficial de desenvolvimento é `feature/* → developer → main`. Branches de trabalho (`feature/*`, `fix/*`, `chore/*`) partem da `developer` e PRs de desenvolvimento devem usar `base: developer`; `main` representa a linha estável e recebe código apenas via PR vindo da `developer`. Detalhes completos, convenção de nomes e recomendações de proteção de branch estão em [docs/DEVELOPMENT_WORKFLOW.md](docs/DEVELOPMENT_WORKFLOW.md).
+
+---
 
 ## 📄 Licença
 

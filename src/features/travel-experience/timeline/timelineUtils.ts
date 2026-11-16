@@ -1,7 +1,4 @@
-import {
-  TRAVEL_EXPERIENCE_CONFIG,
-  type JourneyPhaseName,
-} from "../config/travelExperienceConfig";
+import { TRAVEL_EXPERIENCE_CONFIG, type JourneyPhaseName } from "../config/travelExperienceConfig";
 import type { CameraWaypoints } from "./timelineTypes";
 
 /**
@@ -34,10 +31,7 @@ export function getPhaseFromProgress(progress: number): JourneyPhaseName {
 /**
  * Normaliza o progresso relativo dentro da fase atual [0, 1].
  */
-export function getPhaseProgress(
-  progress: number,
-  phase: JourneyPhaseName
-): number {
+export function getPhaseProgress(progress: number, phase: JourneyPhaseName): number {
   const { start, end } = TRAVEL_EXPERIENCE_CONFIG.phases[phase];
   const range = end - start;
   if (range <= 0) return 0;

@@ -66,8 +66,7 @@ export const AtmosphereScene: React.FC<AtmosphereSceneProps> = ({
 
     if (lightRef.current) {
       const targetColor =
-        STATION_ATMOSPHERE_COLORS[activeStationIndex] ??
-        STATION_ATMOSPHERE_COLORS[0]!;
+        STATION_ATMOSPHERE_COLORS[activeStationIndex] ?? STATION_ATMOSPHERE_COLORS[0]!;
       lightRef.current.color.lerp(targetColor, delta * 2);
     }
   });
@@ -75,24 +74,13 @@ export const AtmosphereScene: React.FC<AtmosphereSceneProps> = ({
   return (
     <>
       <ambientLight intensity={0.4} />
-      <pointLight
-        ref={lightRef}
-        position={[0, 5, 10]}
-        intensity={2.5}
-        distance={40}
-      />
+      <pointLight ref={lightRef} position={[0, 5, 10]} intensity={2.5} distance={40} />
 
       {/* Nuvem de partículas de altitude */}
       <points ref={pointsRef}>
         <bufferGeometry>
-          <bufferAttribute
-            attach="attributes-position"
-            args={[positions, 3]}
-          />
-          <bufferAttribute
-            attach="attributes-color"
-            args={[colors, 3]}
-          />
+          <bufferAttribute attach="attributes-position" args={[positions, 3]} />
+          <bufferAttribute attach="attributes-color" args={[colors, 3]} />
         </bufferGeometry>
         <pointsMaterial
           size={isMobile ? 0.08 : 0.12}

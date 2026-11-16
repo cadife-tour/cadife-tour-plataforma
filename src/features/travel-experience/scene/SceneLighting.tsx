@@ -47,12 +47,7 @@ export const SceneLighting: React.FC<SceneLightingProps> = ({ progress }) => {
   return (
     <>
       <ambientLight ref={ambientLightRef} intensity={0.4} color="#0f172a" />
-      <directionalLight
-        ref={dirLightRef}
-        position={[10, 15, 5]}
-        intensity={1.2}
-        color="#ffffff"
-      />
+      <directionalLight ref={dirLightRef} position={[10, 15, 5]} intensity={1.2} color="#ffffff" />
     </>
   );
 };

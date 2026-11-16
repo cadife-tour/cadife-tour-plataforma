@@ -58,9 +58,7 @@ export const AboutAndTrustSection: React.FC = () => {
           <h2 className="mt-3 text-3xl font-extrabold tracking-tight text-foreground sm:text-4xl">
             {t.title}
           </h2>
-          <p className="mt-4 text-base text-foreground-muted sm:text-lg">
-            {t.subtitle}
-          </p>
+          <p className="mt-4 text-base text-foreground-muted sm:text-lg">{t.subtitle}</p>
         </div>
 
         <div className="grid gap-8 md:grid-cols-3">
@@ -71,31 +69,29 @@ export const AboutAndTrustSection: React.FC = () => {
             return (
               <div
                 key={idx}
-                className="rounded-xl border border-border bg-surface p-7 shadow-sm transition-all hover:border-brand-accent/40"
+                className="hover:border-brand-accent/40 rounded-xl border border-border bg-surface p-7 shadow-sm transition-all"
               >
-                <div className="flex h-8 w-8 items-center justify-center rounded-full bg-brand-primary/20 text-brand-accent font-bold text-sm mb-4">
+                <div className="bg-brand-primary/20 mb-4 flex h-8 w-8 items-center justify-center rounded-full text-sm font-bold text-brand-accent">
                   ✓
                 </div>
                 <h3 className="text-lg font-bold text-foreground">{title}</h3>
-                <p className="mt-2 text-sm text-foreground-muted leading-relaxed">{desc}</p>
+                <p className="mt-2 text-sm leading-relaxed text-foreground-muted">{desc}</p>
               </div>
             );
           })}
         </div>
 
         {/* 2. Prova Social & Avaliações */}
-        <div className="mt-20 pt-16 border-t border-border/60">
-          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-10">
-            <h3 className="text-2xl font-bold text-foreground">
-              {t.testimonialsTitle}
-            </h3>
+        <div className="border-border/60 mt-20 border-t pt-16">
+          <div className="mb-10 flex flex-col justify-between gap-4 sm:flex-row sm:items-center">
+            <h3 className="text-2xl font-bold text-foreground">{t.testimonialsTitle}</h3>
             {contactInfo.googleReviewsUrl && (
               <a
                 href={contactInfo.googleReviewsUrl}
                 target="_blank"
                 rel="noopener noreferrer"
                 onClick={handleReviewLinkClick}
-                className="text-sm font-semibold text-brand-accent hover:underline focus-visible:outline focus-visible:outline-2 focus-visible:outline-brand-accent rounded"
+                className="rounded text-sm font-semibold text-brand-accent hover:underline focus-visible:outline focus-visible:outline-2 focus-visible:outline-brand-accent"
                 aria-label="Ver avaliações verificadas no Google (abre em nova aba)"
               >
                 {t.googleReviewsLink}
@@ -110,19 +106,22 @@ export const AboutAndTrustSection: React.FC = () => {
               return (
                 <blockquote
                   key={test.id}
-                  className="rounded-xl border border-border bg-surface-elevated p-6 flex flex-col justify-between"
+                  className="flex flex-col justify-between rounded-xl border border-border bg-surface-elevated p-6"
                 >
-                  <p className="text-sm text-foreground-muted leading-relaxed italic">
+                  <p className="text-sm italic leading-relaxed text-foreground-muted">
                     &ldquo;{text}&rdquo;
                   </p>
-                  <div className="mt-6 pt-4 border-t border-border/40 flex items-center justify-between">
+                  <div className="border-border/40 mt-6 flex items-center justify-between border-t pt-4">
                     <div>
                       <p className="text-xs font-semibold text-foreground">{test.author}</p>
                       {test.origin && (
                         <p className="text-[11px] text-foreground-subtle">{test.origin}</p>
                       )}
                     </div>
-                    <div className="flex text-brand-gold text-xs" aria-label={`Avaliação ${test.rating} de 5 estrelas`}>
+                    <div
+                      className="flex text-xs text-brand-gold"
+                      aria-label={`Avaliação ${test.rating} de 5 estrelas`}
+                    >
                       {"★".repeat(test.rating)}
                     </div>
                   </div>

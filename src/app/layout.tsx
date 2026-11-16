@@ -44,9 +44,7 @@ export const metadata: Metadata = {
       { url: "/assets/brand/cadife-icon-192.png", sizes: "192x192", type: "image/png" },
       { url: "/assets/brand/cadife-icon-full.png", sizes: "512x512", type: "image/png" },
     ],
-    apple: [
-      { url: "/assets/brand/cadife-icon-192.png", sizes: "180x180", type: "image/png" },
-    ],
+    apple: [{ url: "/assets/brand/cadife-icon-192.png", sizes: "180x180", type: "image/png" }],
   },
   robots: {
     index: true,
@@ -54,11 +52,7 @@ export const metadata: Metadata = {
   },
 };
 
-export default function RootLayout({
-  children,
-}: {
-  children: React.ReactNode;
-}) {
+export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="pt-BR">
       <body className="flex min-h-screen flex-col bg-background text-foreground antialiased selection:bg-brand-primary selection:text-white">

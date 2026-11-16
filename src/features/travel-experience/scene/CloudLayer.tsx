@@ -22,10 +22,7 @@ interface PuffData {
  * Não utiliza volumetria pesada, garantindo 60fps constantes e sensação
  * cinematográfica imediata de atravessar nuvens e neblina de altitude.
  */
-export const CloudLayer: React.FC<CloudLayerProps> = ({
-  progress,
-  opacity = 1,
-}) => {
+export const CloudLayer: React.FC<CloudLayerProps> = ({ progress, opacity = 1 }) => {
   const fgRef = useRef<THREE.Group>(null);
   const mgRef = useRef<THREE.Group>(null);
   const bgRef = useRef<THREE.Group>(null);
@@ -34,9 +31,9 @@ export const CloudLayer: React.FC<CloudLayerProps> = ({
   // Começa sutil em 0.20, atinge ápice em 0.35 - 0.45, e abre revelando Chile em 0.50 - 0.70
   const cloudIntensity = useMemo(() => {
     if (progress < 0.15) return 0.2; // visíveis lá fora pela janela
-    if (progress < 0.30) return 0.2 + (progress - 0.15) * 4; // aproximando
-    if (progress < 0.50) return 1.0; // imersão total
-    if (progress < 0.70) return Math.max(0, 1.0 - (progress - 0.50) * 4.5); // abrindo
+    if (progress < 0.3) return 0.2 + (progress - 0.15) * 4; // aproximando
+    if (progress < 0.5) return 1.0; // imersão total
+    if (progress < 0.7) return Math.max(0, 1.0 - (progress - 0.5) * 4.5); // abrindo
     return 0;
   }, [progress]);
 
@@ -44,14 +41,20 @@ export const CloudLayer: React.FC<CloudLayerProps> = ({
 
   // Gera nuvens em 3 profundidades
   const { fgPuffs, mgPuffs, bgPuffs } = useMemo(() => {
-    const makePuffs = (count: number, zBase: number, zSpread: number, spreadX: number, spreadY: number): PuffData[] => {
+    const makePuffs = (
+      count: number,
+      zBase: number,
+      zSpread: number,
+      spreadX: number,
+      spreadY: number
+    ): PuffData[] => {
       const items: PuffData[] = [];
       for (let i = 0; i < count; i++) {
         items.push({
           pos: [
-            (Math.sin(i * 1.7) * spreadX) + 0.5,
-            (Math.cos(i * 2.3) * spreadY) - 0.5,
-            zBase + (Math.sin(i * 3.1) * zSpread),
+            Math.sin(i * 1.7) * spreadX + 0.5,
+            Math.cos(i * 2.3) * spreadY - 0.5,
+            zBase + Math.sin(i * 3.1) * zSpread,
           ],
           scale: [
             2.5 + Math.abs(Math.sin(i)) * 2,

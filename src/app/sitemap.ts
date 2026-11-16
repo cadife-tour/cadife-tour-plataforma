@@ -1,3 +1,4 @@
+import { destinationPages } from "@/content/destinationPages";
 import type { MetadataRoute } from "next";
 
 export default function sitemap(): MetadataRoute.Sitemap {
@@ -11,5 +12,6 @@ export default function sitemap(): MetadataRoute.Sitemap {
       changeFrequency: "weekly",
       priority: 1.0,
     },
+    ...destinationPages.map(({ slug }) => ({ url: new URL(`/destinos/${slug}`, baseUrl).href })),
   ];
 }

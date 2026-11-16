@@ -14,10 +14,7 @@ interface AirplaneSceneProps {
  * Preparada para carregar .glb quando fornecido, ou renderizar geometria
  * elegante procedural (cabine, assento, painel e moldura da janela com vista exterior).
  */
-export const AirplaneScene: React.FC<AirplaneSceneProps> = ({
-  progress,
-  opacity = 1,
-}) => {
+export const AirplaneScene: React.FC<AirplaneSceneProps> = ({ progress, opacity = 1 }) => {
   const groupRef = useRef<THREE.Group>(null);
 
   // O avião desvanece suavemente conforme a câmera atravessa a janela (progress > 0.3)
