@@ -7,6 +7,26 @@ import { WhatsAppCta } from "@/shared/ui/WhatsAppCta";
 import { destinationsData } from "@/content/data";
 import { useLocale } from "@/core/i18n/LocaleContext";
 import { trackEvent } from "@/core/analytics";
+import { TravelEyebrow } from "@/shared/ui/travel/TravelEyebrow";
+import { PostageStamp } from "@/shared/ui/travel/PostageStamp";
+import { PassportStamp, type StampTone } from "@/shared/ui/travel/PassportStamp";
+
+type StampLocale = "pt" | "en" | "es";
+
+const categoryStamp: Record<
+  "culture" | "nature" | "cruise" | "custom",
+  { tone: StampTone; title: Record<StampLocale, string> }
+> = {
+  culture: { tone: "red", title: { pt: "CULTURA", en: "CULTURE", es: "CULTURA" } },
+  nature: { tone: "green", title: { pt: "NATUREZA", en: "NATURE", es: "NATURALEZA" } },
+  cruise: { tone: "blue", title: { pt: "CRUZEIRO", en: "CRUISE", es: "CRUCERO" } },
+  custom: { tone: "gold", title: { pt: "SOB MEDIDA", en: "BESPOKE", es: "A MEDIDA" } },
+};
+const stampCaption: Record<StampLocale, string> = {
+  pt: "VISTO · 2026",
+  en: "VISA · 2026",
+  es: "VISADO · 2026",
+};
 
 export const DestinationsSection: React.FC = () => {
   const { locale } = useLocale();
@@ -82,10 +102,8 @@ export const DestinationsSection: React.FC = () => {
     <section id="destinos" className="scroll-mt-24 border-b border-border py-20 lg:py-28">
       <Container>
         <div className="mb-16 max-w-2xl">
-          <span className="text-xs font-bold uppercase tracking-wider text-brand-accent">
-            {t.badge}
-          </span>
-          <h2 className="mt-3 text-3xl font-extrabold tracking-tight text-foreground sm:text-4xl">
+          <TravelEyebrow>{t.badge}</TravelEyebrow>
+          <h2 className="mt-4 text-4xl font-semibold tracking-tight text-foreground sm:text-5xl">
             {t.title}
           </h2>
           <p className="mt-4 text-base leading-relaxed text-foreground-muted sm:text-lg">
@@ -94,7 +112,8 @@ export const DestinationsSection: React.FC = () => {
         </div>
 
         <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
-          {destinationsData.map((item) => {
+          {destinationsData.map((item, index) => {
+            const stamp = categoryStamp[item.category];
             const title = item.title[locale] || item.title.pt;
             const subtitle = item.subtitle[locale] || item.subtitle.pt;
             const description = item.description[locale] || item.description.pt;
@@ -104,28 +123,44 @@ export const DestinationsSection: React.FC = () => {
               <article
                 key={item.id}
                 data-destination-id={item.id}
-                className="flex flex-col justify-between overflow-hidden rounded-xl border border-border bg-surface p-6 shadow-sm transition-all duration-200 hover:border-brand-accent/40 hover:bg-surface-elevated"
+                className="group flex flex-col justify-between rounded-3xl border border-border bg-surface p-5 shadow-md transition-all duration-300 ease-expressive hover:-translate-y-1 hover:border-brand-accent/40 hover:shadow-xl motion-reduce:transform-none"
               >
                 <div className="space-y-4">
                   {/* Thumbnail Responsivo com next/image (CLS Zero) */}
-                  <div className="relative aspect-video w-full overflow-hidden rounded-lg bg-surface-muted">
-                    <Image
-                      src={item.imageRef}
-                      alt={title}
-                      fill
-                      sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-                      className="object-cover transition-transform duration-300 hover:scale-105"
-                      loading="lazy"
+                  <div className="relative">
+                    <PostageStamp
+                      denomination={`CDF ${String(index + 1).padStart(2, "0")}`}
+                      className={`${index % 2 === 0 ? "-rotate-1" : "rotate-1"} group-hover:rotate-0`}
+                    >
+                      <div className="relative aspect-[4/3] w-full bg-surface-muted">
+                        <Image
+                          src={item.imageRef}
+                          alt={title}
+                          fill
+                          sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                          className="object-cover transition-transform duration-700 ease-expressive group-hover:scale-105"
+                          loading="lazy"
+                        />
+                      </div>
+                    </PostageStamp>
+                    <PassportStamp
+                      label="CADIFE TOUR"
+                      title={stamp.title[locale]}
+                      caption={stampCaption[locale]}
+                      tone={stamp.tone}
+                      rotate={index % 2 === 0 ? -14 : 11}
+                      size={96}
+                      className="absolute -right-3 -top-5 drop-shadow-[0_2px_6px_rgba(0,0,0,0.5)] transition-transform duration-500 group-hover:scale-110"
                     />
                   </div>
 
                   <div className="flex items-center justify-between pt-1">
-                    <span className="rounded bg-surface-muted px-2.5 py-1 text-xs font-semibold text-brand-accent">
+                    <span className="rounded-full border border-brand-accent/30 bg-brand-primary/10 px-3 py-1 text-[11px] font-bold tracking-[0.14em] text-brand-accent">
                       {item.category.toUpperCase()}
                     </span>
                   </div>
 
-                  <h3 className="text-xl font-bold text-foreground">{title}</h3>
+                  <h3 className="text-2xl font-semibold text-foreground">{title}</h3>
                   <p className="text-xs font-medium text-brand-gold">{subtitle}</p>
                   <p className="text-sm leading-relaxed text-foreground-muted">{description}</p>
 

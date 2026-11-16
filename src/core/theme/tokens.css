@@ -27,6 +27,57 @@
   --color-brand-dark: #393532; /* Grafite clássico da marca Cadife */
   --color-brand-gold: #eab308; /* Dourado quente de viagem / sol */
 
+  /* Brand Scales — tons derivados para fundos, bordas e hovers sem inventar cor */
+  --color-red-50: #fff1f1;
+  --color-red-100: #ffdcdc;
+  --color-red-200: #ffb3b4;
+  --color-red-300: #ff7d7f;
+  --color-red-400: #f7474a;
+  --color-red-500: #dd0b0e;
+  --color-red-600: #b8090b;
+  --color-red-700: #8f0b0d;
+  --color-red-800: #640d0e;
+  --color-red-900: #3d0b0b;
+  --color-gold-100: #fdf3d0;
+  --color-gold-300: #f6d38c;
+  --color-gold-500: #eab308;
+  --color-gold-700: #a37a06;
+
+  /* Travel Ink & Paper — carimbos, selos e papel de passaporte */
+  --color-paper: #f4ead7; /* Papel envelhecido de passaporte */
+  --color-paper-shade: #e3d4b8;
+  --color-ink-red: #ff5a4f; /* Tinta de carimbo legível sobre fundo escuro */
+  --color-ink-blue: #6fa8dc;
+  --color-ink-green: #5cc495;
+  --color-ink-gold: #f2c14e;
+
+  /* Signature Gradients */
+  --gradient-sunset: linear-gradient(
+    120deg,
+    #f0282b 0%,
+    #dd0b0e 32%,
+    #e5533a 58%,
+    #f2a65a 80%,
+    #eab308 100%
+  );
+  --gradient-dusk: linear-gradient(180deg, #1c1615 0%, #141312 100%);
+
+  /* Overlays oficiais para texto sobre foto e vídeo */
+  --overlay-scrim-strong: linear-gradient(
+    90deg,
+    rgba(20, 19, 18, 0.88) 0%,
+    rgba(20, 19, 18, 0.55) 45%,
+    transparent 100%
+  );
+  --overlay-scrim-bottom: linear-gradient(0deg, rgba(20, 19, 18, 0.9) 0%, transparent 70%);
+
+  /* Liquid Glass */
+  --glass-tint: rgba(255, 255, 255, 0.07);
+  --glass-tint-strong: rgba(30, 26, 25, 0.55);
+  --glass-border: rgba(255, 255, 255, 0.2);
+  --glass-highlight: rgba(255, 255, 255, 0.55);
+  --glass-blur: 18px;
+
   /* Functional / Borders / States */
   --color-border: rgba(255, 255, 255, 0.12);
   --color-border-hover: rgba(255, 255, 255, 0.25);
@@ -39,9 +90,10 @@
      2. Typography Tokens (Font families marked for Design Discovery phase)
      ========================================================================== */
   --font-sans:
-    system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell,
-    "Open Sans", "Helvetica Neue", sans-serif;
-  --font-heading: var(--font-sans);
+    var(--font-manrope, system-ui), system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI",
+    Roboto, Oxygen, Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
+  --font-heading: var(--font-fraunces, Georgia), Georgia, "Times New Roman", serif;
+  --font-display: var(--font-heading);
 
   /* Font Sizes & Line Heights */
   --text-xs: 0.75rem; /* 12px */
@@ -67,10 +119,12 @@
   /* ==========================================================================
      4. Elevation & Shadows
      ========================================================================== */
-  --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.3);
-  --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.4), 0 2px 4px -2px rgba(0, 0, 0, 0.4);
-  --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.5), 0 4px 6px -4px rgba(0, 0, 0, 0.5);
-  --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.6), 0 8px 10px -6px rgba(0, 0, 0, 0.6);
+  /* Sombras quentes (grafite avermelhado) em vez de preto puro */
+  --shadow-sm: 0 1px 2px 0 rgba(26, 10, 8, 0.35);
+  --shadow-md: 0 6px 14px -4px rgba(26, 10, 8, 0.45), 0 2px 4px -2px rgba(26, 10, 8, 0.4);
+  --shadow-lg: 0 16px 32px -10px rgba(26, 10, 8, 0.55), 0 4px 8px -4px rgba(26, 10, 8, 0.45);
+  --shadow-xl: 0 28px 56px -16px rgba(26, 10, 8, 0.65), 0 8px 16px -8px rgba(26, 10, 8, 0.5);
+  --shadow-glow: 0 12px 32px -10px rgba(221, 11, 14, 0.6), 0 0 0 1px rgba(240, 40, 43, 0.25);
 
   /* ==========================================================================
      5. Motion & Transitions

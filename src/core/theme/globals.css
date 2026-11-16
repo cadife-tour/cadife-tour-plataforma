@@ -26,3 +26,205 @@
     outline-offset: 3px;
   }
 }
+
+@layer base {
+  /* Títulos usam a serifada editorial da marca; a interface segue na sans. */
+  h1,
+  h2,
+  h3,
+  h4 {
+    font-family: var(--font-heading);
+    font-optical-sizing: auto;
+    letter-spacing: -0.015em;
+  }
+}
+
+@layer components {
+  /* ==========================================================================
+     Liquid Glass — vidro com refração, reflexo de borda e brilho especular.
+     Use em superfícies flutuantes: header, menus, seletores e pílulas.
+     ========================================================================== */
+  .liquid-glass {
+    position: relative;
+    isolation: isolate;
+    border: 1px solid var(--glass-border);
+    background:
+      linear-gradient(
+        135deg,
+        rgba(255, 255, 255, 0.16) 0%,
+        rgba(255, 255, 255, 0.04) 38%,
+        rgba(255, 255, 255, 0.02) 62%,
+        rgba(255, 255, 255, 0.1) 100%
+      ),
+      var(--glass-tint);
+    -webkit-backdrop-filter: blur(var(--glass-blur)) saturate(185%) brightness(1.06);
+    backdrop-filter: blur(var(--glass-blur)) saturate(185%) brightness(1.06);
+    box-shadow:
+      inset 0 1px 0 var(--glass-highlight),
+      inset 0 -1px 0 rgba(255, 255, 255, 0.08),
+      inset 0 0 18px rgba(255, 255, 255, 0.05),
+      var(--shadow-lg);
+  }
+
+  /* Variante mais opaca para menus sobre conteúdo variado (legibilidade). */
+  .liquid-glass-strong {
+    --glass-tint: var(--glass-tint-strong);
+    --glass-blur: 24px;
+  }
+
+  /* Aro especular: reflexo diagonal só na borda. */
+  .liquid-glass::before {
+    position: absolute;
+    z-index: 1;
+    inset: 0;
+    padding: 1px;
+    border-radius: inherit;
+    background: linear-gradient(
+      125deg,
+      rgba(255, 255, 255, 0.75) 0%,
+      rgba(255, 255, 255, 0) 28%,
+      rgba(255, 255, 255, 0) 70%,
+      rgba(255, 255, 255, 0.4) 100%
+    );
+    content: "";
+    pointer-events: none;
+    -webkit-mask:
+      linear-gradient(#000 0 0) content-box,
+      linear-gradient(#000 0 0);
+    -webkit-mask-composite: xor;
+    mask-composite: exclude;
+  }
+
+  /* Brilho do topo, como luz atravessando a gota. */
+  .liquid-glass::after {
+    position: absolute;
+    z-index: -1;
+    inset: 1px;
+    border-radius: inherit;
+    background: radial-gradient(
+      120% 70% at 50% -20%,
+      rgba(255, 255, 255, 0.22),
+      rgba(255, 255, 255, 0) 60%
+    );
+    content: "";
+    pointer-events: none;
+  }
+
+  /* Quando o renderer WebGL (apple-liquid-glass-webgl) assume, a refração é real:
+     desliga a reserva em CSS para não empilhar dois vidros. */
+  .liquid-glass[data-liquid-glass="webgl"] {
+    border-color: transparent;
+    background: none;
+    -webkit-backdrop-filter: none;
+    backdrop-filter: none;
+    box-shadow: var(--shadow-lg);
+  }
+
+  .liquid-glass[data-liquid-glass="webgl"]::before,
+  .liquid-glass[data-liquid-glass="webgl"]::after {
+    display: none;
+  }
+
+  /* ==========================================================================
+     Selo postal — borda picotada para fotos e cartões-postais.
+     ========================================================================== */
+  .postage-stamp {
+    --perf: 6px;
+    padding: calc(var(--perf) * 1.6);
+    background: var(--color-paper);
+    -webkit-mask:
+      radial-gradient(var(--perf) at var(--perf) var(--perf), #0000 97%, #000)
+        calc(var(--perf) * -1) calc(var(--perf) * -1) / calc(var(--perf) * 2) calc(var(--perf) * 2)
+        round,
+      linear-gradient(#000 0 0) content-box;
+    mask:
+      radial-gradient(var(--perf) at var(--perf) var(--perf), #0000 97%, #000)
+        calc(var(--perf) * -1) calc(var(--perf) * -1) / calc(var(--perf) * 2) calc(var(--perf) * 2)
+        round,
+      linear-gradient(#000 0 0) content-box;
+  }
+
+  /* ==========================================================================
+     Cartão de embarque — recortes laterais + linha picotada entre corpo e canhoto.
+     ========================================================================== */
+  .ticket-body,
+  .ticket-stub {
+    --notch: 11px;
+    -webkit-mask-composite: source-in;
+    mask-composite: intersect;
+  }
+
+  .ticket-vertical .ticket-body {
+    -webkit-mask:
+      radial-gradient(circle var(--notch) at 0 100%, #0000 97%, #000),
+      radial-gradient(circle var(--notch) at 100% 100%, #0000 97%, #000);
+    mask:
+      radial-gradient(circle var(--notch) at 0 100%, #0000 97%, #000),
+      radial-gradient(circle var(--notch) at 100% 100%, #0000 97%, #000);
+  }
+
+  .ticket-vertical .ticket-stub {
+    border-top: 2px dashed rgba(255, 255, 255, 0.16);
+    -webkit-mask:
+      radial-gradient(circle var(--notch) at 0 0, #0000 97%, #000),
+      radial-gradient(circle var(--notch) at 100% 0, #0000 97%, #000);
+    mask:
+      radial-gradient(circle var(--notch) at 0 0, #0000 97%, #000),
+      radial-gradient(circle var(--notch) at 100% 0, #0000 97%, #000);
+  }
+
+  @media (min-width: 768px) {
+    .ticket-horizontal .ticket-body {
+      -webkit-mask:
+        radial-gradient(circle var(--notch) at 100% 0, #0000 97%, #000),
+        radial-gradient(circle var(--notch) at 100% 100%, #0000 97%, #000);
+      mask:
+        radial-gradient(circle var(--notch) at 100% 0, #0000 97%, #000),
+        radial-gradient(circle var(--notch) at 100% 100%, #0000 97%, #000);
+    }
+
+    .ticket-horizontal .ticket-stub {
+      border-left: 2px dashed rgba(255, 255, 255, 0.16);
+      -webkit-mask:
+        radial-gradient(circle var(--notch) at 0 0, #0000 97%, #000),
+        radial-gradient(circle var(--notch) at 0 100%, #0000 97%, #000);
+      mask:
+        radial-gradient(circle var(--notch) at 0 0, #0000 97%, #000),
+        radial-gradient(circle var(--notch) at 0 100%, #0000 97%, #000);
+    }
+  }
+
+  /* No mobile o cartão horizontal vira vertical. */
+  @media (max-width: 767px) {
+    .ticket-horizontal .ticket-body {
+      -webkit-mask:
+        radial-gradient(circle var(--notch) at 0 100%, #0000 97%, #000),
+        radial-gradient(circle var(--notch) at 100% 100%, #0000 97%, #000);
+      mask:
+        radial-gradient(circle var(--notch) at 0 100%, #0000 97%, #000),
+        radial-gradient(circle var(--notch) at 100% 100%, #0000 97%, #000);
+    }
+
+    .ticket-horizontal .ticket-stub {
+      border-top: 2px dashed rgba(255, 255, 255, 0.16);
+      -webkit-mask:
+        radial-gradient(circle var(--notch) at 0 0, #0000 97%, #000),
+        radial-gradient(circle var(--notch) at 100% 0, #0000 97%, #000);
+      mask:
+        radial-gradient(circle var(--notch) at 0 0, #0000 97%, #000),
+        radial-gradient(circle var(--notch) at 100% 0, #0000 97%, #000);
+    }
+  }
+
+  .barcode {
+    background: repeating-linear-gradient(
+      90deg,
+      currentColor 0 2px,
+      transparent 2px 4px,
+      currentColor 4px 5px,
+      transparent 5px 8px,
+      currentColor 8px 11px,
+      transparent 11px 12px
+    );
+  }
+}

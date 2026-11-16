@@ -1,7 +1,22 @@
 "use client";
 
 import type { MouseEvent, ReactNode } from "react";
-import { Button, Container, LanguageSelector, SkipToContent, WhatsAppCta } from "@/shared/ui";
+import {
+  Badge,
+  BoardingPass,
+  Button,
+  Card,
+  Container,
+  LanguageSelector,
+  LiquidGlassSurface,
+  PassportStamp,
+  PostageStamp,
+  SkipToContent,
+  TextField,
+  TravelEyebrow,
+  WhatsAppCta,
+} from "@/shared/ui";
+import { Barcode } from "@/shared/ui/travel/BoardingPass";
 import type { sharedUiComponents } from "@/shared/ui";
 import { LocaleProvider } from "@/core/i18n/LocaleContext";
 
@@ -38,6 +53,7 @@ export const sharedUiCatalog: SharedUiCatalogEntry[] = [
         <Button size="sm">Small size</Button>
         <Button size="md">Medium size</Button>
         <Button size="lg">Large size</Button>
+        <Button loading>Loading state</Button>
       </div>
     ),
   },
@@ -139,6 +155,177 @@ export const sharedUiCatalog: SharedUiCatalogEntry[] = [
           </p>
         </div>
       </LocaleProvider>
+    ),
+  },
+  {
+    key: "Badge",
+    name: "Badge",
+    description: "Selo curto para categorias, status e destaques, em quatro tons e três estilos.",
+    source: "src/shared/ui/Badge/Badge.tsx",
+    preview: (
+      <div className="grid gap-3">
+        <div className="flex flex-wrap gap-2">
+          <Badge>Cultura</Badge>
+          <Badge tone="gold">Sob medida</Badge>
+          <Badge tone="success">Confirmado</Badge>
+          <Badge tone="neutral">Rascunho</Badge>
+        </div>
+        <div className="flex flex-wrap gap-2">
+          <Badge variant="outline">Outline</Badge>
+          <Badge variant="solid">Solid</Badge>
+          <Badge tone="gold" variant="solid" size="md">
+            Destaque
+          </Badge>
+        </div>
+      </div>
+    ),
+  },
+  {
+    key: "Card",
+    name: "Card",
+    description:
+      "Superfície base com borda, raio e sombra quente; variantes sólida, elevada e vidro.",
+    source: "src/shared/ui/Card/Card.tsx",
+    preview: (
+      <div className="grid gap-3 sm:grid-cols-3">
+        <Card padding="sm">
+          <p className="font-heading text-lg">Surface</p>
+          <p className="text-xs text-foreground-muted">Padrão para conteúdo.</p>
+        </Card>
+        <Card variant="elevated" padding="sm" interactive tabIndex={0}>
+          <p className="font-heading text-lg">Interativo</p>
+          <p className="text-xs text-foreground-muted">Eleva no hover e no foco.</p>
+        </Card>
+        <div className="rounded-3xl bg-sunset p-3">
+          <Card variant="glass" padding="sm">
+            <p className="font-heading text-lg text-white">Vidro</p>
+            <p className="text-xs text-white/80">Sobre imagens e cores.</p>
+          </Card>
+        </div>
+      </div>
+    ),
+  },
+  {
+    key: "TextField",
+    name: "TextField",
+    description: "Campo acessível com rótulo, dica e erro anunciados; aceita texto longo.",
+    source: "src/shared/ui/TextField/TextField.tsx",
+    preview: (
+      <div className="grid gap-4 sm:grid-cols-2">
+        <TextField label="Nome" placeholder="Como podemos te chamar?" required />
+        <TextField label="Destino desejado" hint="Pode ser um país, cidade ou estilo." />
+        <TextField label="E-mail" defaultValue="cliente@" error="Informe um e-mail válido." />
+        <TextField label="Conte sua viagem" multiline placeholder="Datas, pessoas, sonhos…" />
+      </div>
+    ),
+  },
+  {
+    key: "LiquidGlassSurface",
+    name: "LiquidGlassSurface",
+    description:
+      "Vidro líquido com refração real em WebGL2; usa vidro em CSS como reserva sem WebGL2.",
+    source: "src/shared/ui/LiquidGlass/LiquidGlassSurface.tsx",
+    preview: (
+      <div className="relative overflow-hidden rounded-2xl bg-[url('/assets/destinations/patagonia.webp')] bg-cover bg-center p-8">
+        <LiquidGlassSurface className="mx-auto flex max-w-sm items-center justify-between gap-4 rounded-full px-5 py-3 text-sm font-semibold text-white">
+          <span className="font-heading text-base">CADIFE Tour</span>
+          <span className="text-white/80">Destinos · Contato</span>
+        </LiquidGlassSurface>
+      </div>
+    ),
+  },
+  {
+    key: "PassportStamp",
+    name: "PassportStamp",
+    description: "Carimbo de passaporte decorativo com tinta gasta, redondo ou retangular.",
+    source: "src/shared/ui/travel/PassportStamp.tsx",
+    preview: (
+      <div className="flex flex-wrap items-center gap-6">
+        <PassportStamp label="CADIFE TOUR" title="CHILE" caption="VISTO · 2026" />
+        <PassportStamp
+          label="CADIFE TOUR"
+          title="SEGURO"
+          caption="APROVADO"
+          tone="blue"
+          rotate={8}
+        />
+        <PassportStamp
+          label="CADIFE"
+          title="★ 5.0"
+          caption="AVALIAÇÃO"
+          tone="gold"
+          shape="rect"
+          rotate={-6}
+        />
+        <PassportStamp label="CADIFE TOUR" title="NATUREZA" tone="green" rotate={4} size={96} />
+      </div>
+    ),
+  },
+  {
+    key: "PostageStamp",
+    name: "PostageStamp",
+    description: "Moldura de selo postal com picote em papel de passaporte, para fotos de destino.",
+    source: "src/shared/ui/travel/PostageStamp.tsx",
+    preview: (
+      <div className="flex flex-wrap gap-6">
+        <PostageStamp denomination="CDF 01" className="w-48 -rotate-2">
+          <div className="aspect-[4/3] bg-[url('/assets/destinations/europa.webp')] bg-cover bg-center" />
+        </PostageStamp>
+        <PostageStamp denomination="CDF 02" className="w-48 rotate-1">
+          <div className="aspect-[4/3] bg-[url('/assets/destinations/patagonia.webp')] bg-cover bg-center" />
+        </PostageStamp>
+      </div>
+    ),
+  },
+  {
+    key: "BoardingPass",
+    name: "BoardingPass",
+    description: "Cartão de embarque com recortes e canhoto picotado; vertical ou horizontal.",
+    source: "src/shared/ui/travel/BoardingPass.tsx",
+    preview: (
+      <div className="grid gap-6 lg:grid-cols-[18rem_1fr]">
+        <BoardingPass
+          heading="Embarque"
+          code="Etapa 01"
+          stub={
+            <div className="flex items-end justify-between gap-4 text-[10px] uppercase tracking-[0.18em] text-foreground-subtle">
+              <span>
+                Portão
+                <span className="mt-1 block font-heading text-lg normal-case tracking-normal text-foreground">
+                  A1
+                </span>
+              </span>
+              <Barcode className="h-8 w-14 shrink-0" />
+            </div>
+          }
+        >
+          <p className="font-heading text-xl">Conversa inicial</p>
+          <p className="mt-2 text-sm text-foreground-muted">Entendemos seu estilo de viagem.</p>
+        </BoardingPass>
+        <BoardingPass
+          orientation="horizontal"
+          heading="Cartão de embarque"
+          code="CDF · 2026"
+          stub={<Barcode />}
+        >
+          <p className="font-heading text-2xl">Pronto para embarcar?</p>
+          <p className="mt-2 text-sm text-foreground-muted">
+            No desktop o canhoto fica à direita; no celular, embaixo.
+          </p>
+        </BoardingPass>
+      </div>
+    ),
+  },
+  {
+    key: "TravelEyebrow",
+    name: "TravelEyebrow",
+    description: "Sobretítulo de seção desenhado como rota de voo.",
+    source: "src/shared/ui/travel/TravelEyebrow.tsx",
+    preview: (
+      <div className="grid gap-4">
+        <TravelEyebrow>Curadoria de experiências</TravelEyebrow>
+        <h4 className="font-heading text-3xl">Roteiros e destinos planejados</h4>
+      </div>
     ),
   },
 ];

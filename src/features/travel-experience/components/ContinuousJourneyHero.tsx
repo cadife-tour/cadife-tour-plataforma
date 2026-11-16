@@ -135,9 +135,7 @@ export function ContinuousJourneyHero() {
         <div className="pointer-events-none absolute inset-0 -z-10 bg-gradient-to-r from-black/85 via-black/50 to-black/10" />
         <Container>
           <div className="max-w-3xl space-y-6 text-white">
-            <p className="font-heading text-sm font-semibold uppercase tracking-widest">
-              CADIFE Tour
-            </p>
+            <p className="font-sans text-sm font-semibold uppercase tracking-widest">CADIFE Tour</p>
             <h1 className="font-heading text-4xl font-bold leading-tight sm:text-5xl lg:text-6xl">
               {text.title}
             </h1>
@@ -148,7 +146,7 @@ export function ContinuousJourneyHero() {
               </WhatsAppCta>
               <a
                 href="#destinos"
-                className="inline-flex min-h-11 items-center rounded-lg border border-white/70 px-6 py-3 font-heading font-semibold focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-white"
+                className="inline-flex min-h-11 items-center rounded-lg border border-white/70 px-6 py-3 font-sans font-semibold focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-white"
               >
                 {text.explore}
               </a>
