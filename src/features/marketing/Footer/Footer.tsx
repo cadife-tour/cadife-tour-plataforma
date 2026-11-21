@@ -220,7 +220,7 @@ export const Footer: React.FC = () => {
               <li>
                 <a
                   href="/#destinos"
-                  className="rounded py-0.5 transition-colors hover:text-foreground focus-visible:outline focus-visible:outline-2 focus-visible:outline-brand-accent"
+                  className="rounded py-0.5 transition-colors duration-micro ease-standard hover:text-foreground focus-visible:outline focus-visible:outline-2 focus-visible:outline-brand-accent motion-reduce:transition-none"
                 >
                   {t.destinations}
                 </a>
@@ -228,7 +228,7 @@ export const Footer: React.FC = () => {
               <li>
                 <a
                   href="/#como-funciona"
-                  className="rounded py-0.5 transition-colors hover:text-foreground focus-visible:outline focus-visible:outline-2 focus-visible:outline-brand-accent"
+                  className="rounded py-0.5 transition-colors duration-micro ease-standard hover:text-foreground focus-visible:outline focus-visible:outline-2 focus-visible:outline-brand-accent motion-reduce:transition-none"
                 >
                   {t.howItWorks}
                 </a>
@@ -236,7 +236,7 @@ export const Footer: React.FC = () => {
               <li>
                 <a
                   href="/#agencia"
-                  className="rounded py-0.5 transition-colors hover:text-foreground focus-visible:outline focus-visible:outline-2 focus-visible:outline-brand-accent"
+                  className="rounded py-0.5 transition-colors duration-micro ease-standard hover:text-foreground focus-visible:outline focus-visible:outline-2 focus-visible:outline-brand-accent motion-reduce:transition-none"
                 >
                   {t.about}
                 </a>
@@ -244,7 +244,7 @@ export const Footer: React.FC = () => {
               <li>
                 <a
                   href="/#faq"
-                  className="rounded py-0.5 transition-colors hover:text-foreground focus-visible:outline focus-visible:outline-2 focus-visible:outline-brand-accent"
+                  className="rounded py-0.5 transition-colors duration-micro ease-standard hover:text-foreground focus-visible:outline focus-visible:outline-2 focus-visible:outline-brand-accent motion-reduce:transition-none"
                 >
                   {t.faq}
                 </a>
@@ -281,7 +281,7 @@ export const Footer: React.FC = () => {
               <li>
                 <a
                   href={`mailto:${contactInfo.email}`}
-                  className="rounded py-0.5 transition-colors hover:text-foreground focus-visible:outline focus-visible:outline-2 focus-visible:outline-brand-accent"
+                  className="rounded py-0.5 transition-colors duration-micro ease-standard hover:text-foreground focus-visible:outline focus-visible:outline-2 focus-visible:outline-brand-accent motion-reduce:transition-none"
                 >
                   {contactInfo.email}
                 </a>
@@ -349,7 +349,7 @@ export const Footer: React.FC = () => {
           </div>
         </div>
 
-        <div className="border-border/50 mt-14 flex flex-col items-center justify-between gap-4 border-t pt-8 text-xs text-foreground-subtle sm:flex-row">
+        <div className="mt-14 flex flex-col items-center justify-between gap-4 border-t border-border/50 pt-8 text-xs text-foreground-subtle sm:flex-row">
           <p>
             © {new Date().getFullYear()} {institutionalInfo.brandName}. {t.rights}
           </p>

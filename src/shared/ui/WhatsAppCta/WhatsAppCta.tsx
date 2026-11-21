@@ -30,6 +30,7 @@ export interface WhatsAppCtaProps extends Omit<
     | "how_it_works"
     | string;
   /** Variação visual do componente conforme o Design System */
+  /** `glass` usa a classe CSS `.liquid-glass` (mesmos tokens do LiquidGlassSurface, sem WebGL por CTA). */
   variant?: "primary" | "secondary" | "glass" | "outline" | "link";
   /** Tamanho do componente */
   size?: "sm" | "md" | "lg";
@@ -231,7 +232,7 @@ export const WhatsAppCta = React.forwardRef<HTMLAnchorElement, WhatsAppCtaProps>
     };
 
     const baseStyles =
-      "inline-flex items-center justify-center font-heading font-semibold rounded-lg transition-all duration-200 ease-standard focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 motion-reduce:transform-none motion-reduce:transition-none";
+      "inline-flex items-center justify-center font-heading font-semibold rounded-lg transition-all duration-micro ease-standard focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 motion-reduce:transform-none motion-reduce:transition-none";
 
     const buttonInteractiveStyles =
       "cursor-pointer shadow-sm active:translate-y-0 active:scale-[0.985]";
@@ -241,8 +242,7 @@ export const WhatsAppCta = React.forwardRef<HTMLAnchorElement, WhatsAppCtaProps>
         "bg-brand-primary text-white hover:bg-brand-secondary hover:-translate-y-0.5 shadow-brand-primary/20 hover:shadow-md focus-visible:outline-brand-accent",
       secondary:
         "bg-surface-elevated text-foreground hover:bg-surface-muted hover:border-brand-accent/40 focus-visible:outline-brand-accent border border-border",
-      glass:
-        "bg-white/10 backdrop-blur-md text-white border border-white/20 hover:bg-white/20 hover:border-white/30 focus-visible:outline-white",
+      glass: "liquid-glass text-white hover:bg-white/10 focus-visible:outline-white",
       outline:
         "bg-transparent border border-border text-foreground hover:bg-surface-elevated hover:border-brand-accent focus-visible:outline-brand-accent",
       link: "bg-transparent p-0 text-brand-accent hover:text-brand-primary hover:underline underline-offset-4 focus-visible:outline-brand-accent shadow-none active:scale-100",

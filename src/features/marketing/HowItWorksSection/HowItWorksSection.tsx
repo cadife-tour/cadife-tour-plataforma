@@ -5,6 +5,7 @@ import { Container } from "@/shared/ui/Container/Container";
 import { WhatsAppCta } from "@/shared/ui/WhatsAppCta";
 import { howItWorksSteps } from "@/content/data";
 import { useLocale } from "@/core/i18n/LocaleContext";
+import { Reveal } from "@/shared/motion";
 
 export const HowItWorksSection: React.FC = () => {
   const { locale } = useLocale();
@@ -39,9 +40,12 @@ export const HowItWorksSection: React.FC = () => {
   const t = labels[locale] || labels.pt;
 
   return (
-    <section id="como-funciona" className="bg-surface/30 border-b border-border py-20 lg:py-28">
+    <section
+      id="como-funciona"
+      className="scroll-mt-24 border-b border-border bg-surface/30 py-20 lg:py-28"
+    >
       <Container>
-        <div className="mx-auto mb-16 max-w-2xl text-center">
+        <Reveal variant="editorial" className="mx-auto mb-16 max-w-2xl text-center">
           <span className="text-xs font-bold uppercase tracking-wider text-brand-accent">
             {t.badge}
           </span>
@@ -49,24 +53,25 @@ export const HowItWorksSection: React.FC = () => {
             {t.title}
           </h2>
           <p className="mt-4 text-base text-foreground-muted sm:text-lg">{t.subtitle}</p>
-        </div>
+        </Reveal>
 
         <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-4">
-          {howItWorksSteps.map((step) => {
+          {howItWorksSteps.map((step, idx) => {
             const title = step.title[locale] || step.title.pt;
             const description = step.description[locale] || step.description.pt;
 
             return (
-              <div
-                key={step.stepNumber}
-                className="hover:border-brand-primary/40 relative flex flex-col rounded-xl border border-border bg-surface p-6 shadow-sm transition-all"
-              >
-                <div className="bg-brand-primary/15 mb-4 flex h-10 w-10 items-center justify-center rounded-lg text-base font-bold text-brand-accent">
-                  {step.stepNumber}
+              <Reveal key={step.stepNumber} index={idx} className="h-full">
+                <div className="relative flex h-full flex-col rounded-xl border border-border bg-surface p-6 shadow-sm transition-all duration-micro ease-standard hover:border-brand-primary/40 motion-reduce:transition-none">
+                  <div className="mb-4 flex h-10 w-10 items-center justify-center rounded-lg bg-brand-primary/15 text-base font-bold text-brand-accent">
+                    {step.stepNumber}
+                  </div>
+                  <h3 className="text-lg font-bold text-foreground">{title}</h3>
+                  <p className="mt-2 text-sm leading-relaxed text-foreground-muted">
+                    {description}
+                  </p>
                 </div>
-                <h3 className="text-lg font-bold text-foreground">{title}</h3>
-                <p className="mt-2 text-sm leading-relaxed text-foreground-muted">{description}</p>
-              </div>
+              </Reveal>
             );
           })}
         </div>

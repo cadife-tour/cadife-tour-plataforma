@@ -5,6 +5,7 @@ import { Container } from "@/shared/ui/Container/Container";
 import { agencyValues, testimonialsData, contactInfo, institutionalInfo } from "@/content/data";
 import { useLocale } from "@/core/i18n/LocaleContext";
 import { trackEvent } from "@/core/analytics";
+import { Reveal } from "@/shared/motion";
 
 export const AboutAndTrustSection: React.FC = () => {
   const { locale } = useLocale();
@@ -66,7 +67,7 @@ export const AboutAndTrustSection: React.FC = () => {
     <section id="agencia" className="scroll-mt-24 border-b border-border py-20 lg:py-28">
       <Container>
         {/* 1. Diferenciais Institucionais */}
-        <div className="mb-16 max-w-3xl">
+        <Reveal variant="editorial" className="mb-16 max-w-3xl">
           <span className="text-xs font-bold uppercase tracking-wider text-brand-accent">
             {t.badge}
           </span>
@@ -74,7 +75,7 @@ export const AboutAndTrustSection: React.FC = () => {
             {t.title}
           </h2>
           <p className="mt-4 text-base text-foreground-muted sm:text-lg">{t.subtitle}</p>
-        </div>
+        </Reveal>
 
         <div className="grid gap-8 md:grid-cols-3">
           {agencyValues.map((val, idx) => {
@@ -82,22 +83,21 @@ export const AboutAndTrustSection: React.FC = () => {
             const desc = val.description[locale] || val.description.pt;
 
             return (
-              <div
-                key={idx}
-                className="hover:border-brand-accent/40 rounded-xl border border-border bg-surface p-7 shadow-sm transition-all"
-              >
-                <div className="bg-brand-primary/20 mb-4 flex h-8 w-8 items-center justify-center rounded-full text-sm font-bold text-brand-accent">
-                  ✓
+              <Reveal key={idx} index={idx} className="h-full">
+                <div className="h-full rounded-xl border border-border bg-surface p-7 shadow-sm transition-all duration-micro ease-standard hover:border-brand-accent/40 motion-reduce:transition-none">
+                  <div className="mb-4 flex h-8 w-8 items-center justify-center rounded-full bg-brand-primary/20 text-sm font-bold text-brand-accent">
+                    ✓
+                  </div>
+                  <h3 className="text-lg font-bold text-foreground">{title}</h3>
+                  <p className="mt-2 text-sm leading-relaxed text-foreground-muted">{desc}</p>
                 </div>
-                <h3 className="text-lg font-bold text-foreground">{title}</h3>
-                <p className="mt-2 text-sm leading-relaxed text-foreground-muted">{desc}</p>
-              </div>
+              </Reveal>
             );
           })}
         </div>
 
         {/* 2. Prova Social & Avaliações */}
-        <div id="depoimentos" className="border-border/60 mt-20 scroll-mt-24 border-t pt-16">
+        <div id="depoimentos" className="mt-20 scroll-mt-24 border-t border-border/60 pt-16">
           <div className="mb-10 flex flex-col justify-between gap-4 sm:flex-row sm:items-center">
             <h3 className="text-2xl font-bold text-foreground">{t.testimonialsTitle}</h3>
             {contactInfo.googleReviewsUrl && (
@@ -126,7 +126,7 @@ export const AboutAndTrustSection: React.FC = () => {
                   <p className="text-sm italic leading-relaxed text-foreground-muted">
                     &ldquo;{text}&rdquo;
                   </p>
-                  <div className="border-border/40 mt-6 flex items-center justify-between border-t pt-4">
+                  <div className="mt-6 flex items-center justify-between border-t border-border/40 pt-4">
                     <div>
                       <p className="text-xs font-semibold text-foreground">{test.author}</p>
                       {test.origin && (

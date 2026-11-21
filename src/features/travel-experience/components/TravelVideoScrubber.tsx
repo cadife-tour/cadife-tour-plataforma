@@ -79,11 +79,11 @@ export const TravelVideoScrubber: React.FC<TravelVideoScrubberProps> = ({ progre
         muted
         autoPlay={false}
         preload="auto"
-        className="h-full w-full object-cover object-center transition-opacity duration-500"
+        className="h-full w-full object-cover object-center transition-opacity duration-editorial ease-standard motion-reduce:transition-none"
       />
       {/* Vinhetas escuras e gradientes cinematográficos para garantir legibilidade perfeita do texto */}
-      <div className="via-background/20 to-background/50 absolute inset-0 bg-gradient-to-t from-background" />
-      <div className="from-background/70 to-background/30 absolute inset-0 bg-gradient-to-r via-transparent" />
+      <div className="absolute inset-0 bg-gradient-to-t from-background via-background/20 to-background/50" />
+      <div className="absolute inset-0 bg-gradient-to-r from-background/70 via-transparent to-background/30" />
     </div>
   );
 };
