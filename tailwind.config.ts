@@ -35,6 +35,7 @@ const config: Config = {
           accent: withAlpha("--color-brand-accent"),
           dark: withAlpha("--color-brand-dark"),
           gold: withAlpha("--color-brand-gold"),
+          wine: withAlpha("--color-brand-wine"),
         },
         border: withAlpha("--color-border"),
         focus: withAlpha("--color-focus"),

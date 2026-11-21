@@ -17,6 +17,7 @@ const colors = [
   ["Brand accent", "--color-brand-accent"],
   ["Brand dark", "--color-brand-dark"],
   ["Brand gold", "--color-brand-gold"],
+  ["Brand wine", "--color-brand-wine"],
   ["Border", "--color-border"],
   ["Border hover", "--color-border-hover"],
   ["Focus", "--color-focus"],
@@ -65,6 +66,7 @@ const brandRibbon = [
   "--color-brand-accent",
   "--color-brand-dark",
   "--color-brand-gold",
+  "--color-brand-wine",
 ] as const;
 
 const typeScale = ["xs", "sm", "base", "lg", "xl", "2xl", "3xl", "4xl", "5xl", "6xl"] as const;
@@ -203,7 +205,7 @@ export function DesignSystemLibrary() {
             <div className={styles.specimen} aria-hidden="true">
               <span className={styles.specimenGlyph}>Aa</span>
               <span className={styles.specimenMeta}>
-                <strong>Sans da interface</strong>
+                <strong>Roboto · reserva Poppins</strong>
                 <span>ABCDEFGHIJKLM · abcdefghijklm · 0123456789</span>
               </span>
             </div>

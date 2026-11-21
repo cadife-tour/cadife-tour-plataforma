@@ -87,6 +87,7 @@ describe("Design system library", () => {
       "--color-brand-accent",
       "--color-brand-dark",
       "--color-brand-gold",
+      "--color-brand-wine",
       "--color-border",
       "--color-border-hover",
       "--color-focus",

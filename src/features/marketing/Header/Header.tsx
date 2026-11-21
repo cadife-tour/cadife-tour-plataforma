@@ -2,8 +2,8 @@
 
 import React, { useState, useEffect, useRef, useId } from "react";
 import Image from "next/image";
-import { Container } from "@/shared/ui/Container/Container";
 import { LanguageSelector } from "@/shared/ui/LanguageSelector/LanguageSelector";
+import { LiquidGlassSurface, glassPresets } from "@/shared/ui/LiquidGlass/LiquidGlassSurface";
 import { WhatsAppCta } from "@/shared/ui/WhatsAppCta";
 import { useLocale } from "@/core/i18n/LocaleContext";
 import type { Locale } from "@/content/types";
@@ -136,12 +136,23 @@ export const Header: React.FC = () => {
 
   return (
     <header
-      className={`fixed left-0 right-0 top-0 z-50 w-full transition-all duration-300 ease-in-out motion-reduce:transition-none ${
-        isScrolled ? "bg-brand-dark/95 backdrop-blur-md" : "bg-brand-dark/40 backdrop-blur-sm"
+      className={`fixed left-0 right-0 top-0 z-50 w-full px-2 transition-all duration-300 ease-in-out motion-reduce:transition-none sm:px-4 ${
+        isScrolled ? "pt-2" : "pt-3 sm:pt-4"
       }`}
     >
-      <Container>
-        <div className="grid h-16 grid-cols-[1fr_auto] items-center gap-4 sm:h-20 lg:grid-cols-[1fr_auto_1fr]">
+      {/* Esfumado atrás da pílula: o conteúdo some antes de encostar no header,
+          sem fundo sólido (o vidro continua transparente). */}
+      <div
+        aria-hidden="true"
+        className={`pointer-events-none absolute inset-x-0 top-0 -z-10 h-24 bg-gradient-to-b from-background/90 via-background/50 to-transparent transition-opacity duration-300 motion-reduce:transition-none sm:h-28 ${
+          isScrolled ? "opacity-100" : "opacity-0"
+        }`}
+      />
+      <div className="mx-auto w-full max-w-7xl">
+        <LiquidGlassSurface
+          look={isScrolled ? glassPresets.barScrolled : glassPresets.bar}
+          className="liquid-glass-strong grid h-14 grid-cols-[1fr_auto] items-center gap-4 rounded-full pl-4 pr-2 sm:h-16 sm:pl-5 sm:pr-3 lg:grid-cols-[1fr_auto_1fr]"
+        >
           {/* Logo */}
           <div className="flex items-center justify-self-start">
             <a
@@ -155,14 +166,14 @@ export const Header: React.FC = () => {
                 width={160}
                 height={40}
                 priority
-                className="h-8 w-auto object-contain transition-transform duration-300 group-hover:scale-105 motion-reduce:transform-none motion-reduce:transition-none sm:h-9"
+                className="h-7 w-auto object-contain transition-transform duration-300 group-hover:scale-105 motion-reduce:transform-none motion-reduce:transition-none sm:h-9"
               />
             </a>
           </div>
 
           {/* Desktop Navigation (centered) */}
           <nav
-            className="hidden items-center gap-6 justify-self-center lg:flex"
+            className="hidden items-center gap-1 justify-self-center lg:flex"
             aria-label="Navegação Principal"
           >
             {navigationItems.map((item) => {
@@ -172,8 +183,10 @@ export const Header: React.FC = () => {
                   key={item.key}
                   href={hrefForSection(item.sectionId)}
                   aria-current={isActive ? "location" : undefined}
-                  className={`rounded px-1 text-sm font-medium transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-white ${
-                    isActive ? "text-brand-accent" : "text-white/85 hover:text-white"
+                  className={`rounded-full px-3.5 py-2 text-sm font-semibold transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-white ${
+                    isActive
+                      ? "bg-white/15 text-white"
+                      : "text-white/80 hover:bg-white/10 hover:text-white"
                   }`}
                 >
                   {t[item.key]}
@@ -189,7 +202,7 @@ export const Header: React.FC = () => {
               source="header_nav"
               size="sm"
               variant="primary"
-              className="hidden lg:inline-flex"
+              className="hidden rounded-full lg:inline-flex"
               aria-label={t.ctaAria}
             >
               {t.cta}
@@ -204,7 +217,7 @@ export const Header: React.FC = () => {
               aria-expanded={isMenuOpen}
               aria-controls={mobileMenuId}
               aria-label={isMenuOpen ? t.menuClose : t.menuOpen}
-              className="flex h-10 w-10 items-center justify-center rounded-lg border border-white/20 bg-black/40 text-white transition-colors hover:bg-black/60 focus-visible:outline focus-visible:outline-2 focus-visible:outline-brand-accent motion-reduce:transition-none lg:hidden"
+              className="flex h-10 w-10 items-center justify-center rounded-full border border-white/20 bg-white/10 text-white transition-colors hover:bg-white/20 focus-visible:outline focus-visible:outline-2 focus-visible:outline-brand-accent motion-reduce:transition-none lg:hidden"
             >
               <svg
                 viewBox="0 0 24 24"
@@ -223,20 +236,22 @@ export const Header: React.FC = () => {
               </svg>
             </button>
           </div>
-        </div>
-      </Container>
+        </LiquidGlassSurface>
+      </div>
 
       {/* Mobile Navigation Panel */}
       <div
         id={mobileMenuId}
-        className={`overflow-hidden transition-[max-height] duration-300 ease-in-out motion-reduce:transition-none lg:hidden ${
-          isMenuOpen ? "max-h-[calc(100dvh-4rem)] sm:max-h-[calc(100dvh-5rem)]" : "max-h-0"
+        className={`mx-auto w-full max-w-7xl overflow-hidden transition-[max-height] duration-300 ease-in-out motion-reduce:transition-none lg:hidden ${
+          isMenuOpen ? "max-h-[calc(100dvh-5.25rem)] sm:max-h-[calc(100dvh-6rem)]" : "max-h-0"
         }`}
       >
         {isMenuOpen && (
-          <nav
+          <LiquidGlassSurface
+            as="nav"
+            look={glassPresets.menu}
             aria-label="Navegação Principal (móvel)"
-            className="bg-brand-dark/98 flex max-h-[calc(100dvh-4rem)] flex-col gap-1 overflow-y-auto overscroll-contain px-4 py-4 backdrop-blur-md sm:max-h-[calc(100dvh-5rem)]"
+            className="liquid-glass-strong mt-2 flex max-h-[calc(100dvh-5.75rem)] flex-col gap-1 overflow-y-auto overscroll-contain rounded-3xl px-3 py-3 sm:max-h-[calc(100dvh-6.5rem)]"
             style={{ paddingBottom: "max(1rem, env(safe-area-inset-bottom))" }}
           >
             {navigationItems.map((item) => {
@@ -247,7 +262,7 @@ export const Header: React.FC = () => {
                   href={hrefForSection(item.sectionId)}
                   onClick={closeMenu}
                   aria-current={isActive ? "location" : undefined}
-                  className={`rounded-lg px-3 py-3 text-base font-medium transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-white ${
+                  className={`rounded-2xl px-3 py-3 text-base font-semibold transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-white ${
                     isActive
                       ? "bg-white/10 text-brand-accent"
                       : "text-white/85 hover:bg-white/5 hover:text-white"
@@ -262,12 +277,12 @@ export const Header: React.FC = () => {
               size="md"
               variant="primary"
               onClick={closeMenu}
-              className="mt-3 w-full"
+              className="mt-3 w-full rounded-full"
               aria-label={t.ctaAria}
             >
               {t.cta}
             </WhatsAppCta>
-          </nav>
+          </LiquidGlassSurface>
         )}
       </div>
     </header>

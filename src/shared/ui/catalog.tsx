@@ -1,7 +1,14 @@
 "use client";
 
 import type { MouseEvent, ReactNode } from "react";
-import { Button, Container, LanguageSelector, SkipToContent, WhatsAppCta } from "@/shared/ui";
+import {
+  Button,
+  Container,
+  LanguageSelector,
+  LiquidGlassSurface,
+  SkipToContent,
+  WhatsAppCta,
+} from "@/shared/ui";
 import type { sharedUiComponents } from "@/shared/ui";
 import { LocaleProvider } from "@/core/i18n/LocaleContext";
 
@@ -77,6 +84,21 @@ export const sharedUiCatalog: SharedUiCatalogEntry[] = [
           </p>
         </div>
       </LocaleProvider>
+    ),
+  },
+  {
+    key: "LiquidGlassSurface",
+    name: "LiquidGlassSurface",
+    description:
+      "Vidro líquido com refração real em WebGL2 para superfícies flutuantes (header, menus, seletores); sem WebGL2 usa vidro em CSS como reserva.",
+    source: "src/shared/ui/LiquidGlass/LiquidGlassSurface.tsx",
+    preview: (
+      <div className="relative overflow-hidden rounded-2xl bg-[url('/assets/destinations/patagonia.webp')] bg-cover bg-center p-8">
+        <LiquidGlassSurface className="mx-auto flex max-w-sm items-center justify-between gap-4 rounded-full px-5 py-3 text-sm font-semibold text-white">
+          <span className="text-base font-bold">CADIFE Tour</span>
+          <span className="text-white/80">Destinos · Contato</span>
+        </LiquidGlassSurface>
+      </div>
     ),
   },
   {
