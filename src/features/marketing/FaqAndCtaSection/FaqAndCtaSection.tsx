@@ -125,7 +125,7 @@ export const FaqAndCtaSection: React.FC<FaqAndCtaSectionProps> = ({ phoneNumber 
                     ▼
                   </span>
                 </summary>
-                <div className="border-border/50 mt-4 border-t pt-3 text-sm leading-relaxed text-foreground-muted">
+                <div className="mt-4 border-t border-border/50 pt-3 text-sm leading-relaxed text-foreground-muted">
                   {answer}
                 </div>
               </details>
@@ -136,7 +136,7 @@ export const FaqAndCtaSection: React.FC<FaqAndCtaSectionProps> = ({ phoneNumber 
         {/* 2. Banner Final de Conversão & Atendimento */}
         <div
           id="contato"
-          className="border-brand-primary/30 mt-20 scroll-mt-24 rounded-2xl border bg-gradient-to-b from-surface-elevated to-surface p-8 text-center shadow-lg sm:p-14"
+          className="mt-20 scroll-mt-24 rounded-2xl border border-brand-primary/30 bg-gradient-to-b from-surface-elevated to-surface p-8 text-center shadow-lg sm:p-14"
         >
           <div className="mx-auto max-w-2xl space-y-6">
             <h3 className="text-2xl font-extrabold tracking-tight text-foreground sm:text-3xl lg:text-4xl">
@@ -162,7 +162,7 @@ export const FaqAndCtaSection: React.FC<FaqAndCtaSectionProps> = ({ phoneNumber 
                 <div className="flex justify-center">
                   <a
                     href={`mailto:${contactInfo.email}?subject=${encodeURIComponent(t.emailSubject)}`}
-                    className="shadow-brand-primary/20 inline-flex h-12 min-h-[48px] items-center justify-center gap-2.5 rounded-lg bg-brand-primary px-7 font-heading text-base font-semibold text-white shadow-sm transition-all duration-micro ease-standard hover:-translate-y-0.5 hover:bg-brand-secondary hover:shadow-md focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-accent motion-reduce:transform-none motion-reduce:transition-none"
+                    className="inline-flex h-12 min-h-[48px] items-center justify-center gap-2.5 rounded-lg bg-brand-primary px-7 font-heading text-base font-semibold text-white shadow-sm shadow-brand-primary/20 transition-all duration-micro ease-standard hover:-translate-y-0.5 hover:bg-brand-secondary hover:shadow-md focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-accent motion-reduce:transform-none motion-reduce:transition-none"
                     aria-label={t.emailAriaLabel}
                   >
                     <MailIcon className="h-4 w-4 shrink-0" />

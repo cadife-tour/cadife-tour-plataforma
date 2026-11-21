@@ -105,7 +105,7 @@ export const DestinationsSection: React.FC = () => {
               <Reveal key={item.id} index={idx} className="h-full">
                 <article
                   data-destination-id={item.id}
-                  className="hover:border-brand-accent/40 flex h-full flex-col justify-between overflow-hidden rounded-xl border border-border bg-surface p-6 shadow-sm transition-all duration-micro ease-standard hover:bg-surface-elevated motion-reduce:transition-none"
+                  className="flex h-full flex-col justify-between overflow-hidden rounded-xl border border-border bg-surface p-6 shadow-sm transition-all duration-micro ease-standard hover:border-brand-accent/40 hover:bg-surface-elevated motion-reduce:transition-none"
                 >
                   <div className="space-y-4">
                     {/* Thumbnail Responsivo com next/image (CLS Zero) */}
@@ -146,7 +146,7 @@ export const DestinationsSection: React.FC = () => {
                     </div>
                   </div>
 
-                  <div className="border-border/60 mt-8 border-t pt-5">
+                  <div className="mt-8 border-t border-border/60 pt-5">
                     <WhatsAppCta
                       destination={item.slug}
                       destinationTitle={title}

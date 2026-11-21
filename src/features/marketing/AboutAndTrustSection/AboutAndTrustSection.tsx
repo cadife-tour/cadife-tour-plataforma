@@ -69,8 +69,8 @@ export const AboutAndTrustSection: React.FC = () => {
 
             return (
               <Reveal key={idx} index={idx} className="h-full">
-                <div className="hover:border-brand-accent/40 h-full rounded-xl border border-border bg-surface p-7 shadow-sm transition-all duration-micro ease-standard motion-reduce:transition-none">
-                  <div className="bg-brand-primary/20 mb-4 flex h-8 w-8 items-center justify-center rounded-full text-sm font-bold text-brand-accent">
+                <div className="h-full rounded-xl border border-border bg-surface p-7 shadow-sm transition-all duration-micro ease-standard hover:border-brand-accent/40 motion-reduce:transition-none">
+                  <div className="mb-4 flex h-8 w-8 items-center justify-center rounded-full bg-brand-primary/20 text-sm font-bold text-brand-accent">
                     ✓
                   </div>
                   <h3 className="text-lg font-bold text-foreground">{title}</h3>
@@ -82,7 +82,7 @@ export const AboutAndTrustSection: React.FC = () => {
         </div>
 
         {/* 2. Prova Social & Avaliações */}
-        <div id="depoimentos" className="border-border/60 mt-20 scroll-mt-24 border-t pt-16">
+        <div id="depoimentos" className="mt-20 scroll-mt-24 border-t border-border/60 pt-16">
           <div className="mb-10 flex flex-col justify-between gap-4 sm:flex-row sm:items-center">
             <h3 className="text-2xl font-bold text-foreground">{t.testimonialsTitle}</h3>
             {contactInfo.googleReviewsUrl && (
@@ -111,7 +111,7 @@ export const AboutAndTrustSection: React.FC = () => {
                   <p className="text-sm italic leading-relaxed text-foreground-muted">
                     &ldquo;{text}&rdquo;
                   </p>
-                  <div className="border-border/40 mt-6 flex items-center justify-between border-t pt-4">
+                  <div className="mt-6 flex items-center justify-between border-t border-border/40 pt-4">
                     <div>
                       <p className="text-xs font-semibold text-foreground">{test.author}</p>
                       {test.origin && (

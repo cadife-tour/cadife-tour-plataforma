@@ -145,7 +145,7 @@ export const TravelOverlay: React.FC<TravelOverlayProps> = ({
               style={{ opacity: introOpacity }}
               aria-hidden={introOpacity <= 0.05}
             >
-              <div className="bg-surface/80 inline-flex items-center gap-2.5 rounded-full border border-border px-4 py-1.5 text-xs font-semibold text-white shadow-sm backdrop-blur-md">
+              <div className="inline-flex items-center gap-2.5 rounded-full border border-border bg-surface/80 px-4 py-1.5 text-xs font-semibold text-white shadow-sm backdrop-blur-md">
                 <span
                   className={`h-2 w-2 rounded-full bg-brand-accent ${isFallback ? "" : "animate-pulse motion-reduce:animate-none"}`}
                   aria-hidden="true"
@@ -213,7 +213,7 @@ export const TravelOverlay: React.FC<TravelOverlayProps> = ({
               style={{ opacity: destinationOpacity }}
               aria-hidden={destinationOpacity <= 0.05}
             >
-              <div className="border-brand-accent/40 bg-surface/90 inline-flex w-fit items-center gap-2.5 rounded-full border px-4 py-1.5 text-xs font-semibold text-white shadow-sm backdrop-blur-md">
+              <div className="inline-flex w-fit items-center gap-2.5 rounded-full border border-brand-accent/40 bg-surface/90 px-4 py-1.5 text-xs font-semibold text-white shadow-sm backdrop-blur-md">
                 <span className="h-2 w-2 rounded-full bg-brand-accent" aria-hidden="true" />
                 <span>{destContent.badge}</span>
               </div>

@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import "@/core/theme/globals.css";
+import { roboto } from "@/core/theme/fonts";
 import { LocaleProvider } from "@/core/i18n/LocaleContext";
 import { SkipToContent } from "@/shared/ui/SkipToContent/SkipToContent";
 import { Header } from "@/features/marketing/Header/Header";
@@ -54,7 +55,7 @@ export const metadata: Metadata = {
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="pt-BR">
+    <html lang="pt-BR" className={roboto.variable}>
       <body className="flex min-h-screen flex-col bg-background text-foreground antialiased selection:bg-brand-primary selection:text-white">
         <LocaleProvider>
           <SkipToContent />

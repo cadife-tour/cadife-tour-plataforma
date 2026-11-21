@@ -8,28 +8,39 @@ interface LocaleContextValue {
   setLocale: (locale: Locale) => void;
 }
 
+interface LocaleProviderProps {
+  children: React.ReactNode;
+  initialLocale?: Locale;
+  persistPreference?: boolean;
+  syncDocumentLanguage?: boolean;
+}
+
 const LocaleContext = createContext<LocaleContextValue>({
   locale: "pt",
   setLocale: () => {},
 });
 
-export const LocaleProvider: React.FC<{
-  children: React.ReactNode;
-  initialLocale?: Locale;
-}> = ({ children, initialLocale }) => {
+export const LocaleProvider: React.FC<LocaleProviderProps> = ({
+  children,
+  initialLocale,
+  persistPreference = true,
+  syncDocumentLanguage = true,
+}) => {
   const [locale, setLocaleState] = useState<Locale>(initialLocale || "pt");
 
   useEffect(() => {
     // Tenta recuperar preferência salva no browser sem redirecionamento forçado se initialLocale não for fixo
-    if (!initialLocale) {
-      const saved = localStorage.getItem("cadife_locale") as Locale | null;
-      if (saved && (saved === "pt" || saved === "en" || saved === "es")) {
-        setLocaleState(saved);
-      }
+    if (!persistPreference || initialLocale) return;
+
+    const saved = localStorage.getItem("cadife_locale") as Locale | null;
+    if (saved && (saved === "pt" || saved === "en" || saved === "es")) {
+      setLocaleState(saved);
     }
-  }, [initialLocale]);
+  }, [initialLocale, persistPreference]);
 
   useEffect(() => {
+    if (!syncDocumentLanguage) return;
+
     // Sincronização dinâmica do atributo lang no DOM (ISS-01)
     if (typeof document !== "undefined") {
       const htmlLangMap: Record<Locale, string> = {
@@ -39,11 +50,13 @@ export const LocaleProvider: React.FC<{
       };
       document.documentElement.lang = htmlLangMap[locale] ?? "pt-BR";
     }
-  }, [locale]);
+  }, [locale, syncDocumentLanguage]);
 
   const setLocale = (newLocale: Locale) => {
     setLocaleState(newLocale);
-    localStorage.setItem("cadife_locale", newLocale);
+    if (persistPreference) {
+      localStorage.setItem("cadife_locale", newLocale);
+    }
   };
 
   return <LocaleContext.Provider value={{ locale, setLocale }}>{children}</LocaleContext.Provider>;

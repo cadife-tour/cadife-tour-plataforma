@@ -4,6 +4,7 @@ import React, { useState, useRef, useEffect } from "react";
 import { useLocale } from "@/core/i18n/LocaleContext";
 import type { Locale } from "@/content/types";
 import { trackEvent } from "@/core/analytics";
+import { LiquidGlassSurface, glassPresets } from "@/shared/ui/LiquidGlass/LiquidGlassSurface";
 
 interface LanguageOption {
   code: Locale;
@@ -72,7 +73,10 @@ const languages: LanguageOption[] = [
   { code: "es", shortLabel: "ES", name: "Español", flag: <SpainFlag /> },
 ];
 
-export const LanguageSelector: React.FC<{ className?: string }> = ({ className = "" }) => {
+export const LanguageSelector: React.FC<{
+  className?: string;
+  trackChanges?: boolean;
+}> = ({ className = "", trackChanges = true }) => {
   const { locale, setLocale } = useLocale();
   const [isOpen, setIsOpen] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
@@ -82,10 +86,12 @@ export const LanguageSelector: React.FC<{ className?: string }> = ({ className =
 
   const handleSelect = (newLocale: Locale) => {
     if (newLocale !== locale) {
-      trackEvent("language_change", {
-        from_locale: locale,
-        to_locale: newLocale,
-      });
+      if (trackChanges) {
+        trackEvent("language_change", {
+          from_locale: locale,
+          to_locale: newLocale,
+        });
+      }
       setLocale(newLocale);
     }
     setIsOpen(false);
@@ -128,7 +134,7 @@ export const LanguageSelector: React.FC<{ className?: string }> = ({ className =
         aria-haspopup="listbox"
         aria-expanded={isOpen}
         aria-label={`Idioma selecionado: ${currentLanguage.name}. Clique para alterar.`}
-        className="flex items-center gap-2 rounded-full border border-white/20 bg-black/40 px-3 py-1.5 text-xs font-semibold text-white shadow-sm backdrop-blur-md transition-all duration-micro ease-standard hover:border-white/40 hover:bg-black/60 focus-visible:outline focus-visible:outline-2 focus-visible:outline-brand-primary motion-reduce:transition-none"
+        className="liquid-glass flex items-center gap-2 rounded-full px-3 py-1.5 text-xs font-semibold text-white transition-all duration-micro ease-standard hover:bg-white/10 focus-visible:outline focus-visible:outline-2 focus-visible:outline-brand-primary motion-reduce:transition-none"
       >
         <span className="shadow-xs rounded-xs flex items-center overflow-hidden">
           {currentLanguage.flag}
@@ -150,10 +156,11 @@ export const LanguageSelector: React.FC<{ className?: string }> = ({ className =
 
       {/* Menu Suspenso */}
       {isOpen && (
-        <div
+        <LiquidGlassSurface
+          look={glassPresets.menu}
           role="listbox"
           aria-label="Opções de idioma"
-          className="animate-in fade-in zoom-in-95 absolute right-0 z-50 mt-2 w-44 origin-top-right rounded-xl border border-white/15 bg-[#282523]/95 p-1.5 shadow-2xl backdrop-blur-xl duration-micro motion-reduce:animate-none"
+          className="liquid-glass-strong animate-in fade-in zoom-in-95 !absolute right-0 z-50 mt-2 w-44 origin-top-right rounded-2xl p-1.5 duration-micro motion-reduce:animate-none"
         >
           {languages.map((lang) => {
             const isSelected = lang.code === locale;
@@ -186,7 +193,7 @@ export const LanguageSelector: React.FC<{ className?: string }> = ({ className =
               </button>
             );
           })}
-        </div>
+        </LiquidGlassSurface>
       )}
     </div>
   );

@@ -42,7 +42,7 @@ export const HowItWorksSection: React.FC = () => {
   return (
     <section
       id="como-funciona"
-      className="bg-surface/30 scroll-mt-24 border-b border-border py-20 lg:py-28"
+      className="scroll-mt-24 border-b border-border bg-surface/30 py-20 lg:py-28"
     >
       <Container>
         <Reveal variant="editorial" className="mx-auto mb-16 max-w-2xl text-center">
@@ -62,8 +62,8 @@ export const HowItWorksSection: React.FC = () => {
 
             return (
               <Reveal key={step.stepNumber} index={idx} className="h-full">
-                <div className="hover:border-brand-primary/40 relative flex h-full flex-col rounded-xl border border-border bg-surface p-6 shadow-sm transition-all duration-micro ease-standard motion-reduce:transition-none">
-                  <div className="bg-brand-primary/15 mb-4 flex h-10 w-10 items-center justify-center rounded-lg text-base font-bold text-brand-accent">
+                <div className="relative flex h-full flex-col rounded-xl border border-border bg-surface p-6 shadow-sm transition-all duration-micro ease-standard hover:border-brand-primary/40 motion-reduce:transition-none">
+                  <div className="mb-4 flex h-10 w-10 items-center justify-center rounded-lg bg-brand-primary/15 text-base font-bold text-brand-accent">
                     {step.stepNumber}
                   </div>
                   <h3 className="text-lg font-bold text-foreground">{title}</h3>
