@@ -1,0 +1,237 @@
+import { readFileSync } from "node:fs";
+import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
+import { fireEvent, render, screen, within } from "@testing-library/react";
+import { metadata } from "@/app/design-system/page";
+import { LocaleProvider } from "@/core/i18n/LocaleContext";
+import { sharedUiComponents } from "@/shared/ui";
+import { sharedUiCatalog } from "@/shared/ui/catalog";
+import { DesignSystemLibrary } from "@/shared/ui/DesignSystemLibrary";
+import { LanguageSelector } from "@/shared/ui/LanguageSelector/LanguageSelector";
+
+describe("Design system library", () => {
+  let originalLocalePreference: string | null;
+  let originalDocumentLanguage: string;
+  let originalGtag: PropertyDescriptor | undefined;
+
+  beforeEach(() => {
+    originalLocalePreference = localStorage.getItem("cadife_locale");
+    originalDocumentLanguage = document.documentElement.lang;
+    originalGtag = Object.getOwnPropertyDescriptor(window, "gtag");
+  });
+
+  afterEach(() => {
+    vi.unstubAllGlobals();
+    if (originalGtag) {
+      Object.defineProperty(window, "gtag", originalGtag);
+    } else {
+      Reflect.deleteProperty(window, "gtag");
+    }
+    if (originalLocalePreference === null) {
+      localStorage.removeItem("cadife_locale");
+    } else {
+      localStorage.setItem("cadife_locale", originalLocalePreference);
+    }
+    document.documentElement.lang = originalDocumentLanguage;
+  });
+
+  it("documents every shared UI export with a source and a live preview", () => {
+    expect(sharedUiCatalog.map(({ key }) => key).sort()).toEqual(
+      Object.keys(sharedUiComponents).sort()
+    );
+
+    for (const entry of sharedUiCatalog) {
+      expect(entry.name).toBeTruthy();
+      expect(entry.description).toBeTruthy();
+      expect(entry.source).toMatch(/^src\/shared\/ui\//);
+      expect(entry.preview).toBeTruthy();
+    }
+
+    render(<DesignSystemLibrary />);
+
+    for (const entry of sharedUiCatalog) {
+      expect(screen.getByRole("heading", { name: entry.name, level: 3 })).toBeInTheDocument();
+      expect(screen.getByText(entry.source)).toBeInTheDocument();
+    }
+  });
+
+  it("lets the user inspect Button variants and disabled state", () => {
+    render(<DesignSystemLibrary />);
+
+    const buttonSection = screen.getByRole("region", { name: /button/i });
+    expect(within(buttonSection).getByRole("button", { name: /primary/i })).toBeEnabled();
+    expect(within(buttonSection).getByRole("button", { name: /disabled/i })).toBeDisabled();
+    expect(within(buttonSection).getByRole("button", { name: /secondary/i })).toBeEnabled();
+  });
+
+  it("documents every Button size offered by the shared component", () => {
+    render(<DesignSystemLibrary />);
+
+    const buttonSection = screen.getByRole("region", { name: /button/i });
+    expect(within(buttonSection).getByRole("button", { name: /small size/i })).toHaveClass("h-9");
+    expect(within(buttonSection).getByRole("button", { name: /medium size/i })).toHaveClass("h-11");
+    expect(within(buttonSection).getByRole("button", { name: /large size/i })).toHaveClass(
+      "h-12",
+      "min-h-[48px]"
+    );
+  });
+
+  it("shows every semantic color token and the shared layout scale", () => {
+    render(<DesignSystemLibrary />);
+
+    for (const token of [
+      "--color-bg",
+      "--color-surface",
+      "--color-surface-elevated",
+      "--color-surface-muted",
+      "--color-text",
+      "--color-text-muted",
+      "--color-text-subtle",
+      "--color-brand-primary",
+      "--color-brand-secondary",
+      "--color-brand-accent",
+      "--color-brand-dark",
+      "--color-brand-gold",
+      "--color-border",
+      "--color-border-hover",
+      "--color-focus",
+      "--color-success",
+      "--color-warning",
+      "--color-error",
+    ]) {
+      expect(screen.getByText(`var(${token})`)).toBeInTheDocument();
+    }
+
+    expect(screen.getByRole("heading", { name: /espaçamento e breakpoints/i })).toBeInTheDocument();
+    expect(screen.getByText("space-4 · 1rem")).toBeInTheDocument();
+    expect(screen.getByText("md · 768px")).toBeInTheDocument();
+  });
+
+  it("keeps the language selector interactive without sending analytics", () => {
+    const gtag = vi.fn();
+    Object.defineProperty(window, "gtag", { configurable: true, value: gtag });
+    const originalLanguage = document.documentElement.lang;
+    localStorage.setItem("cadife_locale", "pt");
+
+    render(<DesignSystemLibrary />);
+
+    const languageSection = screen.getByRole("region", { name: /languageselector/i });
+    fireEvent.click(within(languageSection).getByRole("button", { name: /idioma selecionado/i }));
+    fireEvent.click(within(languageSection).getByRole("option", { name: /english/i }));
+
+    expect(gtag).not.toHaveBeenCalled();
+    expect(within(languageSection).getByRole("button", { name: /english/i })).toHaveTextContent(
+      "EN"
+    );
+    expect(localStorage.getItem("cadife_locale")).toBe("pt");
+    expect(document.documentElement.lang).toBe(originalLanguage);
+  });
+
+  it("previews WhatsAppCta variants without navigating or sending analytics", () => {
+    const gtag = vi.fn();
+    Object.defineProperty(window, "gtag", { configurable: true, value: gtag });
+
+    render(<DesignSystemLibrary />);
+
+    const ctaSection = screen.getByRole("region", { name: /whatsappcta/i });
+    const preview = within(ctaSection).getByTestId("whatsapp-cta-preview");
+    const links = within(preview).getAllByRole("link");
+    expect(links.length).toBeGreaterThanOrEqual(6);
+
+    for (const link of links) {
+      const click = new MouseEvent("click", { bubbles: true, cancelable: true });
+      link.dispatchEvent(click);
+      expect(click.defaultPrevented).toBe(true);
+    }
+
+    expect(gtag).not.toHaveBeenCalled();
+  });
+
+  it("aligns the language selector preview to keep its dropdown within the card", () => {
+    render(<DesignSystemLibrary />);
+
+    const languageSection = screen.getByRole("region", { name: /languageselector/i });
+    const preview = within(languageSection).getByTestId("language-selector-preview");
+    expect(preview).toHaveClass("items-end");
+    expect(
+      within(preview).getByRole("button", { name: /idioma selecionado/i }).parentElement
+    ).toHaveClass("w-fit");
+  });
+
+  it("keeps language change analytics enabled by default", () => {
+    const gtag = vi.fn();
+    Object.defineProperty(window, "gtag", { configurable: true, value: gtag });
+
+    render(
+      <LocaleProvider>
+        <LanguageSelector />
+      </LocaleProvider>
+    );
+
+    fireEvent.click(screen.getByRole("button", { name: /idioma selecionado/i }));
+    fireEvent.click(screen.getByRole("option", { name: /english/i }));
+
+    expect(gtag).toHaveBeenCalledOnce();
+    expect(gtag).toHaveBeenCalledWith("event", "language_change", {
+      from_locale: "pt",
+      to_locale: "en",
+    });
+  });
+
+  it("copies tokens and opacity utilities with an accessible confirmation", async () => {
+    const writeText = vi.fn().mockResolvedValue(undefined);
+    vi.stubGlobal("navigator", { ...navigator, clipboard: { writeText } });
+
+    render(<DesignSystemLibrary />);
+
+    fireEvent.click(screen.getByRole("button", { name: /brand dark.*--color-brand-dark/i }));
+    expect(writeText).toHaveBeenCalledWith("var(--color-brand-dark)");
+    expect(await screen.findByRole("status")).toHaveTextContent("Copiado var(--color-brand-dark)");
+
+    fireEvent.click(screen.getByRole("button", { name: "Copiar bg-brand-dark/40" }));
+    expect(writeText).toHaveBeenCalledWith("bg-brand-dark/40");
+    expect(await screen.findByRole("status")).toHaveTextContent("Copiado bg-brand-dark/40");
+  });
+
+  it("previews LiquidGlassSurface without WebGL2 or analytics", async () => {
+    const gtag = vi.fn();
+    Object.defineProperty(window, "gtag", { configurable: true, value: gtag });
+    const { LiquidGlass } = await import("apple-liquid-glass-webgl");
+    vi.spyOn(LiquidGlass, "isSupported").mockReturnValue(false);
+
+    render(<DesignSystemLibrary />);
+
+    expect(sharedUiComponents.LiquidGlassSurface).toBeDefined();
+    const section = screen.getByRole("region", { name: /liquidglasssurface/i });
+    const glass = within(section).getByTestId("liquid-glass-preview").firstElementChild;
+    expect(glass).toHaveClass("liquid-glass");
+    expect(glass).not.toHaveAttribute("data-liquid-glass");
+    expect(within(section).getByText(/texto sobre vidro/i)).toBeVisible();
+
+    fireEvent.click(within(section).getByText(/texto sobre vidro/i));
+    expect(gtag).not.toHaveBeenCalled();
+  });
+
+  it("identifies Roboto as the documented typeface and uses only shipped weights", () => {
+    render(<DesignSystemLibrary />);
+
+    expect(screen.getByText("Roboto")).toBeInTheDocument();
+    expect(screen.getByText(/fonte principal da interface e dos títulos/i)).toBeInTheDocument();
+    expect(screen.getByText(/interface:/i).closest("p")?.textContent).toMatch(
+      /Roboto → sans-serif.*Roboto → sans-serif/
+    );
+    expect(readFileSync("src/shared/ui/design-system.module.css", "utf8")).not.toMatch(
+      /font-weight:\s*(?!400|500|700)\d+/
+    );
+  });
+
+  it("renders the WhatsAppCta glass variant on the shared .liquid-glass CSS foundation", () => {
+    render(<DesignSystemLibrary />);
+
+    const link = screen.getByText(/glass sobre imagem/i).closest("a");
+    expect(link).toHaveClass("liquid-glass");
+  });
+
+  it("keeps the reference page out of search indexing", () => {
+    expect(metadata.robots).toEqual({ index: false, follow: false });
+  });
+});

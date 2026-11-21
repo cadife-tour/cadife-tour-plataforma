@@ -39,7 +39,7 @@ export const HowItWorksSection: React.FC = () => {
   const t = labels[locale] || labels.pt;
 
   return (
-    <section id="como-funciona" className="bg-surface/30 border-b border-border py-20 lg:py-28">
+    <section id="como-funciona" className="border-b border-border bg-surface/30 py-20 lg:py-28">
       <Container>
         <div className="mx-auto mb-16 max-w-2xl text-center">
           <span className="text-xs font-bold uppercase tracking-wider text-brand-accent">
@@ -59,9 +59,9 @@ export const HowItWorksSection: React.FC = () => {
             return (
               <div
                 key={step.stepNumber}
-                className="hover:border-brand-primary/40 relative flex flex-col rounded-xl border border-border bg-surface p-6 shadow-sm transition-all"
+                className="relative flex flex-col rounded-xl border border-border bg-surface p-6 shadow-sm transition-all hover:border-brand-primary/40"
               >
-                <div className="bg-brand-primary/15 mb-4 flex h-10 w-10 items-center justify-center rounded-lg text-base font-bold text-brand-accent">
+                <div className="mb-4 flex h-10 w-10 items-center justify-center rounded-lg bg-brand-primary/15 text-base font-bold text-brand-accent">
                   {step.stepNumber}
                 </div>
                 <h3 className="text-lg font-bold text-foreground">{title}</h3>
