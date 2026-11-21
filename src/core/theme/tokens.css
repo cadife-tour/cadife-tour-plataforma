@@ -17,15 +17,16 @@
 
   /* Typography Colors */
   --color-text: #fdfdfd; /* Branco puro (#FFFFFF) de alto contraste */
-  --color-text-muted: #a39e9b; /* Cinza suave para legibilidade */
+  --color-text-muted: #c5c0bc; /* Cinza claro do manual (#C5C0BC) */
   --color-text-subtle: #7a7571; /* Cinza neutro (#7A7A7A do site original) */
 
-  /* Brand Accents (CADIFE Tour Original Identity) */
+  /* Brand Accents — manual de marca CADIFE (primárias: #DD0B0E, #393532; secundárias: #53141C, #FAA62A) */
   --color-brand-primary: #dd0b0e; /* Vermelho vibrante oficial Cadife */
   --color-brand-secondary: #b8090b; /* Vermelho mais escuro para hover */
   --color-brand-accent: #f0282b; /* Vermelho luminoso para highlights */
   --color-brand-dark: #393532; /* Grafite clássico da marca Cadife */
-  --color-brand-gold: #eab308; /* Dourado quente de viagem / sol */
+  --color-brand-gold: #faa62a; /* Âmbar secundário do manual */
+  --color-brand-wine: #53141c; /* Vinho secundário do manual */
 
   /* Functional / Borders / States */
   --color-border: rgba(255, 255, 255, 0.12);
@@ -36,11 +37,12 @@
   --color-error: #dd0b0e;
 
   /* ==========================================================================
-     2. Typography Tokens (Font families marked for Design Discovery phase)
+     2. Typography Tokens
      ========================================================================== */
+  /* Roboto (principal) e Poppins (reserva), carregadas via next/font em src/core/theme/fonts.ts. */
   --font-sans:
-    system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell,
-    "Open Sans", "Helvetica Neue", sans-serif;
+    var(--font-roboto, "Roboto"), var(--font-poppins, "Poppins"), system-ui, -apple-system,
+    "Segoe UI", "Helvetica Neue", Arial, sans-serif;
   --font-heading: var(--font-sans);
 
   /* Font Sizes & Line Heights */
@@ -80,6 +82,15 @@
   --duration-fast: 150ms;
   --duration-normal: 250ms;
   --duration-slow: 400ms;
+
+  /* ==========================================================================
+     7. Liquid Glass (reserva em CSS do componente LiquidGlassSurface)
+     ========================================================================== */
+  --glass-tint: rgba(255, 255, 255, 0.07);
+  --glass-tint-strong: rgba(57, 53, 50, 0.6); /* Grafite #393532 do manual */
+  --glass-border: rgba(255, 255, 255, 0.2);
+  --glass-highlight: rgba(255, 255, 255, 0.55);
+  --glass-blur: 18px;
 }
 
 /* ==========================================================================

@@ -65,6 +65,8 @@ export default function TravelCanvas({
             antialias: !isMobile,
             powerPreference: "high-performance",
             alpha: true,
+            // Mantém o último quadro legível para o Liquid Glass refratar a cena 3D.
+            preserveDrawingBuffer: true,
           }}
           camera={{ position: [0, 0, 5], fov: 55 }}
           onCreated={({ gl }) => {
