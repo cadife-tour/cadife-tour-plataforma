@@ -1,7 +1,7 @@
 # Plano — Issue #1: Design system global e biblioteca visual
 
 **Derivado de:** [SPEC — Issue #1](ISSUE-1-global-design-system.md)
-**Estado:** aprovado pelo usuário, implementado, validado e revisado; pronto para PR draft.
+**Estado:** aprovado pelo usuário, implementado, validado e revisado; PR #67 aberta contra `developer`; consolidação de Liquid Glass e Roboto em PR própria sobre esta branch.
 
 ## Abordagem mínima
 
@@ -38,7 +38,7 @@ Os caminhos finais podem ser ajustados aos padrões existentes, sem alterar o es
 
 ## Integração e proteção do checkout
 
-- Implementação iniciada na base `68bb936` e rebased em `origin/main` (`6dbacba`) antes da publicação; PR usa `main` como base. Trabalho executado em worktree isolada `codex/issue-1-design-system`.
+- Implementação iniciada na base `68bb936` e rebased em `origin/main` (`6dbacba`) antes da publicação; a PR usa `developer` como base (fluxo `feature → developer`). Trabalho executado em worktree isolada `codex/issue-1-design-system`.
 - Há uma alteração pré-existente em `.gitignore` não relacionada. Preservá-la; não incluir no escopo nem reverter/stagear em conjunto.
 - O workflow de entrega da issue exige PR; manter a mudança em branch e não mesclar nem fechar a issue.
 

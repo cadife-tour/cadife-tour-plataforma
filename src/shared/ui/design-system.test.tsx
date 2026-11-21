@@ -68,7 +68,10 @@ describe("Design system library", () => {
     const buttonSection = screen.getByRole("region", { name: /button/i });
     expect(within(buttonSection).getByRole("button", { name: /small size/i })).toHaveClass("h-9");
     expect(within(buttonSection).getByRole("button", { name: /medium size/i })).toHaveClass("h-11");
-    expect(within(buttonSection).getByRole("button", { name: /large size/i })).toHaveClass("h-13");
+    expect(within(buttonSection).getByRole("button", { name: /large size/i })).toHaveClass(
+      "h-12",
+      "min-h-[48px]"
+    );
   });
 
   it("shows every semantic color token and the shared layout scale", () => {
@@ -186,6 +189,25 @@ describe("Design system library", () => {
     fireEvent.click(screen.getByRole("button", { name: "Copiar bg-brand-dark/40" }));
     expect(writeText).toHaveBeenCalledWith("bg-brand-dark/40");
     expect(await screen.findByRole("status")).toHaveTextContent("Copiado bg-brand-dark/40");
+  });
+
+  it("previews LiquidGlassSurface without WebGL2 or analytics", async () => {
+    const gtag = vi.fn();
+    Object.defineProperty(window, "gtag", { configurable: true, value: gtag });
+    const { LiquidGlass } = await import("apple-liquid-glass-webgl");
+    vi.spyOn(LiquidGlass, "isSupported").mockReturnValue(false);
+
+    render(<DesignSystemLibrary />);
+
+    expect(sharedUiComponents.LiquidGlassSurface).toBeDefined();
+    const section = screen.getByRole("region", { name: /liquidglasssurface/i });
+    const glass = within(section).getByTestId("liquid-glass-preview").firstElementChild;
+    expect(glass).toHaveClass("liquid-glass");
+    expect(glass).not.toHaveAttribute("data-liquid-glass");
+    expect(within(section).getByText(/texto sobre vidro/i)).toBeVisible();
+
+    fireEvent.click(within(section).getByText(/texto sobre vidro/i));
+    expect(gtag).not.toHaveBeenCalled();
   });
 
   it("keeps the reference page out of search indexing", () => {
