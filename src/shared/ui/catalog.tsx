@@ -163,6 +163,8 @@ export const sharedUiCatalog: SharedUiCatalogEntry[] = [
             />
           </div>
           <p className="text-sm text-foreground-muted">
+            A variante glass usa o vidro em CSS (.liquid-glass, mesmos tokens do
+            LiquidGlassSurface), sem contexto WebGL por CTA; o WebGL fica em contêineres maiores.
             Nesta biblioteca os cliques ficam bloqueados: nada abre o WhatsApp nem gera evento.
           </p>
         </div>
