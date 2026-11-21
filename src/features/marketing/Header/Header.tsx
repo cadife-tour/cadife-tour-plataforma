@@ -140,9 +140,17 @@ export const Header: React.FC = () => {
         isScrolled ? "pt-2" : "pt-3 sm:pt-4"
       }`}
     >
+      {/* Esfumado atrás da pílula: o conteúdo some antes de encostar no header,
+          sem fundo sólido (o vidro continua transparente). */}
+      <div
+        aria-hidden="true"
+        className={`pointer-events-none absolute inset-x-0 top-0 -z-10 h-24 bg-gradient-to-b from-background/90 via-background/50 to-transparent transition-opacity duration-300 motion-reduce:transition-none sm:h-28 ${
+          isScrolled ? "opacity-100" : "opacity-0"
+        }`}
+      />
       <div className="mx-auto w-full max-w-7xl">
         <LiquidGlassSurface
-          look={glassPresets.bar}
+          look={isScrolled ? glassPresets.barScrolled : glassPresets.bar}
           className="liquid-glass-strong grid h-14 grid-cols-[1fr_auto] items-center gap-4 rounded-full pl-4 pr-2 sm:h-16 sm:pl-5 sm:pr-3 lg:grid-cols-[1fr_auto_1fr]"
         >
           {/* Logo */}
