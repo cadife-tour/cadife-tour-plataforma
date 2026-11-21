@@ -20,7 +20,7 @@ export const CookiesPreferencesView: React.FC = () => {
           <header className="space-y-5 border-b border-border pb-8">
             <Link
               href="/"
-              className="inline-flex min-h-[44px] items-center gap-2 rounded-lg text-sm font-medium text-foreground-muted transition-colors hover:text-foreground focus-visible:outline focus-visible:outline-2 focus-visible:outline-brand-accent"
+              className="inline-flex min-h-[44px] items-center gap-2 rounded-lg text-sm font-medium text-foreground-muted transition-colors duration-micro ease-standard hover:text-foreground focus-visible:outline focus-visible:outline-2 focus-visible:outline-brand-accent motion-reduce:transition-none"
             >
               <ArrowLeft className="h-4 w-4 shrink-0" aria-hidden="true" />
               <span>{content.backToHome}</span>
@@ -50,7 +50,7 @@ export const CookiesPreferencesView: React.FC = () => {
                 href={institutionalInfo.legalLinks.privacyPolicyUrl}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-flex min-h-[44px] items-center gap-2 rounded-lg border border-border bg-surface px-4 py-2 text-sm font-semibold text-foreground transition-colors hover:border-brand-accent hover:bg-surface-elevated focus-visible:outline focus-visible:outline-2 focus-visible:outline-brand-accent"
+                className="inline-flex min-h-[44px] items-center gap-2 rounded-lg border border-border bg-surface px-4 py-2 text-sm font-semibold text-foreground transition-colors duration-micro ease-standard hover:border-brand-accent hover:bg-surface-elevated focus-visible:outline focus-visible:outline-2 focus-visible:outline-brand-accent motion-reduce:transition-none"
               >
                 <span>{content.privacyPolicyCta}</span>
                 <ExternalLink className="h-4 w-4 shrink-0" aria-hidden="true" />
@@ -216,7 +216,7 @@ export const CookiesPreferencesView: React.FC = () => {
                 <dd className="mt-1">
                   <a
                     href={`mailto:${institutionalInfo.email}`}
-                    className="font-medium text-foreground underline-offset-4 hover:text-brand-accent hover:underline focus-visible:outline focus-visible:outline-2 focus-visible:outline-brand-accent"
+                    className="font-medium text-foreground underline-offset-4 transition-colors duration-micro ease-standard hover:text-brand-accent hover:underline focus-visible:outline focus-visible:outline-2 focus-visible:outline-brand-accent motion-reduce:transition-none"
                   >
                     {institutionalInfo.email}
                   </a>

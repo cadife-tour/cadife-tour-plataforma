@@ -3,9 +3,25 @@
 import React from "react";
 import { Container } from "@/shared/ui/Container/Container";
 import { agencyValues, testimonialsData, contactInfo, institutionalInfo } from "@/content/data";
+import type { Locale } from "@/content/types";
 import { useLocale } from "@/core/i18n/LocaleContext";
 import { trackEvent } from "@/core/analytics";
 import { Reveal } from "@/shared/motion";
+
+/** Formata uma data ISO `YYYY-MM-DD` no padrão esperado pelo locale sem deslocamento de fuso. */
+function formatCadasturDate(isoDate: string, locale: Locale): string {
+  const [year, month, day] = isoDate.split("-");
+  if (!year || !month || !day) return isoDate;
+  if (locale === "en") {
+    return new Intl.DateTimeFormat("en-US", {
+      month: "short",
+      day: "numeric",
+      year: "numeric",
+      timeZone: "UTC",
+    }).format(new Date(Date.UTC(Number(year), Number(month) - 1, Number(day))));
+  }
+  return `${day}/${month}/${year}`;
+}
 
 export const AboutAndTrustSection: React.FC = () => {
   const { locale } = useLocale();
@@ -20,7 +36,7 @@ export const AboutAndTrustSection: React.FC = () => {
       googleReviewsLink: "Ver avaliações no Google Meu Negócio →",
       cadasturPendingNotice: "[Registro CADASTUR formal em processo de homologação cadastral]",
       cadasturVerifiedLabel: "Agência regularizada no Cadastur (Ministério do Turismo)",
-      cadasturValidity: "Validade 30/01/2025 a 30/01/2027",
+      cadasturValidity: (from: string, until: string) => `Validade ${from} a ${until}`,
       cadasturVerifyLink: "Consultar autenticidade no Cadastur →",
       cadasturVerifyAria: (number: string) =>
         `Consultar autenticidade do registro Cadastur ${number} no site oficial (abre em nova aba)`,
@@ -34,7 +50,7 @@ export const AboutAndTrustSection: React.FC = () => {
       googleReviewsLink: "View reviews on Google Business →",
       cadasturPendingNotice: "[Official regulatory registration under verification]",
       cadasturVerifiedLabel: "Officially registered on Cadastur (Brazilian Ministry of Tourism)",
-      cadasturValidity: "Valid from Jan 30, 2025 to Jan 30, 2027",
+      cadasturValidity: (from: string, until: string) => `Valid from ${from} to ${until}`,
       cadasturVerifyLink: "Verify on Cadastur →",
       cadasturVerifyAria: (number: string) =>
         `Verify Cadastur registration ${number} on the official portal (opens in new tab)`,
@@ -48,7 +64,7 @@ export const AboutAndTrustSection: React.FC = () => {
       googleReviewsLink: "Ver opiniones en Google →",
       cadasturPendingNotice: "[Registro regulatorio oficial en proceso de verificación]",
       cadasturVerifiedLabel: "Agencia registrada en Cadastur (Ministerio de Turismo de Brasil)",
-      cadasturValidity: "Vigencia 30/01/2025 al 30/01/2027",
+      cadasturValidity: (from: string, until: string) => `Vigencia ${from} al ${until}`,
       cadasturVerifyLink: "Verificar en Cadastur →",
       cadasturVerifyAria: (number: string) =>
         `Verificar el registro Cadastur ${number} en el sitio oficial (abre en nueva pestaña)`,
@@ -157,7 +173,11 @@ export const AboutAndTrustSection: React.FC = () => {
                   {t.cadasturVerifiedLabel}: {institutionalInfo.cadastur.number}
                 </p>
                 <p className="text-foreground-subtle">
-                  {institutionalInfo.cadastur.providerName} • {t.cadasturValidity}
+                  {institutionalInfo.cadastur.providerName} •{" "}
+                  {t.cadasturValidity(
+                    formatCadasturDate(institutionalInfo.cadastur.validFrom, locale),
+                    formatCadasturDate(institutionalInfo.cadastur.validUntil, locale)
+                  )}
                 </p>
               </div>
               <a

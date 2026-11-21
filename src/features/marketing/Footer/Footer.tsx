@@ -200,7 +200,7 @@ export const Footer: React.FC = () => {
                       target="_blank"
                       rel="noopener noreferrer"
                       aria-label={t.socialAria(social.name)}
-                      className="hover:border-brand-accent/50 inline-flex min-h-[44px] items-center gap-1.5 rounded-md border border-border bg-surface px-2.5 py-1.5 text-xs font-medium text-foreground-muted transition-colors hover:text-foreground focus-visible:outline focus-visible:outline-2 focus-visible:outline-brand-accent"
+                      className="inline-flex min-h-[44px] items-center gap-1.5 rounded-md border border-border bg-surface px-2.5 py-1.5 text-xs font-medium text-foreground-muted transition-colors duration-micro ease-standard hover:border-brand-accent/50 hover:text-foreground focus-visible:outline focus-visible:outline-2 focus-visible:outline-brand-accent motion-reduce:transition-none"
                     >
                       <SocialIcon id={social.id} />
                       <span>{social.name}</span>
@@ -273,7 +273,7 @@ export const Footer: React.FC = () => {
                 <a
                   href={`tel:+${rawPhone}`}
                   aria-label={t.phoneAria(whatsappDisplay)}
-                  className="rounded py-0.5 font-medium text-foreground-muted transition-colors hover:text-foreground focus-visible:outline focus-visible:outline-2 focus-visible:outline-brand-accent"
+                  className="rounded py-0.5 font-medium text-foreground-muted transition-colors duration-micro ease-standard hover:text-foreground focus-visible:outline focus-visible:outline-2 focus-visible:outline-brand-accent motion-reduce:transition-none"
                 >
                   {whatsappDisplay}
                 </a>
@@ -305,7 +305,7 @@ export const Footer: React.FC = () => {
                   target="_blank"
                   rel="noopener noreferrer"
                   aria-label={t.privacyPolicyAria}
-                  className="rounded py-0.5 font-medium text-foreground-muted transition-colors hover:text-foreground focus-visible:outline focus-visible:outline-2 focus-visible:outline-brand-accent"
+                  className="rounded py-0.5 font-medium text-foreground-muted transition-colors duration-micro ease-standard hover:text-foreground focus-visible:outline focus-visible:outline-2 focus-visible:outline-brand-accent motion-reduce:transition-none"
                 >
                   {t.privacyPolicy} ↗
                 </a>
@@ -313,7 +313,7 @@ export const Footer: React.FC = () => {
               <li>
                 <Link
                   href={institutionalInfo.legalLinks.cookiePreferencesUrl}
-                  className="rounded py-0.5 font-medium text-foreground-muted transition-colors hover:text-foreground focus-visible:outline focus-visible:outline-2 focus-visible:outline-brand-accent"
+                  className="rounded py-0.5 font-medium text-foreground-muted transition-colors duration-micro ease-standard hover:text-foreground focus-visible:outline focus-visible:outline-2 focus-visible:outline-brand-accent motion-reduce:transition-none"
                 >
                   {t.cookiePreferences}
                 </Link>
@@ -339,7 +339,7 @@ export const Footer: React.FC = () => {
                     target="_blank"
                     rel="noopener noreferrer"
                     aria-label={t.cadasturVerifyAria(institutionalInfo.cadastur.number)}
-                    className="underline underline-offset-2 transition-colors hover:text-foreground focus-visible:outline focus-visible:outline-2 focus-visible:outline-brand-accent"
+                    className="underline underline-offset-2 transition-colors duration-micro ease-standard hover:text-foreground focus-visible:outline focus-visible:outline-2 focus-visible:outline-brand-accent motion-reduce:transition-none"
                   >
                     {institutionalInfo.cadastur.number}
                   </a>
