@@ -3,6 +3,7 @@
 import React, { useState, useRef, useEffect } from "react";
 import Image from "next/image";
 import Link from "next/link";
+import { createWhatsAppUrl } from "@/shared/utils/whatsapp";
 
 export default function LandoStyleHeroPage() {
   // Coordenadas do cursor relativas ao container central
@@ -107,7 +108,7 @@ export default function LandoStyleHeroPage() {
           </div>
 
           <Link
-            href="https://wa.me/5511999999999"
+            href={createWhatsAppUrl({ source: "contact", locale: "pt" })}
             target="_blank"
             className="flex items-center gap-2 rounded-xl bg-[#d2ff00] px-5 py-2.5 font-mono text-xs font-black uppercase tracking-wider text-[#111112] shadow-sm transition hover:scale-105 active:scale-95"
           >
@@ -359,7 +360,7 @@ export default function LandoStyleHeroPage() {
             </p>
             <div className="pt-4">
               <Link
-                href="https://wa.me/5511999999999"
+                href={createWhatsAppUrl({ source: "contact", locale: "pt" })}
                 target="_blank"
                 className="inline-flex items-center gap-3 rounded-xl bg-[#d2ff00] px-8 py-3.5 font-mono text-xs font-black uppercase tracking-widest text-[#282c20] shadow-[0_0_30px_rgba(210,255,0,0.5)] transition hover:scale-105"
               >
