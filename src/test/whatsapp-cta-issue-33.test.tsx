@@ -238,7 +238,7 @@ describe("Issue #33 — Componente Reutilizável de CTA para WhatsApp", () => {
           <WhatsAppCta variant="glass">Opção Glass</WhatsAppCta>
         </LocaleProvider>
       );
-      expect(screen.getByRole("link")).toHaveClass("backdrop-blur-md");
+      expect(screen.getByRole("link")).toHaveClass("liquid-glass");
 
       rerender(
         <LocaleProvider>
