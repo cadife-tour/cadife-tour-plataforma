@@ -505,6 +505,23 @@ describe("Issue #2 — Header & Navigation", () => {
     });
   });
 
+  it("apresenta a barra e o menu mobile sobre LiquidGlassSurface (fallback CSS sem WebGL2)", () => {
+    render(
+      <LocaleProvider>
+        <Header />
+      </LocaleProvider>
+    );
+
+    const bar = screen.getByRole("banner").querySelector(".liquid-glass");
+    expect(bar).not.toBeNull();
+    expect(bar).toContainElement(screen.getByRole("navigation", { name: "Navegação Principal" }));
+
+    fireEvent.click(screen.getByRole("button", { name: /abrir menu/i }));
+    expect(screen.getByRole("navigation", { name: "Navegação Principal (móvel)" })).toHaveClass(
+      "liquid-glass"
+    );
+  });
+
   describe("menu mobile em viewports de baixa altura", () => {
     it("painel interno do menu possui scroll vertical próprio (overflow-y-auto)", () => {
       render(
@@ -521,7 +538,7 @@ describe("Issue #2 — Header & Navigation", () => {
       expect(mobileNav.className).toMatch(/overscroll-contain/);
     });
 
-    it("usa unidade dvh e diferencia o limite de altura entre mobile (h-16) e sm (h-20)", () => {
+    it("usa unidade dvh e desconta a altura da pílula flutuante no mobile e no sm", () => {
       render(
         <LocaleProvider>
           <Header />
@@ -534,10 +551,11 @@ describe("Issue #2 — Header & Navigation", () => {
       const panel = document.getElementById(menuButton.getAttribute("aria-controls")!);
       const mobileNav = screen.getByRole("navigation", { name: "Navegação Principal (móvel)" });
 
-      [panel, mobileNav].forEach((el) => {
-        expect(el?.className).toMatch(/max-h-\[calc\(100dvh-4rem\)\]/);
-        expect(el?.className).toMatch(/sm:max-h-\[calc\(100dvh-5rem\)\]/);
-      });
+      // Pílula: pt-3 + h-14 (mobile) e pt-4 + h-16 (sm); o menu ainda tem mt-2.
+      expect(panel?.className).toMatch(/max-h-\[calc\(100dvh-5\.25rem\)\]/);
+      expect(panel?.className).toMatch(/sm:max-h-\[calc\(100dvh-6rem\)\]/);
+      expect(mobileNav.className).toMatch(/max-h-\[calc\(100dvh-5\.75rem\)\]/);
+      expect(mobileNav.className).toMatch(/sm:max-h-\[calc\(100dvh-6\.5rem\)\]/);
     });
 
     it("CTA permanece presente e acessível com o menu aberto, mesmo com scroll interno", () => {
