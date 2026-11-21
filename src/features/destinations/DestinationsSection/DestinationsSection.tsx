@@ -4,6 +4,7 @@ import React, { useEffect, useRef } from "react";
 import Image from "next/image";
 import { Container } from "@/shared/ui/Container/Container";
 import { WhatsAppCta } from "@/shared/ui/WhatsAppCta";
+import { Reveal } from "@/shared/motion";
 import { destinationsData } from "@/content/data";
 import { useLocale } from "@/core/i18n/LocaleContext";
 import { trackEvent } from "@/core/analytics";
@@ -81,7 +82,7 @@ export const DestinationsSection: React.FC = () => {
   return (
     <section id="destinos" className="scroll-mt-24 border-b border-border py-20 lg:py-28">
       <Container>
-        <div className="mb-16 max-w-2xl">
+        <Reveal variant="editorial" className="mb-16 max-w-2xl">
           <span className="text-xs font-bold uppercase tracking-wider text-brand-accent">
             {t.badge}
           </span>
@@ -91,77 +92,78 @@ export const DestinationsSection: React.FC = () => {
           <p className="mt-4 text-base leading-relaxed text-foreground-muted sm:text-lg">
             {t.subtitle}
           </p>
-        </div>
+        </Reveal>
 
         <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
-          {destinationsData.map((item) => {
+          {destinationsData.map((item, idx) => {
             const title = item.title[locale] || item.title.pt;
             const subtitle = item.subtitle[locale] || item.subtitle.pt;
             const description = item.description[locale] || item.description.pt;
             const highlights = item.highlights[locale] || item.highlights.pt;
 
             return (
-              <article
-                key={item.id}
-                data-destination-id={item.id}
-                className="flex flex-col justify-between overflow-hidden rounded-xl border border-border bg-surface p-6 shadow-sm transition-all duration-200 hover:border-brand-accent/40 hover:bg-surface-elevated"
-              >
-                <div className="space-y-4">
-                  {/* Thumbnail Responsivo com next/image (CLS Zero) */}
-                  <div className="relative aspect-video w-full overflow-hidden rounded-lg bg-surface-muted">
-                    <Image
-                      src={item.imageRef}
-                      alt={title}
-                      fill
-                      sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-                      className="object-cover transition-transform duration-300 hover:scale-105"
-                      loading="lazy"
-                    />
+              <Reveal key={item.id} index={idx} className="h-full">
+                <article
+                  data-destination-id={item.id}
+                  className="flex h-full flex-col justify-between overflow-hidden rounded-xl border border-border bg-surface p-6 shadow-sm transition-all duration-micro ease-standard hover:border-brand-accent/40 hover:bg-surface-elevated motion-reduce:transition-none"
+                >
+                  <div className="space-y-4">
+                    {/* Thumbnail Responsivo com next/image (CLS Zero) */}
+                    <div className="relative aspect-video w-full overflow-hidden rounded-lg bg-surface-muted">
+                      <Image
+                        src={item.imageRef}
+                        alt={title}
+                        fill
+                        sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                        className="object-cover transition-transform duration-reveal ease-standard hover:scale-105 motion-reduce:transform-none motion-reduce:transition-none"
+                        loading="lazy"
+                      />
+                    </div>
+
+                    <div className="flex items-center justify-between pt-1">
+                      <span className="rounded bg-surface-muted px-2.5 py-1 text-xs font-semibold text-brand-accent">
+                        {item.category.toUpperCase()}
+                      </span>
+                    </div>
+
+                    <h3 className="text-xl font-bold text-foreground">{title}</h3>
+                    <p className="text-xs font-medium text-brand-gold">{subtitle}</p>
+                    <p className="text-sm leading-relaxed text-foreground-muted">{description}</p>
+
+                    {/* Highlights List */}
+                    <div className="pt-2">
+                      <p className="mb-2 text-xs font-semibold uppercase tracking-wider text-foreground-subtle">
+                        {t.highlightsLabel}
+                      </p>
+                      <ul className="space-y-1.5 text-xs text-foreground-muted">
+                        {highlights.map((h, i) => (
+                          <li key={i} className="flex items-start gap-2">
+                            <span className="font-bold text-brand-accent">•</span>
+                            <span>{h}</span>
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
                   </div>
 
-                  <div className="flex items-center justify-between pt-1">
-                    <span className="rounded bg-surface-muted px-2.5 py-1 text-xs font-semibold text-brand-accent">
-                      {item.category.toUpperCase()}
-                    </span>
+                  <div className="mt-8 border-t border-border/60 pt-5">
+                    <WhatsAppCta
+                      destination={item.slug}
+                      destinationTitle={title}
+                      source="destination_card"
+                      variant="link"
+                      showIcon={false}
+                      className="inline-flex items-center rounded py-1 text-sm font-semibold text-brand-accent transition-colors duration-micro ease-standard hover:text-brand-primary focus-visible:outline focus-visible:outline-2 focus-visible:outline-brand-accent motion-reduce:transition-none"
+                      aria-label={t.ctaAria(title)}
+                    >
+                      <span>{t.ctaText}</span>
+                      <span className="ml-1" aria-hidden="true">
+                        →
+                      </span>
+                    </WhatsAppCta>
                   </div>
-
-                  <h3 className="text-xl font-bold text-foreground">{title}</h3>
-                  <p className="text-xs font-medium text-brand-gold">{subtitle}</p>
-                  <p className="text-sm leading-relaxed text-foreground-muted">{description}</p>
-
-                  {/* Highlights List */}
-                  <div className="pt-2">
-                    <p className="mb-2 text-xs font-semibold uppercase tracking-wider text-foreground-subtle">
-                      {t.highlightsLabel}
-                    </p>
-                    <ul className="space-y-1.5 text-xs text-foreground-muted">
-                      {highlights.map((h, i) => (
-                        <li key={i} className="flex items-start gap-2">
-                          <span className="font-bold text-brand-accent">•</span>
-                          <span>{h}</span>
-                        </li>
-                      ))}
-                    </ul>
-                  </div>
-                </div>
-
-                <div className="mt-8 border-t border-border/60 pt-5">
-                  <WhatsAppCta
-                    destination={item.slug}
-                    destinationTitle={title}
-                    source="destination_card"
-                    variant="link"
-                    showIcon={false}
-                    className="inline-flex items-center rounded py-1 text-sm font-semibold text-brand-accent transition-colors hover:text-brand-primary focus-visible:outline focus-visible:outline-2 focus-visible:outline-brand-accent"
-                    aria-label={t.ctaAria(title)}
-                  >
-                    <span>{t.ctaText}</span>
-                    <span className="ml-1" aria-hidden="true">
-                      →
-                    </span>
-                  </WhatsAppCta>
-                </div>
-              </article>
+                </article>
+              </Reveal>
             );
           })}
         </div>

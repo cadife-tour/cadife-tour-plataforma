@@ -1,4 +1,5 @@
 import type { Config } from "tailwindcss";
+import { MOTION_DURATIONS_MS } from "./src/shared/motion/tokens";
 
 /**
  * Converte um token CSS em cor do Tailwind que aceita modificador de opacidade
@@ -56,6 +57,11 @@ const config: Config = {
         md: "var(--shadow-md)",
         lg: "var(--shadow-lg)",
         xl: "var(--shadow-xl)",
+      },
+      transitionDuration: {
+        micro: `${MOTION_DURATIONS_MS.micro}ms`,
+        reveal: `${MOTION_DURATIONS_MS.reveal}ms`,
+        editorial: `${MOTION_DURATIONS_MS.editorial}ms`,
       },
       transitionTimingFunction: {
         standard: "var(--ease-standard)",

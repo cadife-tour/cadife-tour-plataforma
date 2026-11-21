@@ -232,7 +232,7 @@ export const WhatsAppCta = React.forwardRef<HTMLAnchorElement, WhatsAppCtaProps>
     };
 
     const baseStyles =
-      "inline-flex items-center justify-center font-heading font-semibold rounded-lg transition-all duration-200 ease-standard focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 motion-reduce:transform-none motion-reduce:transition-none";
+      "inline-flex items-center justify-center font-heading font-semibold rounded-lg transition-all duration-micro ease-standard focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 motion-reduce:transform-none motion-reduce:transition-none";
 
     const buttonInteractiveStyles =
       "cursor-pointer shadow-sm active:translate-y-0 active:scale-[0.985]";

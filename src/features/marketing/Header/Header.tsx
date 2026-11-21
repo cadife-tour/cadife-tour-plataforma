@@ -136,7 +136,7 @@ export const Header: React.FC = () => {
 
   return (
     <header
-      className={`fixed left-0 right-0 top-0 z-50 w-full px-2 transition-all duration-300 ease-in-out motion-reduce:transition-none sm:px-4 ${
+      className={`fixed left-0 right-0 top-0 z-50 w-full px-2 transition-all duration-reveal ease-standard motion-reduce:transition-none sm:px-4 ${
         isScrolled ? "pt-2" : "pt-3 sm:pt-4"
       }`}
     >
@@ -158,7 +158,7 @@ export const Header: React.FC = () => {
                 width={160}
                 height={40}
                 priority
-                className="h-7 w-auto object-contain transition-transform duration-300 group-hover:scale-105 motion-reduce:transform-none motion-reduce:transition-none sm:h-9"
+                className="h-7 w-auto object-contain transition-transform duration-reveal ease-standard group-hover:scale-105 motion-reduce:transform-none motion-reduce:transition-none sm:h-9"
               />
             </a>
           </div>
@@ -234,7 +234,7 @@ export const Header: React.FC = () => {
       {/* Mobile Navigation Panel */}
       <div
         id={mobileMenuId}
-        className={`mx-auto w-full max-w-7xl overflow-hidden transition-[max-height] duration-300 ease-in-out motion-reduce:transition-none lg:hidden ${
+        className={`mx-auto w-full max-w-7xl overflow-hidden transition-[max-height] duration-reveal ease-standard motion-reduce:transition-none lg:hidden ${
           isMenuOpen ? "max-h-[calc(100dvh-5.25rem)] sm:max-h-[calc(100dvh-6rem)]" : "max-h-0"
         }`}
       >

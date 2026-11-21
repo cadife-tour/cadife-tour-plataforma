@@ -5,6 +5,7 @@ import { Container } from "@/shared/ui/Container/Container";
 import { agencyValues, testimonialsData, contactInfo } from "@/content/data";
 import { useLocale } from "@/core/i18n/LocaleContext";
 import { trackEvent } from "@/core/analytics";
+import { Reveal } from "@/shared/motion";
 
 export const AboutAndTrustSection: React.FC = () => {
   const { locale } = useLocale();
@@ -51,7 +52,7 @@ export const AboutAndTrustSection: React.FC = () => {
     <section id="agencia" className="scroll-mt-24 border-b border-border py-20 lg:py-28">
       <Container>
         {/* 1. Diferenciais Institucionais */}
-        <div className="mb-16 max-w-3xl">
+        <Reveal variant="editorial" className="mb-16 max-w-3xl">
           <span className="text-xs font-bold uppercase tracking-wider text-brand-accent">
             {t.badge}
           </span>
@@ -59,7 +60,7 @@ export const AboutAndTrustSection: React.FC = () => {
             {t.title}
           </h2>
           <p className="mt-4 text-base text-foreground-muted sm:text-lg">{t.subtitle}</p>
-        </div>
+        </Reveal>
 
         <div className="grid gap-8 md:grid-cols-3">
           {agencyValues.map((val, idx) => {
@@ -67,16 +68,15 @@ export const AboutAndTrustSection: React.FC = () => {
             const desc = val.description[locale] || val.description.pt;
 
             return (
-              <div
-                key={idx}
-                className="rounded-xl border border-border bg-surface p-7 shadow-sm transition-all hover:border-brand-accent/40"
-              >
-                <div className="mb-4 flex h-8 w-8 items-center justify-center rounded-full bg-brand-primary/20 text-sm font-bold text-brand-accent">
-                  ✓
+              <Reveal key={idx} index={idx} className="h-full">
+                <div className="h-full rounded-xl border border-border bg-surface p-7 shadow-sm transition-all duration-micro ease-standard hover:border-brand-accent/40 motion-reduce:transition-none">
+                  <div className="mb-4 flex h-8 w-8 items-center justify-center rounded-full bg-brand-primary/20 text-sm font-bold text-brand-accent">
+                    ✓
+                  </div>
+                  <h3 className="text-lg font-bold text-foreground">{title}</h3>
+                  <p className="mt-2 text-sm leading-relaxed text-foreground-muted">{desc}</p>
                 </div>
-                <h3 className="text-lg font-bold text-foreground">{title}</h3>
-                <p className="mt-2 text-sm leading-relaxed text-foreground-muted">{desc}</p>
-              </div>
+              </Reveal>
             );
           })}
         </div>

@@ -82,9 +82,9 @@
      ========================================================================== */
   --ease-standard: cubic-bezier(0.2, 0, 0, 1);
   --ease-expressive: cubic-bezier(0.16, 1, 0.3, 1);
-  --duration-fast: 150ms;
-  --duration-normal: 250ms;
-  --duration-slow: 400ms;
+  --duration-fast: 180ms;
+  --duration-normal: 360ms;
+  --duration-slow: 680ms;
 }
 
 /* ==========================================================================
