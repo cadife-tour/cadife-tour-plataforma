@@ -1,3 +1,4 @@
+import { readFileSync } from "node:fs";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { fireEvent, render, screen, within } from "@testing-library/react";
 import { metadata } from "@/app/design-system/page";
@@ -208,6 +209,26 @@ describe("Design system library", () => {
 
     fireEvent.click(within(section).getByText(/texto sobre vidro/i));
     expect(gtag).not.toHaveBeenCalled();
+  });
+
+  it("identifies Roboto as the documented typeface and uses only shipped weights", () => {
+    render(<DesignSystemLibrary />);
+
+    expect(screen.getByText("Roboto")).toBeInTheDocument();
+    expect(screen.getByText(/fonte principal da interface e dos títulos/i)).toBeInTheDocument();
+    expect(screen.getByText(/interface:/i).closest("p")?.textContent).toMatch(
+      /Roboto → sans-serif.*Roboto → sans-serif/
+    );
+    expect(readFileSync("src/shared/ui/design-system.module.css", "utf8")).not.toMatch(
+      /font-weight:\s*(?!400|500|700)\d+/
+    );
+  });
+
+  it("renders the WhatsAppCta glass variant on the shared .liquid-glass CSS foundation", () => {
+    render(<DesignSystemLibrary />);
+
+    const link = screen.getByText(/glass sobre imagem/i).closest("a");
+    expect(link).toHaveClass("liquid-glass");
   });
 
   it("keeps the reference page out of search indexing", () => {

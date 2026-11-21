@@ -38,7 +38,7 @@
   /* ==========================================================================
      2. Typography Tokens (Roboto via next/font, fallback sans-serif)
      ========================================================================== */
-  --font-sans: var(--font-roboto), Arial, Helvetica, sans-serif;
+  --font-sans: var(--font-roboto, Roboto), Arial, Helvetica, sans-serif;
   --font-heading: var(--font-sans);
 
   /* Font Sizes & Line Heights */

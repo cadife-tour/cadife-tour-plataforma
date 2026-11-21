@@ -203,12 +203,16 @@ export function DesignSystemLibrary() {
             <div className={styles.specimen} aria-hidden="true">
               <span className={styles.specimenGlyph}>Aa</span>
               <span className={styles.specimenMeta}>
-                <strong>Sans da interface</strong>
+                <strong>Roboto</strong>
+                <span>Fonte principal da interface e dos títulos</span>
                 <span>ABCDEFGHIJKLM · abcdefghijklm · 0123456789</span>
+                <span>400 Regular · 500 Medium · 700 Bold</span>
               </span>
             </div>
             <p className={styles.tokenHint}>
-              Interface: <code>var(--font-sans)</code> · Títulos: <code>var(--font-heading)</code>
+              Interface: <code>var(--font-sans)</code> · Roboto → sans-serif
+              <br />
+              Títulos: <code>var(--font-heading)</code> · Roboto → sans-serif
             </p>
             <div className={styles.typeList}>
               {typeScale.map((size) => (
