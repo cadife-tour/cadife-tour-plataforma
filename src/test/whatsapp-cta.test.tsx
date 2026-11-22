@@ -1,7 +1,12 @@
 import { describe, it, expect, vi } from "vitest";
 import { render, screen, fireEvent } from "@testing-library/react";
 import { WhatsAppCta } from "@/shared/ui/WhatsAppCta";
-import { createWhatsAppUrl } from "@/shared/utils/whatsapp";
+import {
+  createWhatsAppUrl,
+  destinationSpecificMessages,
+  sectionSpecificMessages,
+} from "@/shared/utils/whatsapp";
+import type { Locale } from "@/content/types";
 import { LocaleProvider } from "@/core/i18n/LocaleContext";
 import * as analytics from "@/core/analytics";
 import {
@@ -160,5 +165,63 @@ describe("Fase 1 & 2 — WhatsAppCta & Hero Engine Multi-Mode", () => {
     expect(screen.getByText(/atendimento 100% humano/i)).toBeInTheDocument();
     expect(screen.getByText(/roteiros personalizados/i)).toBeInTheDocument();
     expect(screen.getByText(/suporte 24h na viagem/i)).toBeInTheDocument();
+  });
+});
+
+describe("Issue #27 — Mensagens contextuais por destino e seção", () => {
+  const locales: readonly Locale[] = ["pt", "en", "es"];
+
+  it("gera mensagem específica para todos os 10 destinos oficiais em PT, EN e ES", () => {
+    const destinationIds = Object.keys(DESTINATION_SCENES);
+    expect(destinationIds).toHaveLength(10);
+
+    for (const locale of locales) {
+      for (const destId of destinationIds) {
+        const scene = DESTINATION_SCENES[destId];
+        expect(scene).toBeDefined();
+        const url = createWhatsAppUrl({
+          destination: scene!.whatsappContext,
+          source: `hero_${destId}_destination`,
+          locale,
+        });
+        const expectedKey = destId === "resorts" ? "resort" : destId;
+        const expectedMsg = destinationSpecificMessages[locale][expectedKey];
+        expect(expectedMsg).toBeTruthy();
+        expect(url).toBe(`https://wa.me/5547996714510?text=${encodeURIComponent(expectedMsg!)}`);
+      }
+    }
+  });
+
+  it("normaliza aliases de destino ('resorts' -> 'resort' e 'rio-de-janeiro' -> 'brasil') em PT, EN e ES", () => {
+    for (const locale of locales) {
+      expect(createWhatsAppUrl({ destination: "resorts", locale })).toBe(
+        createWhatsAppUrl({ destination: "resort", locale })
+      );
+      expect(createWhatsAppUrl({ destination: "rio-de-janeiro", locale })).toBe(
+        createWhatsAppUrl({ destination: "brasil", locale })
+      );
+    }
+  });
+
+  it("gera mensagens contextuais codificadas para todas as seções principais em PT, EN e ES sem dados pessoais", () => {
+    const sections = [
+      "header",
+      "header_nav",
+      "hero",
+      "how_it_works",
+      "contact",
+      "faq_banner",
+      "footer",
+    ] as const;
+
+    for (const locale of locales) {
+      for (const source of sections) {
+        const url = createWhatsAppUrl({ source, locale });
+        const expectedMsg = sectionSpecificMessages[locale][source];
+        expect(expectedMsg).toBeTruthy();
+        expect(url).toBe(`https://wa.me/5547996714510?text=${encodeURIComponent(expectedMsg!)}`);
+        expect(url).not.toMatch(/email=|phone=|name=/i);
+      }
+    }
   });
 });

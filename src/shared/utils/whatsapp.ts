@@ -13,7 +13,7 @@ export interface WhatsAppUrlOptions {
   customMessage?: string;
 }
 
-const destinationSpecificMessages: Record<Locale, Record<string, string>> = {
+export const destinationSpecificMessages: Record<Locale, Record<string, string>> = {
   pt: {
     chile:
       "Olá! Estava conhecendo o Chile no site da CADIFE Tour e gostaria de conversar sobre essa viagem.",
@@ -77,6 +77,11 @@ const destinationSpecificMessages: Record<Locale, Record<string, string>> = {
     resort:
       "¡Hola! Estaba conociendo las opciones de resorts en el sitio web de CADIFE Tour y me gustaría conversar sobre este viaje.",
   },
+};
+
+const destinationMessageAliases: Record<string, string> = {
+  resorts: "resort",
+  "rio-de-janeiro": "brasil",
 };
 
 const defaultMessages: Record<Locale, Record<string, string>> = {
@@ -199,8 +204,9 @@ export function buildWhatsAppUrl(options: WhatsAppUrlOptions): string {
     return `https://wa.me/${cleanPhone}?text=${encodeURIComponent(customMessage)}`;
   }
 
-  // 2. Destino específico por slug
-  const destKey = destination?.toLowerCase().trim();
+  // 2. Destino específico por slug (incluindo aliases oficiais de rota/config)
+  const rawDestKey = destination?.toLowerCase().trim();
+  const destKey = rawDestKey ? (destinationMessageAliases[rawDestKey] ?? rawDestKey) : undefined;
   if (destKey && destinationSpecificMessages[locale]?.[destKey]) {
     const specificMessage = destinationSpecificMessages[locale][destKey];
     return `https://wa.me/${cleanPhone}?text=${encodeURIComponent(specificMessage)}`;
