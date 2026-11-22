@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { TripInMotionSection } from "@/features/marketing/TripInMotionSection/TripInMotionSection";
 import { DestinationsSection } from "@/features/destinations/DestinationsSection/DestinationsSection";
 import { destinationPages } from "@/content/destinationPages";
 import { HowItWorksSection } from "@/features/marketing/HowItWorksSection/HowItWorksSection";
@@ -8,6 +9,7 @@ import { FaqAndCtaSection } from "@/features/marketing/FaqAndCtaSection/FaqAndCt
 export function LandingSections() {
   return (
     <>
+      <TripInMotionSection />
       <DestinationsSection />
       <nav aria-label="Destinos" className="flex flex-wrap justify-center gap-4 px-4 py-6">
         {destinationPages.map(({ slug, name }) => (
