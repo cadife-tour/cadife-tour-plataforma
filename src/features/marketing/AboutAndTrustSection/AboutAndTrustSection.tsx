@@ -1,6 +1,7 @@
 "use client";
 
 import React from "react";
+import Image from "next/image";
 import { Container } from "@/shared/ui/Container/Container";
 import { agencyValues, testimonialsData, contactInfo, institutionalInfo } from "@/content/data";
 import type { Locale } from "@/content/types";
@@ -40,6 +41,11 @@ export const AboutAndTrustSection: React.FC = () => {
       cadasturVerifyLink: "Consultar autenticidade no Cadastur →",
       cadasturVerifyAria: (number: string) =>
         `Consultar autenticidade do registro Cadastur ${number} no site oficial (abre em nova aba)`,
+      officialCardTitle: "CADIFE Tour Oficial",
+      officialCardDescription:
+        "Atuamos como agência de turismo formalmente cadastrada e regularizada junto ao Ministério do Turismo, seguindo as normas oficiais do setor.",
+      cadasturSealAlt: (number: string) =>
+        `Selo oficial Cadastur da CADIFE Tour — registro ${number}`,
     },
     en: {
       badge: "Authority & Trust",
@@ -54,6 +60,11 @@ export const AboutAndTrustSection: React.FC = () => {
       cadasturVerifyLink: "Verify on Cadastur →",
       cadasturVerifyAria: (number: string) =>
         `Verify Cadastur registration ${number} on the official portal (opens in new tab)`,
+      officialCardTitle: "CADIFE Tour Official",
+      officialCardDescription:
+        "We operate as a travel agency formally registered with the Brazilian Ministry of Tourism, following official industry regulations.",
+      cadasturSealAlt: (number: string) =>
+        `Official Cadastur seal for CADIFE Tour — registration ${number}`,
     },
     es: {
       badge: "Autoridad y Confianza",
@@ -68,6 +79,11 @@ export const AboutAndTrustSection: React.FC = () => {
       cadasturVerifyLink: "Verificar en Cadastur →",
       cadasturVerifyAria: (number: string) =>
         `Verificar el registro Cadastur ${number} en el sitio oficial (abre en nueva pestaña)`,
+      officialCardTitle: "CADIFE Tour Oficial",
+      officialCardDescription:
+        "Operamos como agencia de turismo formalmente registrada ante el Ministerio de Turismo de Brasil, cumpliendo las normas oficiales del sector.",
+      cadasturSealAlt: (number: string) =>
+        `Sello oficial Cadastur de CADIFE Tour — registro ${number}`,
     },
   };
 
@@ -167,29 +183,71 @@ export const AboutAndTrustSection: React.FC = () => {
               {t.cadasturPendingNotice}
             </p>
           ) : (
-            <div className="mt-8 flex flex-col items-center justify-between gap-3 rounded-xl border border-border bg-surface px-6 py-4 text-xs text-foreground-muted sm:flex-row">
-              <div className="space-y-1 text-center sm:text-left">
-                <p className="font-semibold text-foreground">
-                  {t.cadasturVerifiedLabel}: {institutionalInfo.cadastur.number}
-                </p>
-                <p className="text-foreground-subtle">
-                  {institutionalInfo.cadastur.providerName} •{" "}
-                  {t.cadasturValidity(
-                    formatCadasturDate(institutionalInfo.cadastur.validFrom, locale),
-                    formatCadasturDate(institutionalInfo.cadastur.validUntil, locale)
-                  )}
-                </p>
-              </div>
-              <a
-                href={institutionalInfo.cadastur.verificationUrl}
-                target="_blank"
-                rel="noopener noreferrer"
-                aria-label={t.cadasturVerifyAria(institutionalInfo.cadastur.number)}
-                className="shrink-0 rounded py-1 font-semibold text-brand-accent underline-offset-4 hover:underline focus-visible:outline focus-visible:outline-2 focus-visible:outline-brand-accent"
+            <Reveal>
+              <article
+                aria-labelledby="cadife-official-heading"
+                className="mt-10 rounded-xl border border-border bg-surface p-6 shadow-sm sm:p-8"
               >
-                {t.cadasturVerifyLink}
-              </a>
-            </div>
+                <div className="grid items-center gap-8 md:grid-cols-12">
+                  <div className="space-y-4 text-center md:col-span-8 md:text-left">
+                    <div className="flex items-center justify-center gap-3 md:justify-start">
+                      <span className="h-0.5 w-8 bg-brand-primary" aria-hidden="true" />
+                      <h4
+                        id="cadife-official-heading"
+                        className="font-heading text-xl font-bold tracking-tight text-foreground sm:text-2xl"
+                      >
+                        {t.officialCardTitle}
+                      </h4>
+                    </div>
+
+                    <p className="max-w-2xl text-sm leading-relaxed text-foreground-muted sm:text-base">
+                      {t.officialCardDescription}
+                    </p>
+
+                    <div className="space-y-1 border-t border-border/60 pt-4 text-xs text-foreground-muted sm:text-sm">
+                      <p className="font-semibold text-foreground">
+                        {t.cadasturVerifiedLabel}: {institutionalInfo.cadastur.number}
+                      </p>
+                      <p className="text-foreground-subtle">
+                        {institutionalInfo.cadastur.providerName} •{" "}
+                        {institutionalInfo.cadastur.activity[locale] ||
+                          institutionalInfo.cadastur.activity.pt}{" "}
+                        •{" "}
+                        {t.cadasturValidity(
+                          formatCadasturDate(institutionalInfo.cadastur.validFrom, locale),
+                          formatCadasturDate(institutionalInfo.cadastur.validUntil, locale)
+                        )}
+                      </p>
+                    </div>
+
+                    <div className="pt-1">
+                      <a
+                        href={institutionalInfo.cadastur.verificationUrl}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        aria-label={t.cadasturVerifyAria(institutionalInfo.cadastur.number)}
+                        className="inline-flex items-center rounded py-1 text-sm font-semibold text-brand-accent underline-offset-4 hover:underline focus-visible:outline focus-visible:outline-2 focus-visible:outline-brand-accent"
+                      >
+                        {t.cadasturVerifyLink}
+                      </a>
+                    </div>
+                  </div>
+
+                  <div className="flex justify-center md:col-span-4 md:justify-end">
+                    <figure className="w-full max-w-[220px] sm:max-w-[240px]">
+                      <Image
+                        src="/assets/brand/selo-cadastur.webp"
+                        alt={t.cadasturSealAlt(institutionalInfo.cadastur.number)}
+                        width={480}
+                        height={663}
+                        sizes="(max-width: 768px) 220px, 240px"
+                        className="h-auto w-full rounded-lg border border-border/60 bg-white shadow-sm"
+                      />
+                    </figure>
+                  </div>
+                </div>
+              </article>
+            </Reveal>
           )}
         </div>
       </Container>
