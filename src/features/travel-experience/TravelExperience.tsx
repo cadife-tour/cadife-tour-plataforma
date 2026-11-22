@@ -3,6 +3,8 @@
 import { useEffect, useRef, useState, type CSSProperties } from "react";
 import Image from "next/image";
 import type { Locale } from "@/content/types";
+import { useLocale } from "@/core/i18n/LocaleContext";
+import { Container } from "@/shared/ui/Container/Container";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { useGpuCapability } from "@/features/visual-journey/hooks/useGpuCapability";
@@ -14,11 +16,82 @@ import { type TravelExperienceMode, getDestinationConfig } from "./config/travel
 import { JOURNEY_SCENES, PLAYLIST_DESTINATIONS, getSceneTiming } from "./config/journeyScenes";
 const FRAME_INTERVAL = 1 / 24;
 
+const STATIC_NAV_LABELS: Record<
+  Locale,
+  {
+    navLabel: string;
+    prev: string;
+    next: string;
+    viewDestination: (name: string) => string;
+  }
+> = {
+  pt: {
+    navLabel: "Navegação de destinos da Hero",
+    prev: "Destino anterior",
+    next: "Próximo destino",
+    viewDestination: (name) => `Ver destino ${name}`,
+  },
+  en: {
+    navLabel: "Hero destination navigation",
+    prev: "Previous destination",
+    next: "Next destination",
+    viewDestination: (name) => `View ${name}`,
+  },
+  es: {
+    navLabel: "Navegación de destinos del Hero",
+    prev: "Destino anterior",
+    next: "Siguiente destino",
+    viewDestination: (name) => `Ver destino ${name}`,
+  },
+};
+
+const STATIC_DESTINATION_LABELS: Record<Locale, Record<string, string>> = {
+  pt: {
+    chile: "Chile",
+    argentina: "Argentina",
+    peru: "Peru",
+    cruzeiros: "Cruzeiros",
+    portugal: "Portugal",
+    espanha: "Espanha",
+    franca: "França",
+    italia: "Itália",
+    brasil: "Brasil",
+    resorts: "Resorts",
+  },
+  en: {
+    chile: "Chile",
+    argentina: "Argentina",
+    peru: "Peru",
+    cruzeiros: "Cruises",
+    portugal: "Portugal",
+    espanha: "Spain",
+    franca: "France",
+    italia: "Italy",
+    brasil: "Brazil",
+    resorts: "Resorts",
+  },
+  es: {
+    chile: "Chile",
+    argentina: "Argentina",
+    peru: "Perú",
+    cruzeiros: "Cruceros",
+    portugal: "Portugal",
+    espanha: "España",
+    franca: "Francia",
+    italia: "Italia",
+    brasil: "Brasil",
+    resorts: "Resorts",
+  },
+};
+
 interface StaticJourneyProps {
   continuation?: boolean;
   mode?: TravelExperienceMode;
   targetDestination?: string;
   introTitle?: Record<Locale, string>;
+  playlist?: readonly string[];
+  playlistIndex?: number;
+  onSelectDestination?: (index: number) => void;
 }
 
 function StaticJourney({
@@ -26,7 +99,13 @@ function StaticJourney({
   targetDestination,
   introTitle,
   continuation = false,
+  playlist,
+  playlistIndex,
+  onSelectDestination,
 }: StaticJourneyProps) {
+  const { locale } = useLocale();
+  const navText = STATIC_NAV_LABELS[locale] ?? STATIC_NAV_LABELS.pt;
+  const destLabels = STATIC_DESTINATION_LABELS[locale] ?? STATIC_DESTINATION_LABELS.pt;
   const destination = getDestinationConfig(targetDestination);
   const destinationStill = destination.media.stillImage || ASSET_MANIFEST.images.chileAndes;
 
@@ -38,7 +117,7 @@ function StaticJourney({
     >
       {!continuation && (
         <>
-          <div className="relative min-h-screen overflow-hidden bg-[#141312]">
+          <div className="relative flex min-h-[max(42rem,100svh)] flex-col overflow-hidden bg-[#141312] pb-16 pt-24 md:min-h-screen">
             <Image
               src={destination.media.posterImage || ASSET_MANIFEST.images.airplanePoster}
               alt=""
@@ -48,15 +127,17 @@ function StaticJourney({
               className="object-cover"
             />
             <div className="pointer-events-none absolute inset-0 bg-gradient-to-r from-black/85 via-black/45 to-black/10" />
-            <TravelOverlay
-              progress={0}
-              staticFallback
-              mode={mode}
-              targetDestination={targetDestination}
-              introTitle={introTitle}
-            />
+            <div className="relative flex-1">
+              <TravelOverlay
+                progress={0}
+                staticFallback
+                mode={mode}
+                targetDestination={targetDestination}
+                introTitle={introTitle}
+              />
+            </div>
           </div>
-          <div className="relative min-h-screen overflow-hidden bg-slate-300">
+          <div className="relative flex min-h-[max(42rem,100svh)] flex-col overflow-hidden bg-slate-300 pb-16 pt-24 md:min-h-screen">
             <div
               className="pointer-events-none absolute inset-0"
               style={{
@@ -65,28 +146,82 @@ function StaticJourney({
               }}
             />
             <div className="pointer-events-none absolute inset-0 bg-gradient-to-r from-black/75 via-black/30 to-transparent" />
-            <TravelOverlay
-              progress={0.57}
-              staticFallback
-              mode={mode}
-              targetDestination={targetDestination}
-              introTitle={introTitle}
-            />
+            <div className="relative flex-1">
+              <TravelOverlay
+                progress={0.57}
+                staticFallback
+                mode={mode}
+                targetDestination={targetDestination}
+                introTitle={introTitle}
+              />
+            </div>
           </div>
         </>
       )}
-      <div className="relative min-h-screen overflow-hidden bg-[#141312]">
+      <div className="relative flex min-h-[max(42rem,100svh)] flex-col overflow-hidden bg-[#141312] pb-16 pt-24 md:min-h-screen">
         <Image src={destinationStill} alt="" fill sizes="100vw" className="object-cover" />
         <div className="pointer-events-none absolute inset-0 bg-gradient-to-r from-black/85 via-black/40 to-transparent" />
-        <TravelOverlay
-          progress={1}
-          showIntro={!continuation}
-          staticFallback
-          mode={mode}
-          targetDestination={targetDestination}
-          introTitle={introTitle}
-        />
+        <div className="relative flex-1">
+          <TravelOverlay
+            progress={1}
+            showIntro={!continuation}
+            staticFallback
+            mode={mode}
+            targetDestination={targetDestination}
+            introTitle={introTitle}
+          />
+        </div>
       </div>
+      {playlist && playlist.length > 1 && onSelectDestination && playlistIndex !== undefined && (
+        <div className="border-t border-white/15 bg-[#141312] pb-20 pt-4 sm:py-4">
+          <Container>
+            <nav
+              aria-label={navText.navLabel}
+              className="flex flex-wrap items-center justify-center gap-2"
+            >
+              <button
+                type="button"
+                onClick={() =>
+                  onSelectDestination((playlistIndex - 1 + playlist.length) % playlist.length)
+                }
+                aria-label={navText.prev}
+                className="flex min-h-11 min-w-11 items-center justify-center rounded-full border border-white/25 bg-white/5 text-white/90 transition-colors hover:bg-white/15 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white motion-reduce:transition-none"
+              >
+                ‹
+              </button>
+              {playlist.map((destId, idx) => {
+                const isActive = idx === playlistIndex;
+                const destConf = getDestinationConfig(destId);
+                const destLabel = destLabels[destId] ?? destConf.country;
+                return (
+                  <button
+                    key={destId}
+                    type="button"
+                    onClick={() => onSelectDestination(idx)}
+                    aria-label={navText.viewDestination(destLabel)}
+                    aria-current={isActive ? "true" : undefined}
+                    className={`min-h-11 rounded-full px-3.5 py-2 text-sm font-medium transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white motion-reduce:transition-none ${
+                      isActive
+                        ? "bg-brand-accent text-white"
+                        : "border border-white/25 bg-white/5 text-white/90 hover:bg-white/15"
+                    }`}
+                  >
+                    {destLabel}
+                  </button>
+                );
+              })}
+              <button
+                type="button"
+                onClick={() => onSelectDestination((playlistIndex + 1) % playlist.length)}
+                aria-label={navText.next}
+                className="flex min-h-11 min-w-11 items-center justify-center rounded-full border border-white/25 bg-white/5 text-white/90 transition-colors hover:bg-white/15 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white motion-reduce:transition-none"
+              >
+                ›
+              </button>
+            </nav>
+          </Container>
+        </div>
+      )}
     </section>
   );
 }
@@ -324,6 +459,9 @@ function DestinationExperience({
         targetDestination={targetDestination}
         introTitle={introTitle}
         continuation={continuation}
+        playlist={autoAdvance ? playlist : undefined}
+        playlistIndex={autoAdvance ? playlistIndex : undefined}
+        onSelectDestination={autoAdvance ? onSelectDestination : undefined}
       />
     );
 
@@ -568,13 +706,13 @@ export function TravelExperience({
 
   return (
     <DestinationExperience
-      key={destination.id}
+      key={staticDevice ? "static" : destination.id}
       targetDestination={destination.id}
       introTitle={introTitle}
       hydrated={hydrated}
       staticDevice={staticDevice}
       autoAdvance={autoAdvance}
-      continuation={autoAdvance && playlistIndex > 0}
+      continuation={autoAdvance && !staticDevice && playlistIndex > 0}
       onDestinationEnd={handleNextDestination}
       onSelectDestination={handleSelectDestination}
       playlist={autoAdvance ? PLAYLIST_DESTINATIONS : undefined}

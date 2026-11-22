@@ -34,80 +34,101 @@ export function useGpuCapability(): GpuCapability {
   });
 
   useEffect(() => {
-    // 1. Verificação de Reduced Motion
-    let isReducedMotion = false;
-    if (typeof window !== "undefined" && typeof window.matchMedia === "function") {
-      const motionQuery = window.matchMedia("(prefers-reduced-motion: reduce)");
-      isReducedMotion = Boolean(motionQuery.matches);
-    }
+    const motionQuery =
+      typeof window !== "undefined" && typeof window.matchMedia === "function"
+        ? window.matchMedia("(prefers-reduced-motion: reduce)")
+        : null;
 
-    // 2. Verificação de Save-Data (Conexão Econômica)
-    const nav = navigator as Navigator & {
-      connection?: { saveData?: boolean };
-      deviceMemory?: number;
-    };
-    const isSaveData = Boolean(nav.connection?.saveData);
-    const isConstrainedDevice =
-      (typeof nav.deviceMemory === "number" && nav.deviceMemory <= 2) ||
-      (typeof nav.hardwareConcurrency === "number" && nav.hardwareConcurrency <= 2);
+    const evaluate = (reducedMotionOverride?: boolean) => {
+      // 1. Verificação de Reduced Motion
+      const isReducedMotion = reducedMotionOverride ?? Boolean(motionQuery?.matches);
 
-    // 4. Verificação de Suporte a WebGL
-    let hasWebGL = false;
-    if (!isReducedMotion && !isSaveData && !isConstrainedDevice) {
-      try {
-        const canvas = document.createElement("canvas");
-        const gl =
-          canvas.getContext("webgl2") ||
-          canvas.getContext("webgl") ||
-          canvas.getContext("experimental-webgl");
-        hasWebGL = Boolean(gl);
-      } catch {
-        hasWebGL = false;
-      }
-    }
+      // 2. Verificação de Save-Data (Conexão Econômica)
+      const nav = navigator as Navigator & {
+        connection?: { saveData?: boolean };
+        deviceMemory?: number;
+      };
+      const isSaveData = Boolean(nav.connection?.saveData);
+      const isConstrainedDevice =
+        (typeof nav.deviceMemory === "number" && nav.deviceMemory <= 2) ||
+        (typeof nav.hardwareConcurrency === "number" && nav.hardwareConcurrency <= 2);
 
-    // 5. Cálculo de DPR Seguro (Máx 1.5 em telas móveis/densas para economizar GPU)
-    const isMobile = window.innerWidth < 768;
-    const rawDpr = window.devicePixelRatio || 1;
-    const effectiveDpr = isMobile ? Math.min(rawDpr, 1.5) : Math.min(rawDpr, 2.0);
-
-    // 6. Decisão de Habilitação do 3D
-    const canRender3D = hasWebGL && !isReducedMotion && !isSaveData && !isConstrainedDevice;
-
-    setCapability({
-      canRender3D,
-      isReducedMotion,
-      isSaveData,
-      isConstrainedDevice,
-      hasWebGL,
-      effectiveDpr,
-    });
-
-    // 7. Emissão única do evento técnico webgl_status
-    if (!hasEmittedStatus.current) {
-      hasEmittedStatus.current = true;
-      let status:
-        | "active"
-        | "fallback_reduced_motion"
-        | "fallback_save_data"
-        | "fallback_low_power"
-        | "fallback_no_webgl" = "active";
-
-      if (isReducedMotion) {
-        status = "fallback_reduced_motion";
-      } else if (isSaveData) {
-        status = "fallback_save_data";
-      } else if (isConstrainedDevice) {
-        status = "fallback_low_power";
-      } else if (!hasWebGL) {
-        status = "fallback_no_webgl";
+      // 4. Verificação de Suporte a WebGL
+      let hasWebGL = false;
+      if (!isReducedMotion && !isSaveData && !isConstrainedDevice) {
+        try {
+          const canvas = document.createElement("canvas");
+          const gl =
+            canvas.getContext("webgl2") ||
+            canvas.getContext("webgl") ||
+            canvas.getContext("experimental-webgl");
+          hasWebGL = Boolean(gl);
+        } catch {
+          hasWebGL = false;
+        }
       }
 
-      trackEvent("webgl_status", {
-        status,
-        dpr: effectiveDpr,
-        is_mobile: isMobile,
+      // 5. Cálculo de DPR Seguro (Máx 1.5 em telas móveis/densas para economizar GPU)
+      const isMobile = window.innerWidth < 768;
+      const rawDpr = window.devicePixelRatio || 1;
+      const effectiveDpr = isMobile ? Math.min(rawDpr, 1.5) : Math.min(rawDpr, 2.0);
+
+      // 6. Decisão de Habilitação do 3D
+      const canRender3D = hasWebGL && !isReducedMotion && !isSaveData && !isConstrainedDevice;
+
+      setCapability({
+        canRender3D,
+        isReducedMotion,
+        isSaveData,
+        isConstrainedDevice,
+        hasWebGL,
+        effectiveDpr,
       });
+
+      // 7. Emissão única do evento técnico webgl_status
+      if (!hasEmittedStatus.current) {
+        hasEmittedStatus.current = true;
+        let status:
+          | "active"
+          | "fallback_reduced_motion"
+          | "fallback_save_data"
+          | "fallback_low_power"
+          | "fallback_no_webgl" = "active";
+
+        if (isReducedMotion) {
+          status = "fallback_reduced_motion";
+        } else if (isSaveData) {
+          status = "fallback_save_data";
+        } else if (isConstrainedDevice) {
+          status = "fallback_low_power";
+        } else if (!hasWebGL) {
+          status = "fallback_no_webgl";
+        }
+
+        trackEvent("webgl_status", {
+          status,
+          dpr: effectiveDpr,
+          is_mobile: isMobile,
+        });
+      }
+    };
+
+    evaluate();
+
+    if (!motionQuery) return;
+
+    const handleMotionChange = (event: MediaQueryListEvent) => {
+      evaluate(Boolean(event.matches));
+    };
+
+    if (typeof motionQuery.addEventListener === "function") {
+      motionQuery.addEventListener("change", handleMotionChange);
+      return () => motionQuery.removeEventListener("change", handleMotionChange);
+    }
+
+    if (typeof motionQuery.addListener === "function") {
+      motionQuery.addListener(handleMotionChange);
+      return () => motionQuery.removeListener(handleMotionChange);
     }
   }, []);
 
